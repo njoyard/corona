@@ -183,6 +183,16 @@
           </div>
         </PaperItem>
 
+        <PaperItem as |controls|>
+          <p>Stacked</p>
+          <div class="md-secondary-container">
+            <controls.switch
+              @secondary={{true}}
+              @value={{this.stacked}}
+              @onChange={{action (mut this.stacked)}} />
+          </div>
+        </PaperItem>
+
         <PaperDivider />
 
         <PaperSubheader>Regions</PaperSubheader>
@@ -197,7 +207,7 @@
         </PaperItem>
 
         {{#each this.regionOptions as |option|}}
-          {{#if (string-matches option.label this.regionFilter)}}
+          {{#if (string-matches option.value this.regionFilter)}}
             <PaperItem as |controls|>
               <p class="region-option-level-{{option.level}}">{{option.label}}</p>
               <div class="md-secondary-container">

@@ -157,7 +157,7 @@ export default class ApplicationController extends Controller {
   get hasSelection() {
     return this.selectedRegions.length > 0
   }
-  
+
   @tracked xSelection = "date"
   @tracked xLog = false;
 
@@ -166,12 +166,14 @@ export default class ApplicationController extends Controller {
   @tracked yChange = false;
 
   @tracked showLegend = true;
+  @tracked stacked = false;
 
   get chartOptions() {
     let {
       xSelection, xLog,
       ySelection, yChange, yLog,
-      showLegend
+      showLegend,
+      stacked
     } = this
 
     let xLabel, yLabel
@@ -209,7 +211,8 @@ export default class ApplicationController extends Controller {
             scaleLabel: {
               display: true,
               labelString: xLabel
-            }
+            },
+            ticks: xSelection === 'confirmed' ? { callback: formatYTick } : {}
           }
         ],
         yAxes: [
@@ -222,7 +225,8 @@ export default class ApplicationController extends Controller {
             },
             ticks: {
               callback: formatYTick
-            }
+            },
+            stacked
           }
         ]
       }
@@ -234,7 +238,8 @@ export default class ApplicationController extends Controller {
       xSelection, xLog,
       ySelection, yLog, yChange,
       model,
-      selectedRegions
+      selectedRegions,
+      stacked
     } = this
 
     let xField = xSelection
