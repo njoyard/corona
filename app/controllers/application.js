@@ -202,7 +202,23 @@ export default class ApplicationController extends Controller {
       },
       tooltips: {
         mode: 'nearest',
-        intersect: false
+        axis: 'x',
+        intersect: false,
+        callbacks: {
+          title: function([item], { datasets }) {
+            let point = datasets[item.datasetIndex].data[item.index]
+
+            if (xSelection === 'date') {
+              return moment(point.t).format('ll')
+            } else if (xSelection === 'start') {
+              return `Day ${item.xLabel} since first confirmed case`
+            } else {
+              return `${item.xLabel} confirmed cases`
+            }
+
+            return "FOOOO"
+          }
+        }
       },
       scales: {
         xAxes: [
