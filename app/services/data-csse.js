@@ -1,5 +1,6 @@
 import Service from '@ember/service';
-import fetch from 'fetch';
+import fetchText from 'corona/utils/fetch-text';
+import { hash } from 'rsvp';
 
 function parseCSV(csv) {
   return csv.replace(/"Korea, South"/g, 'South Korea').split('\n').map(l => l.split(',').map(c => c.replace(/(^"|"$)/g, '')))
@@ -61,8 +62,13 @@ export default class DataCeseService extends Service {
   globalConfirmedURL = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv';
 
   async data() {
-    let confirmedCSVLines = parseCSV(await (await fetch(this.globalConfirmedURL)).text())
-    let deathsCSVLines = parseCSV(await (await fetch(this.globalDeathsURL)).text())
+    let { confirmed, deaths } = await hash({
+      confirmed: fetchText(this.globalConfirmedURL),
+      deaths: fetchText(this.globalDeathsURL)
+    })
+
+    let confirmedCSVLines = parseCSV(confirmed)
+    let deathsCSVLines = parseCSV(deaths)
     
     let confirmedDates = confirmedCSVLines.shift().slice(4).map(parseDate)
     let deathsDates = deathsCSVLines.shift().slice(4).map(parseDate)
