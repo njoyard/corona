@@ -1,0 +1,280 @@
+{{#if this.showAboutDialog}}
+  <PaperDialog
+    class="flex-50"
+    @onClose={{action (mut this.showAboutDialog) false}}
+    @clickOutsideToClose={{true}} >
+    <PaperToolbar>
+      <PaperToolbarTools>
+        <h2>About this application</h2>
+        <span class="flex"></span>
+        <PaperButton
+          @iconButton={{true}}
+          @onClick={{action (mut this.showAboutDialog) false}}>
+          <PaperIcon @icon="close" />
+        </PaperButton>
+      </PaperToolbarTools>
+    </PaperToolbar>
+
+    <PaperDialogContent>
+      <p>
+        This app was largely inspired by Benjamin Ooghe Tabanou's <a target="_blank" rel="noopener" href="//boogheta.github.io/coronavirus-countries/">Coronavirus Country Comparator</a>.
+      </p>
+      <h3>Data sources</h3>
+      <p>
+        Data comes from the <a target="_blank" rel="noopener" href="//systems.jhu.edu/">Center for Systems Science and Engineering (CSSE)</a> at Johns Hopkins University.  It is <a target="_blank" rel="noopener" href="//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series">released openly</a> and updated daily.  They used it to build a <a target="_blank" rel="noopener" href="//gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">very nice dashboard</a>, please also check it out.
+      </p>
+      <p>
+        The app uses the latest version available at the time of loading. Just refresh the page to get updated data.
+      </p>
+      <p>
+        Finally, please note that this data uses officially reported figures, and is only indicative of the actual situation.  They come from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
+      </p>
+      <h3>License and developer info</h3>
+      <p>
+        The code for this app is <a target="_blank" rel="noopener" href="//github.com/njoyard/corona">available on GitHub</a> and released under the terms of the MIT license.
+      </p>
+      <p>
+        Made with <PaperIcon @icon="favorite" /> using <a target="_blank" rel="noopener" href="//emberjs.com">EmberJS</a>, <a target="_blank" rel="noopener" href="//miguelcobain.github.io/ember-paper">Ember Paper</a> and <a target="_blank" rel="noopener" href="//chartjs.org">ChartJS</a>.
+      </p>
+      <h3>Please stay home.</h3>
+    </PaperDialogContent>
+  </PaperDialog>
+{{/if}}
+
+{{#if this.downloadURL}}
+  <PaperToast
+    @duration={{false}}
+    @position="bottom left"
+    @swipeToClose={{true}}
+    @escapeToClose={{true}}
+    @onClose={{action (mut this.downloadURL) null}}
+    as |toast|>
+    <toast.text>
+      Click
+      <a href="{{this.downloadURL}}" download="corona-chart.png">here</a>
+      to download the image.
+    </toast.text>
+    <PaperButton
+      @accent={{true}}
+      @onClick={{action (mut this.downloadURL) null}}>
+      Close
+    </PaperButton>
+  </PaperToast>
+{{/if}}
+
+<PaperSidenavContainer class="layout-fill site-nav-container">
+  <PaperSidenav
+    class="md-whiteframe"
+    @lockedOpen={{true}}>
+
+    <PaperToolbar as |toolbar|>
+      <toolbar.tools>
+        <h1>Corona</h1>
+      </toolbar.tools>
+    </PaperToolbar>
+
+    <PaperContent @padding={{true}}>
+      <PaperList>
+        <PaperSubheader>Vertical axis</PaperSubheader>
+
+        <PaperItem as |controls|>
+          <p>Confirmed cases</p>
+          <div class="md-secondary-container">
+            <controls.radio
+              @groupValue={{this.ySelection}}
+              @value="confirmed"
+              @secondary={{true}}
+              @onChange={{action (mut this.ySelection)}} />
+          </div>
+        </PaperItem>
+
+        <PaperItem as |controls|>
+          <p>Deaths</p>
+          <div class="md-secondary-container">
+            <controls.radio
+              @groupValue={{this.ySelection}}
+              @value="deceased"
+              @secondary={{true}}
+              @onChange={{action (mut this.ySelection)}} />
+          </div>
+        </PaperItem>
+
+        <PaperItem as |controls|>
+          <p>Daily change</p>
+          <div class="md-secondary-container">
+            <controls.switch
+              @secondary={{true}}
+              @value={{this.yChange}}
+              @onChange={{action (mut this.yChange)}} />
+          </div>
+        </PaperItem>
+
+        <PaperItem as |controls|>
+          <p>Logarithmic scale</p>
+          <div class="md-secondary-container">
+            <controls.switch
+              @secondary={{true}}
+              @value={{this.yLog}}
+              @onChange={{action (mut this.yLog)}} />
+          </div>
+        </PaperItem>
+
+        <PaperDivider />
+
+        <PaperSubheader>Horizontal axis</PaperSubheader>
+
+        <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
+          <p>Date</p>
+          <div class="md-secondary-container">
+            <controls.radio
+              @groupValue={{this.xSelection}}
+              @value="date"
+              @disabled={{this.xLog}}
+              @secondary={{true}}
+              @onChange={{action (mut this.xSelection)}} />
+          </div>
+        </PaperItem>
+
+        <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
+          <p>Day since first case</p>
+          <div class="md-secondary-container">
+            <controls.radio
+              @groupValue={{this.xSelection}}
+              @value="start"
+              @disabled={{this.xLog}}
+              @secondary={{true}}
+              @onChange={{action (mut this.xSelection)}} />
+          </div>
+        </PaperItem>
+
+        <PaperItem as |controls|>
+          <p>Confirmed cases</p>
+          <div class="md-secondary-container">
+            <controls.radio
+              @groupValue={{this.xSelection}}
+              @value="confirmed"
+              @secondary={{true}}
+              @onChange={{action (mut this.xSelection)}} />
+          </div>
+        </PaperItem>
+
+        <PaperItem class={{if (not-eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
+          <p>Logarithmic scale</p>
+          <div class="md-secondary-container">
+            <controls.switch
+              @secondary={{true}}
+              @value={{this.xLog}}
+              @disabled={{not-eq this.xSelection "confirmed"}}
+              @onChange={{action (mut this.xLog)}} />
+          </div>
+        </PaperItem>
+
+        <PaperDivider />
+
+        <PaperSubheader>Chart options</PaperSubheader>
+
+        <PaperItem as |controls|>
+          <p>Show legend</p>
+          <div class="md-secondary-container">
+            <controls.switch
+              @secondary={{true}}
+              @value={{this.showLegend}}
+              @onChange={{action (mut this.showLegend)}} />
+          </div>
+        </PaperItem>
+
+        <PaperDivider />
+
+        <PaperSubheader>Regions</PaperSubheader>
+
+        <PaperItem>
+          <p>
+            <PaperInput
+              @label="Filter regions"
+              @value={{this.regionFilter}}
+              @onChange={{action (mut this.regionFilter)}} />
+          </p>
+        </PaperItem>
+
+        {{#each this.regionOptions as |option|}}
+          {{#if (string-matches option.label this.regionFilter)}}
+            <PaperItem as |controls|>
+              <p class="region-option-level-{{option.level}}">{{option.label}}</p>
+              <div class="md-secondary-container">
+                {{#if option.hasChildren}}
+                  <controls.button
+                    @secondary={{true}}
+                    @iconButton={{true}}
+                    @onClick={{action "toggleChildren" option}} >
+                    <PaperIcon @icon="done_all">
+                      <PaperTooltip @position="top">
+                        Toggle all {{#if (eq option.level 0)}}countries{{else}}provinces of {{option.label}}{{/if}}
+                      </PaperTooltip>
+                    </PaperIcon>
+                  </controls.button>
+                {{/if}}
+                <controls.checkbox
+                  @value={{option.selected}}
+                  @secondary={{true}}
+                  @onChange={{action "toggleRegion" option}} />
+              </div>
+            </PaperItem>
+          {{/if}}
+        {{/each}}
+        
+      </PaperList>
+    </PaperContent>
+  </PaperSidenav>
+
+  <PaperCard class="flex layout-fill layout-column layout-stretch" as |card|>
+    <card.content class="flex">
+      {{#if this.hasSelection}}
+        <EmberChart
+          @type="line"
+          @data={{this.chartData}}
+          @options={{this.chartOptions}} />
+      {{else}}
+        Please select at least one region
+      {{/if}}
+    </card.content>
+  </PaperCard>
+</PaperSidenavContainer>
+
+<PaperSpeedDial
+  @animation="scale"
+  @direction="up"
+  @open={{this.speedDialOpen}}
+  @onToggle={{action (mut this.speedDialOpen)}}
+  as |dial|>
+  <dial.trigger>
+    <PaperButton @fab={{true}}>
+      <PaperIcon @icon="menu" />
+    </PaperButton>
+  </dial.trigger>
+
+  <dial.actions as |actions|>
+    <actions.action>
+      <PaperButton
+        @mini={{true}}
+        @onClick={{action "downloadChart"}} >
+        <PaperIcon @icon="save_alt">
+          <PaperTooltip @position="left">
+            Download chart as an image
+          </PaperTooltip>
+        </PaperIcon>
+      </PaperButton>
+    </actions.action>
+
+    <actions.action>
+      <PaperButton
+        @mini={{true}}
+        @onClick={{action (mut this.showAboutDialog)}} >
+        <PaperIcon @icon="help">
+          <PaperTooltip @position="left">
+            About this app
+          </PaperTooltip>
+        </PaperIcon>
+      </PaperButton>
+    </actions.action>
+  </dial.actions>
+</PaperSpeedDial>
