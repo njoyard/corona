@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  checkout:
+    name: Checkout code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+  install:
+    name: Install dependencies
+    needs: checkout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+
+  lintjs:
+    name: Lint JS
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: lint:js
+
+  linthbs:
+    name: Lint HBS
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: lint:hbs
+
+  test:
+    name: Run test suite
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test
