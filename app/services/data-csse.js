@@ -3,7 +3,7 @@ import fetchText from 'corona/utils/fetch-text';
 import { hash } from 'rsvp';
 
 function parseCSV(csv) {
-  return csv.replace(/"Korea, South"/g, 'South Korea').split('\n').map(l => l.split(',').map(c => c.replace(/(^"|"$)/g, '')))
+  return csv.replace(/"Korea, South"/g, 'South Korea').split('\n').filter(Boolean).map(l => l.split(',').map(c => c.replace(/(^"|"$)/g, '')))
 }
 
 function parseDate(date) {
