@@ -33,6 +33,8 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Cache node_modules
         uses: actions/cache@v1
         env:
@@ -54,6 +56,8 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Cache node_modules
         uses: actions/cache@v1
         env:
@@ -75,6 +79,8 @@ jobs:
     needs: install
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       - name: Cache node_modules
         uses: actions/cache@v1
         env:
