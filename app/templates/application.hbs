@@ -150,13 +150,14 @@
           </div>
         </PaperItem>
 
-        <PaperItem as |controls|>
+        <PaperItem class={{if this.stacked "md-disabled"}} as |controls|>
           <p>Confirmed cases</p>
           <div class="md-secondary-container">
             <controls.radio
               @groupValue={{this.xSelection}}
               @value="confirmed"
               @secondary={{true}}
+              @disabled={{this.stacked}}
               @onChange={{fn (mut this.xSelection)}} />
           </div>
         </PaperItem>
@@ -186,12 +187,13 @@
           </div>
         </PaperItem>
 
-        <PaperItem as |controls|>
+        <PaperItem class={{if (eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
           <p>Stacked</p>
           <div class="md-secondary-container">
             <controls.switch
               @secondary={{true}}
               @value={{this.stacked}}
+              @disabled={{eq this.xSelection "confirmed"}}
               @onChange={{fn (mut this.stacked)}} />
           </div>
         </PaperItem>
