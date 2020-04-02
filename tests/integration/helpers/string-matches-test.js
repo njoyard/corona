@@ -8,10 +8,13 @@ module('Integration | Helper | string-matches', function(hooks) {
 
   // Replace this with your real tests.
   test('it renders', async function(assert) {
-    this.set('inputValue', '1234');
+    this.set('haystack', '1234');
+    this.set('needle1', '23');
+    this.set('needle2', '99');
 
-    await render(hbs`{{string-matches inputValue}}`);
+    await render(hbs`{{#if (string-matches haystack needle1)}}yes1{{/if}}{{#unless (string-matches haystack needle2)}}no2{{/unless}}`);
 
-    assert.equal(this.element.textContent.trim(), '1234');
+    assert.equal(this.element.textContent.trim(), 'yes1no2');
   });
 });
+

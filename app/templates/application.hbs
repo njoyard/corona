@@ -1,7 +1,7 @@
 {{#if this.showAboutDialog}}
   <PaperDialog
     class="flex-50"
-    @onClose={{action (mut this.showAboutDialog) false}}
+    @onClose={{fn (mut this.showAboutDialog) false}}
     @clickOutsideToClose={{true}} >
     <PaperToolbar>
       <PaperToolbarTools>
@@ -9,7 +9,7 @@
         <span class="flex"></span>
         <PaperButton
           @iconButton={{true}}
-          @onClick={{action (mut this.showAboutDialog) false}}>
+          @onClick={{fn (mut this.showAboutDialog) false}}>
           <PaperIcon @icon="close" />
         </PaperButton>
       </PaperToolbarTools>
@@ -17,11 +17,11 @@
 
     <PaperDialogContent>
       <p>
-        This app was largely inspired by Benjamin Ooghe Tabanou's <a target="_blank" rel="noopener" href="//boogheta.github.io/coronavirus-countries/">Coronavirus Country Comparator</a>.
+        This app was largely inspired by Benjamin Ooghe Tabanou's <a target="_blank" rel="noopener noreferrer" href="//boogheta.github.io/coronavirus-countries/">Coronavirus Country Comparator</a>.
       </p>
       <h3>Data sources</h3>
       <p>
-        Data comes from the <a target="_blank" rel="noopener" href="//systems.jhu.edu/">Center for Systems Science and Engineering (CSSE)</a> at Johns Hopkins University.  It is <a target="_blank" rel="noopener" href="//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series">released openly</a> and updated daily.  They used it to build a <a target="_blank" rel="noopener" href="//gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">very nice dashboard</a>, please also check it out.
+        Data comes from the <a target="_blank" rel="noopener noreferrer" href="//systems.jhu.edu/">Center for Systems Science and Engineering (CSSE)</a> at Johns Hopkins University.  It is <a target="_blank" rel="noopener noreferrer" href="//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series">released openly</a> and updated daily.  They used it to build a <a target="_blank" rel="noopener noreferrer" href="//gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">very nice dashboard</a>, please also check it out.
       </p>
       <p>
         The app uses the latest version available at the time of loading. Just refresh the page to get updated data.
@@ -31,10 +31,10 @@
       </p>
       <h3>License and developer info</h3>
       <p>
-        The code for this app is <a target="_blank" rel="noopener" href="//github.com/njoyard/corona">available on GitHub</a> and released under the terms of the MIT license.
+        The code for this app is <a target="_blank" rel="noopener noreferrer" href="//github.com/njoyard/corona">available on GitHub</a> and released under the terms of the MIT license.
       </p>
       <p>
-        Made with <PaperIcon @icon="favorite" /> using <a target="_blank" rel="noopener" href="//emberjs.com">EmberJS</a>, <a target="_blank" rel="noopener" href="//miguelcobain.github.io/ember-paper">Ember Paper</a> and <a target="_blank" rel="noopener" href="//chartjs.org">ChartJS</a>.
+        Made with <PaperIcon @icon="favorite" /> using <a target="_blank" rel="noopener noreferrer" href="//emberjs.com">EmberJS</a>, <a target="_blank" rel="noopener noreferrer" href="//miguelcobain.github.io/ember-paper">Ember Paper</a> and <a target="_blank" rel="noopener noreferrer" href="//chartjs.org">ChartJS</a>.
       </p>
       <h3>Please stay home.</h3>
     </PaperDialogContent>
@@ -47,7 +47,7 @@
     @position="bottom left"
     @swipeToClose={{true}}
     @escapeToClose={{true}}
-    @onClose={{action (mut this.downloadURL) null}}
+    @onClose={{fn (mut this.downloadURL) null}}
     as |toast|>
     <toast.text>
       Click
@@ -56,7 +56,7 @@
     </toast.text>
     <PaperButton
       @accent={{true}}
-      @onClick={{action (mut this.downloadURL) null}}>
+      @onClick={{fn (mut this.downloadURL) null}}>
       Close
     </PaperButton>
   </PaperToast>
@@ -84,7 +84,7 @@
               @groupValue={{this.ySelection}}
               @value="confirmed"
               @secondary={{true}}
-              @onChange={{action (mut this.ySelection)}} />
+              @onChange={{fn (mut this.ySelection)}} />
           </div>
         </PaperItem>
 
@@ -95,7 +95,7 @@
               @groupValue={{this.ySelection}}
               @value="deceased"
               @secondary={{true}}
-              @onChange={{action (mut this.ySelection)}} />
+              @onChange={{fn (mut this.ySelection)}} />
           </div>
         </PaperItem>
 
@@ -105,7 +105,7 @@
             <controls.switch
               @secondary={{true}}
               @value={{this.yChange}}
-              @onChange={{action (mut this.yChange)}} />
+              @onChange={{fn (mut this.yChange)}} />
           </div>
         </PaperItem>
 
@@ -115,7 +115,7 @@
             <controls.switch
               @secondary={{true}}
               @value={{this.yLog}}
-              @onChange={{action (mut this.yLog)}} />
+              @onChange={{fn (mut this.yLog)}} />
           </div>
         </PaperItem>
 
@@ -131,7 +131,7 @@
               @value="date"
               @disabled={{this.xLog}}
               @secondary={{true}}
-              @onChange={{action (mut this.xSelection)}} />
+              @onChange={{fn (mut this.xSelection)}} />
           </div>
         </PaperItem>
 
@@ -143,7 +143,7 @@
               @value="start"
               @disabled={{this.xLog}}
               @secondary={{true}}
-              @onChange={{action (mut this.xSelection)}} />
+              @onChange={{fn (mut this.xSelection)}} />
           </div>
         </PaperItem>
 
@@ -154,7 +154,7 @@
               @groupValue={{this.xSelection}}
               @value="confirmed"
               @secondary={{true}}
-              @onChange={{action (mut this.xSelection)}} />
+              @onChange={{fn (mut this.xSelection)}} />
           </div>
         </PaperItem>
 
@@ -165,7 +165,7 @@
               @secondary={{true}}
               @value={{this.xLog}}
               @disabled={{not-eq this.xSelection "confirmed"}}
-              @onChange={{action (mut this.xLog)}} />
+              @onChange={{fn (mut this.xLog)}} />
           </div>
         </PaperItem>
 
@@ -179,7 +179,7 @@
             <controls.switch
               @secondary={{true}}
               @value={{this.showLegend}}
-              @onChange={{action (mut this.showLegend)}} />
+              @onChange={{fn (mut this.showLegend)}} />
           </div>
         </PaperItem>
 
@@ -189,7 +189,7 @@
             <controls.switch
               @secondary={{true}}
               @value={{this.stacked}}
-              @onChange={{action (mut this.stacked)}} />
+              @onChange={{fn (mut this.stacked)}} />
           </div>
         </PaperItem>
 
@@ -202,7 +202,7 @@
             <PaperInput
               @label="Filter regions"
               @value={{this.regionFilter}}
-              @onChange={{action (mut this.regionFilter)}} />
+              @onChange={{fn (mut this.regionFilter)}} />
           </p>
         </PaperItem>
 
@@ -215,7 +215,7 @@
                   <controls.button
                     @secondary={{true}}
                     @iconButton={{true}}
-                    @onClick={{action "toggleChildren" option}} >
+                    @onClick={{fn this.toggleChildren option}} >
                     <PaperIcon @icon="done_all">
                       <PaperTooltip @position="top">
                         Toggle all {{#if (eq option.level 0)}}countries{{else}}provinces of {{option.label}}{{/if}}
@@ -226,7 +226,7 @@
                 <controls.checkbox
                   @value={{option.selected}}
                   @secondary={{true}}
-                  @onChange={{action "toggleRegion" option}} />
+                  @onChange={{fn this.toggleRegion option}} />
               </div>
             </PaperItem>
           {{/if}}
@@ -254,7 +254,7 @@
   @animation="scale"
   @direction="up"
   @open={{this.speedDialOpen}}
-  @onToggle={{action (mut this.speedDialOpen)}}
+  @onToggle={{fn (mut this.speedDialOpen)}}
   as |dial|>
   <dial.trigger>
     <PaperButton @fab={{true}}>
@@ -266,7 +266,7 @@
     <actions.action>
       <PaperButton
         @mini={{true}}
-        @onClick={{action "downloadChart"}} >
+        @onClick={{fn this.downloadChart}} >
         <PaperIcon @icon="save_alt">
           <PaperTooltip @position="left">
             Download chart as an image
@@ -278,7 +278,7 @@
     <actions.action>
       <PaperButton
         @mini={{true}}
-        @onClick={{action (mut this.showAboutDialog)}} >
+        @onClick={{fn (mut this.showAboutDialog)}} >
         <PaperIcon @icon="help">
           <PaperTooltip @position="left">
             About this app

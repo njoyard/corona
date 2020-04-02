@@ -1,8 +1,5 @@
 import Service from '@ember/service';
-import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
 import fetch from 'fetch';
-import moment from 'moment';
 
 function parseCSV(csv) {
   return csv.replace(/"Korea, South"/g, 'South Korea').split('\n').map(l => l.split(',').map(c => c.replace(/(^"|"$)/g, '')))
@@ -11,14 +8,6 @@ function parseCSV(csv) {
 function parseDate(date) {
   let [m, d, y] = date.split('/').map(x => Number(x) < 10 ? `0${x}` : x)
   return Number(new Date(`20${y}-${m}-${d}`))
-}
-
-function sortBy(array, key) {
-  return array.sort(function(a, b) {
-    if (a[key] < b[key]) return -1
-    if (b[key] < a[key]) return 1
-    return 0
-  })
 }
 
 function totalize(data) {
@@ -80,7 +69,7 @@ export default class DataCeseService extends Service {
 
     let data = {}
 
-    for (let [province, country, lat, lon, ...counts] of confirmedCSVLines) {
+    for (let [province, country, , , ...counts] of confirmedCSVLines) {
       if (!province) province = 'Mainland'
 
       if (!(country in data)) data[country] = {}
@@ -93,7 +82,7 @@ export default class DataCeseService extends Service {
       }})
     }
 
-    for (let [province, country, lat, lon, ...counts] of deathsCSVLines) {
+    for (let [province, country, , , ...counts] of deathsCSVLines) {
       if (!province) province = 'Mainland'
 
       if (!(country in data)) data[country] = {}

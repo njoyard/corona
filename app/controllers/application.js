@@ -2,6 +2,7 @@ import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { A } from '@ember/array';
+import moment from 'moment';
 
 function generateDataset(source, xField, xLog, yField, yLog, options = {}) {
   // Remove zeroes for log scales
@@ -49,7 +50,7 @@ function getColor(count, index) {
     let desaturate = index % 2
 
     return {
-      hue: idx * 360 / count,
+      hue: idx * 360 / cnt,
       sat: desaturate ? '25%' : '75%'
     }
   }
@@ -86,7 +87,7 @@ export default class ApplicationController extends Controller {
   @tracked selectedRegions = A(['World'])
 
   get regionOptions() {
-    let { model } = this
+    let { model } = this
 
     let worldOption = new RegionOption()
     worldOption.value = 'World'
@@ -215,8 +216,6 @@ export default class ApplicationController extends Controller {
             } else {
               return `${item.xLabel} confirmed cases`
             }
-
-            return "FOOOO"
           }
         }
       },
@@ -254,8 +253,7 @@ export default class ApplicationController extends Controller {
       xSelection, xLog,
       ySelection, yLog, yChange,
       model,
-      selectedRegions,
-      stacked
+      selectedRegions
     } = this
 
     let xField = xSelection
