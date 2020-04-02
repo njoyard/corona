@@ -3,6 +3,9 @@ import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { A } from '@ember/array';
 import moment from 'moment';
+import env from "corona/config/environment";
+
+const { buildID, buildDate } = env.APP;
 
 function generateDataset(source, xField, xLog, yField, yLog, options = {}) {
   // Remove zeroes for log scales
@@ -82,6 +85,16 @@ class RegionOption {
 export default class ApplicationController extends Controller {
   @tracked speedDialOpen = false;
   @tracked showAboutDialog = false;
+
+  get versionInfo() {
+    let info = `This version was built on ${buildDate}`
+
+    if (buildID) {
+      info += ` from commit ${buildID}`
+    }
+
+    return `${info}.`
+  }
 
   @tracked regionFilter = '';
   @tracked selectedRegions = A(['World'])

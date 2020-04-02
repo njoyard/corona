@@ -18,8 +18,8 @@ module.exports = function(environment) {
     },
 
     APP: {
-      // Here you can pass flags/options to your application instance
-      // when it is created
+      buildID: process.env.CORONA_BUILD_ID,
+      buildDate: process.env.CORONA_BUILD_DATE || new Date().toISOString()
     }
   };
 
