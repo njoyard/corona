@@ -25,6 +25,14 @@ $app-bar-height: 48px;
   overflow-x: hidden;
 }
 
+.site-nav-container md-input-container {
+  margin-bottom: 0;
+}
+
+.site-nav-container .md-errors-spacer {
+  display: none;
+}
+
 md-fab-speed-dial {
   position: absolute;
   right: 1rem;
