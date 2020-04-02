@@ -96,9 +96,8 @@ export default class ApplicationController extends Controller {
 
     let options = A([worldOption])
 
-    for (let country in model) {
-      if (country === '_total') continue
-
+    let countries = Object.keys(model).filter(c => c !== '_total').sort()
+    for (let country of countries) {
       let countryOption = new RegionOption()
       countryOption.value = countryOption.label = country
       countryOption.level = 1
