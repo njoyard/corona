@@ -1,37 +1,25 @@
 # corona
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This is a Covid-19 cases visualisation app using CSSE data built with EmberJS.  It runs completely in the browser and does not require a backend server.
+
+Access the [live instance](https://corona.njoyard.fr) of this app.
 
 ## Prerequisites
 
-You will need the following things properly installed on your computer.
-
-* [Git](https://git-scm.com/)
-* [Node.js](https://nodejs.org/) (with npm)
-* [Ember CLI](https://ember-cli.com/)
-* [Google Chrome](https://google.com/chrome/)
+* [Node.js](https://nodejs.org/) (with npm and yarn, `npm install -g yarn`)
+* [Ember CLI](https://ember-cli.com/) (`npm install -g ember-cli`)
 
 ## Installation
 
-* `git clone <repository-url>` this repository
+* `git clone https://github.com/njoyard/corona` this repository
 * `cd corona`
-* `npm install`
+* `yarn`
 
 ## Running / Development
 
-* `ember serve`
+* `ember s`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 * Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
-
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
-### Running Tests
-
-* `ember test`
-* `ember test --server`
 
 ### Linting
 
@@ -42,16 +30,6 @@ Make use of the many generators for code, try `ember help generate` for more det
 ### Building
 
 * `ember build` (development)
-* `ember build --environment production` (production)
+* `ember build --environment production` (or `yarn build`) (production)
 
-### Deploying
-
-Specify what it takes to deploy your app.
-
-## Further Reading / Useful Links
-
-* [ember.js](https://emberjs.com/)
-* [ember-cli](https://ember-cli.com/)
-* Development Browser Extensions
-  * [ember inspector for chrome](https://chrome.google.com/webstore/detail/ember-inspector/bmdblncegkenkacieihfhpjfppoconhi)
-  * [ember inspector for firefox](https://addons.mozilla.org/en-US/firefox/addon/ember-inspector/)
+Build output is stored in the `dist` folder.  Use any web server to serve the contents of this directory to deploy your version of the app.
