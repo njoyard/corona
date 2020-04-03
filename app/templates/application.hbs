@@ -139,7 +139,7 @@
         </PaperItem>
 
         <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
-          <p>Day since first case</p>
+          <p>Day since {{this.xStartOffset}}th case</p>
           <div class="md-secondary-container">
             <controls.radio
               @groupValue={{this.xSelection}}

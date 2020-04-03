@@ -7,6 +7,7 @@ import env from "corona/config/environment";
 const { buildID, buildDate } = env.APP;
 
 const LEGEND_LIMIT = 20;
+const START_OFFSET = 10;
 
 function generateDataset(source, xField, xLog, yField, yLog, options = {}) {
   // Remove zeroes for log scales
@@ -19,7 +20,7 @@ function generateDataset(source, xField, xLog, yField, yLog, options = {}) {
   }
 
   if (xField === "start") {
-    let firstIndex = source.findIndex(p => p[yField])
+    let firstIndex = source.findIndex(p => p[yField] >= START_OFFSET)
     source = source.slice(firstIndex)
   }
 
@@ -144,6 +145,7 @@ export default class ApplicationController extends Controller {
     return regionOptions.filter(o => o.value.toLowerCase().indexOf(filter) !== -1)
   }
 
+  @tracked xStartOffset = START_OFFSET;
   @tracked xSelection = "date"
   @tracked xLog = false;
 
@@ -156,7 +158,7 @@ export default class ApplicationController extends Controller {
 
   get chartOptions() {
     let {
-      xSelection, xLog,
+      xSelection, xLog, xStartOffset,
       ySelection, yChange, yLog,
       showLegend,
       stacked
@@ -167,7 +169,7 @@ export default class ApplicationController extends Controller {
     if (xSelection === 'date') {
       xLabel = 'Date'
     } else if (xSelection === 'start') {
-      xLabel = 'Days since first confirmed case'
+      xLabel = `Days since ${xStartOffset}th confirmed case`
     } else {
       xLabel = 'Confirmed cases'
     }
@@ -197,7 +199,7 @@ export default class ApplicationController extends Controller {
             if (xSelection === 'date') {
               return moment(point.t).format('ll')
             } else if (xSelection === 'start') {
-              return `Day ${item.xLabel} since first confirmed case`
+              return `Day ${item.xLabel} since ${xStartOffset}th confirmed case`
             } else {
               return `${item.xLabel} confirmed cases`
             }
