@@ -235,21 +235,23 @@ export default class ApplicationController extends Controller {
     let yField = ySelection
     if (yChange) yField = `${yField}Change`
 
-    let selectedRegions = selectedOptions.map(o => o.value).sort()
+    let selectedRegions = selectedOptions.sortBy('value')
     let regions = selectedRegions.map(s => {
-      if (s === 'World') return data
-      if (s.indexOf('|') === -1) return data[s]
+      let v = s.value
 
-      let [country, province] = s.split('|')
+      if (v === 'World') return data
+      if (v.indexOf('|') === -1) return data[v]
+
+      let [country, province] = v.split('|')
       return data[country][province]
     })
 
     return {
       datasets: regions.map((s, i) => {
-        let { hue, saturation, lightness } = selectedOptions[i]
+        let { hue, saturation, lightness } = selectedRegions[i]
         
         return generateDataset(s._total, xField, xLog, yField, yLog, {
-          label: selectedRegions[i].replace(/(.*)\|(.*)/, (m, p1, p2) => `${p1} (${p2})`),
+          label: selectedRegions[i].value.replace(/(.*)\|(.*)/, (m, p1, p2) => `${p1} (${p2})`),
           fill: false,
           lineTension: 0,
           borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
