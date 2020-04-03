@@ -1,7 +1,10 @@
-/* $font-size: 8px; */
-
-$baseline-grid: 6px;
-$app-bar-height: 48px;
+$font-size: 8px;
+$baseline-grid: 4px;
+$app-bar-height: 32px;
+$checkbox-width: 16px;
+$radio-width: 16px;
+$switch-width: 30px;
+$switch-thumb-size: 16px;
 
 @import 'ember-paper';
 
@@ -35,6 +38,10 @@ $app-bar-height: 48px;
 
 .site-nav-container .md-errors-spacer {
   display: none;
+}
+
+.site-nav-container md-radio-button {
+  margin: 4px 0;
 }
 
 md-fab-speed-dial {

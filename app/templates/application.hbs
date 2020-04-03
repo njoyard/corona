@@ -81,7 +81,7 @@
         <PaperSubheader>Vertical axis</PaperSubheader>
 
         <PaperItem as |controls|>
-          <p>Confirmed cases</p>
+          <small>Confirmed cases</small>
           <div class="md-secondary-container">
             <controls.radio
               @groupValue={{this.ySelection}}
@@ -92,7 +92,7 @@
         </PaperItem>
 
         <PaperItem as |controls|>
-          <p>Deaths</p>
+          <small>Deaths</small>
           <div class="md-secondary-container">
             <controls.radio
               @groupValue={{this.ySelection}}
@@ -103,7 +103,7 @@
         </PaperItem>
 
         <PaperItem as |controls|>
-          <p>Daily change</p>
+          <small>Daily change</small>
           <div class="md-secondary-container">
             <controls.switch
               @secondary={{true}}
@@ -113,7 +113,7 @@
         </PaperItem>
 
         <PaperItem as |controls|>
-          <p>Logarithmic scale</p>
+          <small>Logarithmic scale</small>
           <div class="md-secondary-container">
             <controls.switch
               @secondary={{true}}
@@ -127,7 +127,7 @@
         <PaperSubheader>Horizontal axis</PaperSubheader>
 
         <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
-          <p>Date</p>
+          <small>Date</small>
           <div class="md-secondary-container">
             <controls.radio
               @groupValue={{this.xSelection}}
@@ -139,7 +139,7 @@
         </PaperItem>
 
         <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
-          <p>Day since {{this.xStartOffset}}th case</p>
+          <small>Day since {{this.xStartOffset}}th case</small>
           <div class="md-secondary-container">
             <controls.radio
               @groupValue={{this.xSelection}}
@@ -151,7 +151,7 @@
         </PaperItem>
 
         <PaperItem class={{if this.stacked "md-disabled"}} as |controls|>
-          <p>Confirmed cases</p>
+          <small>Confirmed cases</small>
           <div class="md-secondary-container">
             <controls.radio
               @groupValue={{this.xSelection}}
@@ -163,7 +163,7 @@
         </PaperItem>
 
         <PaperItem class={{if (not-eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
-          <p>Logarithmic scale</p>
+          <small>Logarithmic scale</small>
           <div class="md-secondary-container">
             <controls.switch
               @secondary={{true}}
@@ -178,7 +178,7 @@
         <PaperSubheader>Chart options</PaperSubheader>
 
         <PaperItem as |controls|>
-          <p>Show legend</p>
+          <small>Show legend</small>
           <div class="md-secondary-container">
             <controls.switch
               @secondary={{true}}
@@ -188,7 +188,7 @@
         </PaperItem>
 
         <PaperItem class={{if (eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
-          <p>Stacked</p>
+          <small>Stacked</small>
           <div class="md-secondary-container">
             <controls.switch
               @secondary={{true}}
@@ -236,10 +236,10 @@
 
         {{#each this.filteredRegions as |option|}}
           <PaperItem as |controls|>
-            <p class="region-option-level-{{option.level}}">
+            <small class="region-option-level-{{option.level}}">
               <Swatch @color={{option}} />
               {{option.label}}
-            </p>
+            </small>
             <div class="md-secondary-container">
               {{#if option.hasChildren}}
                 <controls.button
