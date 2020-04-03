@@ -2,6 +2,9 @@
   <div class="loading-container">
     <PaperProgressCircular
       @diameter={{96}} />
-    <h1>Loading data...</h1>
+    <h1>Starting up...</h1>
+    {{#if this.loadingState}}
+      <i>{{this.loadingState}}</i>
+    {{/if}}
   </div>
 </div>

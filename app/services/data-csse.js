@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import fetchText from 'corona/utils/fetch-text';
+import delay from 'corona/utils/delay';
 
 function parseCSV(csv) {
   return csv.split('\n')
@@ -86,7 +87,9 @@ export default class DataCeseService extends Service {
     return `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${type}_${scope}.csv`
   }
 
-  async data() {
+  async data(updateState) {
+    updateState('downloading CSSE data')
+
     let [
       confirmedGlobalLines,
       deathsGlobalLines,
@@ -105,61 +108,70 @@ export default class DataCeseService extends Service {
     let deathsUSDates = deathsUSLines.shift().slice(12).map(parseDate)
 
     let globalData = {}
-
-    parseLines(
-      confirmedGlobalLines
-        .map(([province, country, , , ...counts]) => [province, country, ...counts])
-        .filter(([, country]) => country !== 'US'),
-      confirmedGlobalDates,
-      globalData,
-      'confirmed'
-    )
-
-    parseLines(
-      deathsGlobalLines
-        .map(([province, country, , , ...counts]) => [province, country, ...counts])
-        .filter(([, country]) => country !== 'US'),
-      deathsGlobalDates,
-      globalData,
-      'deceased'
-    )
-
     let usaData = {}
 
-    parseLines(
-      confirmedUSLines
-        .map(([, , , , , county, state, , , , , ...counts]) => [county, state, ...counts]),
-      confirmedUSDates,
-      usaData,
-      'confirmed'
-    )
+    updateState('parsing CSSE data')
 
-    parseLines(
-      deathsUSLines
-        .map(([, , , , , county, state, , , , , , ...counts]) => [county, state, ...counts]),
-      deathsUSDates,
-      usaData,
-      'deceased'
-    )
+    await delay(() => {
+      parseLines(
+        confirmedGlobalLines
+          .map(([province, country, , , ...counts]) => [province, country, ...counts])
+          .filter(([, country]) => country !== 'US'),
+        confirmedGlobalDates,
+        globalData,
+        'confirmed'
+      )
+
+      parseLines(
+        deathsGlobalLines
+          .map(([province, country, , , ...counts]) => [province, country, ...counts])
+          .filter(([, country]) => country !== 'US'),
+        deathsGlobalDates,
+        globalData,
+        'deceased'
+      )
+
+      parseLines(
+        confirmedUSLines
+          .map(([, , , , , county, state, , , , , ...counts]) => [county, state, ...counts]),
+        confirmedUSDates,
+        usaData,
+        'confirmed'
+      )
+
+      parseLines(
+        deathsUSLines
+          .map(([, , , , , county, state, , , , , , ...counts]) => [county, state, ...counts]),
+        deathsUSDates,
+        usaData,
+        'deceased'
+      )
+    })
 
     globalData.USA = usaData
 
-    totalize(globalData)
+    updateState('computing totals')
 
-    // Drop city data
-    for (let country in globalData) {
-      if (country === '_total') continue
+    await delay(() => {
+      totalize(globalData)
 
-      for (let province in globalData[country]) {
-        if (province === '_total') continue
+      // Drop city data
+      for (let country in globalData) {
+        if (country === '_total') continue
 
-        for (let city in globalData[country][province]) {
-          if (city !== '_total') delete globalData[country][province][city]
+        for (let province in globalData[country]) {
+          if (province === '_total') continue
+
+          for (let city in globalData[country][province]) {
+            if (city !== '_total') delete globalData[country][province][city]
+          }
         }
       }
-    }
+    })
 
-    derive(globalData)
+    updateState('computing daily changes')
+
+    await delay(() => derive(globalData))
 
     return globalData
   }

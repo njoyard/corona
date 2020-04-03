@@ -2,6 +2,7 @@ import Service from '@ember/service';
 import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { A } from '@ember/array';
+import delay from 'corona/utils/delay';
 
 const MIN_SATURATION = 25;
 const MAX_SATURATION = 90;
@@ -73,45 +74,55 @@ export default class DataService extends Service {
     return this.dataCsse
   }
 
-  async data(selected = ['World']) {
-    let sourceData = await this.source.data()
+  async data(updateState, selected = ['World']) {
+    let sourceData = await this.source.data(updateState)
 
-    let worldOption = new RegionOption('World', 'World', selected.indexOf('World') !== -1)
-    worldOption.saturation = 0
-    worldOption.lightness = 30
+    updateState('building region options')
 
-    let options = [worldOption]
+    let data = await delay(() => {
+      let worldOption = new RegionOption('World', 'World', selected.indexOf('World') !== -1)
+      worldOption.saturation = 0
+      worldOption.lightness = 30
 
-    let countries = Object.keys(sourceData).filter(c => c !== '_total').sort()
-    for (let country of countries) {
-      let countryOption = new RegionOption(country, country, selected.indexOf(country) !== -1, 1)
+      let options = [worldOption]
 
-      options.push(countryOption)
-      worldOption.addChild(countryOption)
+      let countries = Object.keys(sourceData).filter(c => c !== '_total').sort()
+      for (let country of countries) {
+        let countryOption = new RegionOption(country, country, selected.indexOf(country) !== -1, 1)
 
-      if (Object.keys(sourceData[country]).length > 2) {
-        let provinces = Object.keys(sourceData[country]).filter(p => p !== '_total').sort()
-        if (provinces.indexOf('Mainland') !== -1) {
-          provinces = provinces.filter(p => p !== 'Mainland')
-          provinces.unshift('Mainland')
-        }
+        options.push(countryOption)
+        worldOption.addChild(countryOption)
 
-        for (let province of provinces) {
-          let provinceOption = new RegionOption(`${country}|${province}`, province, selected.indexOf(`${country}|${province}`) !== -1, 2)
+        if (Object.keys(sourceData[country]).length > 2) {
+          let provinces = Object.keys(sourceData[country]).filter(p => p !== '_total').sort()
+          if (provinces.indexOf('Mainland') !== -1) {
+            provinces = provinces.filter(p => p !== 'Mainland')
+            provinces.unshift('Mainland')
+          }
 
-          countryOption.addChild(provinceOption)
-          options.push(provinceOption)
+          for (let province of provinces) {
+            let provinceOption = new RegionOption(`${country}|${province}`, province, selected.indexOf(`${country}|${province}`) !== -1, 2)
+
+            countryOption.addChild(provinceOption)
+            options.push(provinceOption)
+          }
         }
       }
-    }
 
-    let dataset = new DataSet()
+      let dataset = new DataSet()
 
-    dataset.data = sourceData
-    dataset.worldOption = worldOption
-    dataset.regionOptions = A(options)
-    dataset.selectedOptions = A(options.filter(o => o.selected))
+      dataset.data = sourceData
+      dataset.worldOption = worldOption
+      dataset.regionOptions = A(options)
+      dataset.selectedOptions = A(options.filter(o => o.selected))
 
-    return dataset
+      return dataset
+    })
+
+    updateState('starting application')
+
+    await delay(() => {})
+
+    return data
   }
 }

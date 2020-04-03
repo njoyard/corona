@@ -5,6 +5,11 @@ export default class ApplicationRoute extends Route {
   @service data;
 
   model() {
-    return this.data.data()
+    let loadingController = this.controllerFor('application-loading')
+    loadingController.loadingState = 'initializing'
+
+    return this.data.data((state) => {
+      loadingController.loadingState = state
+    })
   }
 }
