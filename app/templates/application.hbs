@@ -209,32 +209,53 @@
               @value={{this.regionFilter}}
               @onChange={{fn (mut this.regionFilter)}} />
           </p>
+          <div class="md-secondary-container align-with-input">
+            {{#if this.regionFilter}}
+              <PaperButton
+                @iconButton={{true}}
+                @onClick={{fn (mut this.regionFilter) ""}} >
+                <PaperIcon @icon="clear">
+                  <PaperTooltip @position="top">
+                    Clear region filter
+                  </PaperTooltip>
+                </PaperIcon>
+              </PaperButton>
+            {{/if}}
+
+            <PaperButton
+              @iconButton={{true}}
+              @onClick={{fn this.resetRegions}} >
+              <PaperIcon @icon="replay">
+                <PaperTooltip @position="top">
+                  Reset region list to World only
+                </PaperTooltip>
+              </PaperIcon>
+            </PaperButton>
+          </div>
         </PaperItem>
 
-        {{#each this.regionOptions as |option|}}
-          {{#if (string-matches option.value this.regionFilter)}}
-            <PaperItem as |controls|>
-              <p class="region-option-level-{{option.level}}">{{option.label}}</p>
-              <div class="md-secondary-container">
-                {{#if option.hasChildren}}
-                  <controls.button
-                    @secondary={{true}}
-                    @iconButton={{true}}
-                    @onClick={{fn this.toggleChildren option}} >
-                    <PaperIcon @icon="done_all">
-                      <PaperTooltip @position="top">
-                        Toggle all {{#if (eq option.level 0)}}countries{{else}}provinces of {{option.label}}{{/if}}
-                      </PaperTooltip>
-                    </PaperIcon>
-                  </controls.button>
-                {{/if}}
-                <controls.checkbox
-                  @value={{option.selected}}
+        {{#each this.filteredRegions as |option|}}
+          <PaperItem as |controls|>
+            <p class="region-option-level-{{option.level}}">{{option.label}}</p>
+            <div class="md-secondary-container">
+              {{#if option.hasChildren}}
+                <controls.button
                   @secondary={{true}}
-                  @onChange={{fn this.toggleRegion option}} />
-              </div>
-            </PaperItem>
-          {{/if}}
+                  @iconButton={{true}}
+                  @onClick={{fn this.toggleChildren option}} >
+                  <PaperIcon @icon="done_all">
+                    <PaperTooltip @position="top">
+                      Toggle all {{#if (eq option.level 0)}}countries{{else}}provinces of {{option.label}}{{/if}}
+                    </PaperTooltip>
+                  </PaperIcon>
+                </controls.button>
+              {{/if}}
+              <controls.checkbox
+                @value={{option.selected}}
+                @secondary={{true}}
+                @onChange={{fn this.toggleRegion option}} />
+            </div>
+          </PaperItem>
         {{/each}}
         
       </PaperList>

@@ -1,7 +1,6 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
-import { A } from '@ember/array';
 import moment from 'moment';
 import env from "corona/config/environment";
 
@@ -65,23 +64,6 @@ function formatYTick(number) {
   return `${number}`
 }
 
-class RegionOption {
-  @tracked selected = false;
-  @tracked value;
-  @tracked label;
-  @tracked level = 0;
-
-  children = A([]);
-
-  addChild(child) {
-    this.children.pushObject(child)
-  }
-
-  get hasChildren() {
-    return this.children.length > 0
-  }
-}
-
 export default class ApplicationController extends Controller {
   @tracked speedDialOpen = false;
   @tracked showAboutDialog = false;
@@ -97,47 +79,21 @@ export default class ApplicationController extends Controller {
   }
 
   @tracked regionFilter = '';
-  @tracked selectedRegions = A(['World'])
+
+  get data() {
+    return this.model.data
+  }
+
+  get worldOption() {
+    return this.model.worldOption
+  }
 
   get regionOptions() {
-    let { model } = this
+    return this.model.regionOptions
+  }
 
-    let worldOption = new RegionOption()
-    worldOption.value = 'World'
-    worldOption.label = 'World'
-    worldOption.selected = true
-
-    let options = A([worldOption])
-
-    let countries = Object.keys(model).filter(c => c !== '_total').sort()
-    for (let country of countries) {
-      let countryOption = new RegionOption()
-      countryOption.value = countryOption.label = country
-      countryOption.level = 1
-
-      options.pushObject(countryOption)
-      worldOption.addChild(countryOption)
-
-      if (Object.keys(model[country]).length > 2) {
-        let provinces = Object.keys(model[country]).filter(p => p !== '_total').sort()
-        if (provinces.indexOf('Mainland') !== -1) {
-          provinces = provinces.filter(p => p !== 'Mainland')
-          provinces.unshift('Mainland')
-        }
-
-        for (let province of provinces) {
-          let provinceOption = new RegionOption()
-          provinceOption.value = `${country}|${province}`
-          provinceOption.label = province
-          provinceOption.level = 2
-
-          countryOption.addChild(provinceOption)
-          options.pushObject(provinceOption)
-        }
-      }
-    }
-
-    return options
+  get selectedOptions() {
+    return this.model.selectedOptions
   }
 
   @action
@@ -145,9 +101,9 @@ export default class ApplicationController extends Controller {
     option.selected = !option.selected
 
     if (option.selected) {
-      this.selectedRegions.pushObject(option.value)
+      this.selectedOptions.pushObject(option)
     } else {
-      this.selectedRegions.removeObject(option.value)
+      this.selectedOptions.removeObject(option)
     }
   }
 
@@ -157,18 +113,43 @@ export default class ApplicationController extends Controller {
     let targetState = allSelected ? false : true
 
     for (let child of option.children) {
-      child.selected = targetState
+      if (child.selected !== targetState) {
+        child.selected = targetState
 
-      if (targetState) {
-        this.selectedRegions.pushObject(child.value)
-      } else {
-        this.selectedRegions.removeObject(child.value)
+        if (targetState) {
+          this.selectedOptions.pushObject(child)
+        } else {
+          this.selectedOptions.removeObject(child)
+        }
       }
     }
   }
 
+  @action
+  resetRegions() {
+    for (let option of this.selectedOptions) {
+      option.selected = false
+    }
+    this.selectedOptions.clear()
+
+    this.worldOption.selected = true
+    this.selectedOptions.pushObject(this.worldOption)
+  }
+
   get hasSelection() {
-    return this.selectedRegions.length > 0
+    return this.selectedOptions.length > 0
+  }
+
+  get filteredRegions() {
+    let {
+      regionOptions,
+      regionFilter
+    } = this
+
+    if (!regionFilter) return regionOptions
+
+    let filter = regionFilter.toLowerCase()
+    return regionOptions.filter(o => o.value.toLowerCase().indexOf(filter) !== -1)
   }
 
   @tracked xSelection = "date"
@@ -264,20 +245,21 @@ export default class ApplicationController extends Controller {
     let {
       xSelection, xLog,
       ySelection, yLog, yChange,
-      model,
-      selectedRegions
+      data,
+      selectedOptions
     } = this
 
     let xField = xSelection
     let yField = ySelection
     if (yChange) yField = `${yField}Change`
 
-    let regions = selectedRegions.sort().map(s => {
-      if (s === 'World') return model
-      if (s.indexOf('|') === -1) return model[s]
+    let selectedRegions = selectedOptions.map(o => o.value).sort()
+    let regions = selectedRegions.map(s => {
+      if (s === 'World') return data
+      if (s.indexOf('|') === -1) return data[s]
 
       let [country, province] = s.split('|')
-      return model[country][province]
+      return data[country][province]
     })
 
     return {
