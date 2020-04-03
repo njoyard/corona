@@ -127,7 +127,7 @@ export default class ApplicationController extends Controller {
 
         for (let province of provinces) {
           let provinceOption = new RegionOption()
-          provinceOption.value = `${country},${province}`
+          provinceOption.value = `${country}|${province}`
           provinceOption.label = province
           provinceOption.level = 2
 
@@ -274,9 +274,9 @@ export default class ApplicationController extends Controller {
 
     let regions = selectedRegions.sort().map(s => {
       if (s === 'World') return model
-      if (s.indexOf(',') === -1) return model[s]
+      if (s.indexOf('|') === -1) return model[s]
 
-      let [country, province] = s.split(',')
+      let [country, province] = s.split('|')
       return model[country][province]
     })
 
@@ -285,7 +285,7 @@ export default class ApplicationController extends Controller {
         let { hue, sat } = getColor(regions.length, i)
         
         return generateDataset(s._total, xField, xLog, yField, yLog, {
-          label: selectedRegions[i],
+          label: selectedRegions[i].replace(/(.*)\|(.*)/, (m, p1, p2) => `${p1} (${p2})`),
           fill: false,
           lineTension: 0,
           borderColor: `hsla(${hue}, ${sat}, 65%, 100%)`,
