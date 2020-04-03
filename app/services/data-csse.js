@@ -1,6 +1,5 @@
 import Service from '@ember/service';
 import fetchText from 'corona/utils/fetch-text';
-import { hash } from 'rsvp';
 
 function parseCSV(csv) {
   return csv.split('\n')
@@ -14,6 +13,27 @@ function parseCSV(csv) {
 function parseDate(date) {
   let [m, d, y] = date.split('/').map(x => Number(x) < 10 ? `0${x}` : x)
   return Number(new Date(`20${y}-${m}-${d}`))
+}
+
+function parseLines(lines, dates, data, key) {
+  for (let [province, country, ...counts] of lines) {
+    if (!province) province = 'Mainland'
+    if (!(country in data)) data[country] = {}
+    if (!(province in data[country])) data[country][province] = { _total: [] }
+
+    counts.forEach((count, index) => {
+      let date = dates[index]
+
+      let existing = data[country][province]._total.find(p => p.date === date)
+
+      if (!existing) {
+        existing = { date, confirmed: 0, deceased: 0 }
+        data[country][province]._total.push(existing)
+      }
+
+      existing[key] = Number(count)
+    })
+  }
 }
 
 function totalize(data) {
@@ -61,63 +81,86 @@ function derive(data) {
   }
 }
 
-
 export default class DataCeseService extends Service {
-  globalDeathsURL = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv';
-  globalConfirmedURL = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv';
+  getURL(type, scope) {
+    return `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${type}_${scope}.csv`
+  }
 
   async data() {
-    let { confirmed, deaths } = await hash({
-      confirmed: fetchText(this.globalConfirmedURL),
-      deaths: fetchText(this.globalDeathsURL)
-    })
+    let [
+      confirmedGlobalLines,
+      deathsGlobalLines,
+      confirmedUSLines,
+      deathsUSLines
+    ] = (await Promise.all([
+      fetchText(this.getURL('confirmed', 'global')),
+      fetchText(this.getURL('deaths', 'global')),
+      fetchText(this.getURL('confirmed', 'US')),
+      fetchText(this.getURL('deaths', 'US'))
+    ])).map(parseCSV)
 
-    let confirmedCSVLines = parseCSV(confirmed)
-    let deathsCSVLines = parseCSV(deaths)
-    
-    let confirmedDates = confirmedCSVLines.shift().slice(4).map(parseDate)
-    let deathsDates = deathsCSVLines.shift().slice(4).map(parseDate)
+    let confirmedGlobalDates = confirmedGlobalLines.shift().slice(4).map(parseDate)
+    let deathsGlobalDates = deathsGlobalLines.shift().slice(4).map(parseDate)
+    let confirmedUSDates = confirmedUSLines.shift().slice(11).map(parseDate)
+    let deathsUSDates = deathsUSLines.shift().slice(12).map(parseDate)
 
-    let data = {}
+    let globalData = {}
 
-    for (let [province, country, , , ...counts] of confirmedCSVLines) {
-      if (!province) province = 'Mainland'
+    parseLines(
+      confirmedGlobalLines
+        .map(([province, country, , , ...counts]) => [province, country, ...counts])
+        .filter(([, country]) => country !== 'US'),
+      confirmedGlobalDates,
+      globalData,
+      'confirmed'
+    )
 
-      if (!(country in data)) data[country] = {}
-      if (!(province in data[country])) data[country][province] = {}
+    parseLines(
+      deathsGlobalLines
+        .map(([province, country, , , ...counts]) => [province, country, ...counts])
+        .filter(([, country]) => country !== 'US'),
+      deathsGlobalDates,
+      globalData,
+      'deceased'
+    )
 
-      data[country][province]._total = counts.map((count, index) => { return {
-        date: confirmedDates[index],
-        confirmed: Number(count),
-        deceased: 0
-      }})
-    }
+    let usaData = {}
 
-    for (let [province, country, , , ...counts] of deathsCSVLines) {
-      if (!province) province = 'Mainland'
+    parseLines(
+      confirmedUSLines
+        .map(([, , , , , county, state, , , , , ...counts]) => [county, state, ...counts]),
+      confirmedUSDates,
+      usaData,
+      'confirmed'
+    )
 
-      if (!(country in data)) data[country] = {}
-      if (!(province in data[country])) data[country][province] = {}
+    parseLines(
+      deathsUSLines
+        .map(([, , , , , county, state, , , , , , ...counts]) => [county, state, ...counts]),
+      deathsUSDates,
+      usaData,
+      'deceased'
+    )
 
-      counts.forEach((count, index) => {
-        let date = deathsDates[index]
-        let existing = data[country][province]._total.find(p => p.date === date)
+    globalData.USA = usaData
 
-        if (existing) {
-          existing.deceased = Number(count)
-        } else {
-          data[country][province]._total.push({
-            date,
-            confirmed: 0,
-            deceased: Number(count)
-          })
+    totalize(globalData)
+
+    // Drop city data
+    for (let country in globalData) {
+      if (country === '_total') continue
+
+      for (let province in globalData[country]) {
+        if (province === '_total') continue
+
+        for (let city in globalData[country][province]) {
+          if (city !== '_total') delete globalData[country][province][city]
         }
-      })
+      }
     }
 
-    totalize(data)
-    derive(data)
+    derive(globalData)
 
-    return data
+    return globalData
   }
 }
