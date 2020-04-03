@@ -6,6 +6,8 @@ import env from "corona/config/environment";
 
 const { buildID, buildDate } = env.APP;
 
+const LEGEND_LIMIT = 20;
+
 function generateDataset(source, xField, xLog, yField, yLog, options = {}) {
   // Remove zeroes for log scales
   if (xLog) {
@@ -87,6 +89,10 @@ export default class ApplicationController extends Controller {
     } else {
       this.selectedOptions.removeObject(option)
     }
+
+    if (this.selectedOptions.length > LEGEND_LIMIT) {
+      this.showLegend = false
+    }
   }
 
   @action
@@ -104,6 +110,10 @@ export default class ApplicationController extends Controller {
           this.selectedOptions.removeObject(child)
         }
       }
+    }
+
+    if (this.selectedOptions.length > LEGEND_LIMIT) {
+      this.showLegend = false
     }
   }
 
