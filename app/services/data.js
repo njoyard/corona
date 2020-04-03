@@ -65,33 +65,61 @@ class RegionOption {
 
 class DataSet {
   @tracked selectedOptions;
+  @tracked rootOption;
+  @tracked regionOptions;
+  @tracked selectedOptions;
 }
 
 export default class DataService extends Service {
   @service dataCsse;
-  
-  get source() {
-    return this.dataCsse
-  }
 
-  async data(updateState, selected = ['World']) {
-    let sourceData = await this.source.data(updateState)
+  datasets = {
+    'csse-us': {
+      title: 'CSSE (United States only)',
+      us: true,
+      world: false,
+      deep: false
+    },
+    'csse-global': {
+      title: 'CSSE (Global)',
+      us: false,
+      world: true,
+      deep: true
+    },
+    'csse-global-flat': {
+      title: 'CSSE (Global, simplified)',
+      us: false,
+      world: true,
+      deep: false,
+      limit: 100
+    }
+  };
+
+  @tracked dataset = 'csse-global-flat'
+
+  async data(updateState) {
+    let { dataCsse, dataset, datasets } = this
+    let options = datasets[dataset]
+
+    let sourceData = await this.dataCsse.data(updateState, options)
+    let root = options.world ? 'World' : 'USA'
+    let selected = [root]
 
     updateState('building region options')
 
     let data = await delay(() => {
-      let worldOption = new RegionOption('World', 'World', selected.indexOf('World') !== -1)
-      worldOption.saturation = 0
-      worldOption.lightness = 30
+      let rootOption = new RegionOption(root, root, selected.indexOf(root) !== -1)
+      rootOption.saturation = 0
+      rootOption.lightness = 30
 
-      let options = [worldOption]
+      let options = [rootOption]
 
       let countries = Object.keys(sourceData).filter(c => c !== '_total').sort()
       for (let country of countries) {
         let countryOption = new RegionOption(country, country, selected.indexOf(country) !== -1, 1)
 
         options.push(countryOption)
-        worldOption.addChild(countryOption)
+        rootOption.addChild(countryOption)
 
         if (Object.keys(sourceData[country]).length > 2) {
           let provinces = Object.keys(sourceData[country]).filter(p => p !== '_total').sort()
@@ -112,7 +140,7 @@ export default class DataService extends Service {
       let dataset = new DataSet()
 
       dataset.data = sourceData
-      dataset.worldOption = worldOption
+      dataset.rootOption = rootOption
       dataset.regionOptions = A(options)
       dataset.selectedOptions = A(options.filter(o => o.selected))
 

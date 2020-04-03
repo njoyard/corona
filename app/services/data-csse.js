@@ -62,6 +62,7 @@ function totalize(data) {
   }
 
   data._total = total
+  data._total.sortBy('date')
 }
 
 function derive(data) {
@@ -70,8 +71,6 @@ function derive(data) {
       derive(data[region])
     }
   }
-
-  data._total.sortBy('date')
 
   let prev = { confirmed: 0, deceased: 0 }
   for (let point of data._total) {
@@ -87,7 +86,7 @@ export default class DataCeseService extends Service {
     return `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${type}_${scope}.csv`
   }
 
-  async data(updateState) {
+  async data(updateState, { us, world, deep, limit }) {
     updateState('downloading CSSE data')
 
     let [
@@ -96,16 +95,16 @@ export default class DataCeseService extends Service {
       confirmedUSLines,
       deathsUSLines
     ] = (await Promise.all([
-      fetchText(this.getURL('confirmed', 'global')),
-      fetchText(this.getURL('deaths', 'global')),
-      fetchText(this.getURL('confirmed', 'US')),
-      fetchText(this.getURL('deaths', 'US'))
+      world ? fetchText(this.getURL('confirmed', 'global')) : Promise.resolve(''),
+      world ? fetchText(this.getURL('deaths', 'global')) : Promise.resolve(''),
+      us ? fetchText(this.getURL('confirmed', 'US')) : Promise.resolve(''),
+      us ? fetchText(this.getURL('deaths', 'US')) : Promise.resolve('')
     ])).map(parseCSV)
 
-    let confirmedGlobalDates = confirmedGlobalLines.shift().slice(4).map(parseDate)
-    let deathsGlobalDates = deathsGlobalLines.shift().slice(4).map(parseDate)
-    let confirmedUSDates = confirmedUSLines.shift().slice(11).map(parseDate)
-    let deathsUSDates = deathsUSLines.shift().slice(12).map(parseDate)
+    let confirmedGlobalDates = world && confirmedGlobalLines.shift().slice(4).map(parseDate)
+    let deathsGlobalDates = world && deathsGlobalLines.shift().slice(4).map(parseDate)
+    let confirmedUSDates = us && confirmedUSLines.shift().slice(11).map(parseDate)
+    let deathsUSDates = us && deathsUSLines.shift().slice(12).map(parseDate)
 
     let globalData = {}
     let usaData = {}
@@ -113,58 +112,69 @@ export default class DataCeseService extends Service {
     updateState('parsing CSSE data')
 
     await delay(() => {
-      parseLines(
-        confirmedGlobalLines
-          .map(([province, country, , , ...counts]) => [province, country, ...counts])
-          .filter(([, country]) => country !== 'US'),
-        confirmedGlobalDates,
-        globalData,
-        'confirmed'
-      )
+      if (world) {
+        parseLines(
+          confirmedGlobalLines
+            .map(([province, country, , , ...counts]) => [province, country, ...counts]),
+          confirmedGlobalDates,
+          globalData,
+          'confirmed'
+        )
 
-      parseLines(
-        deathsGlobalLines
-          .map(([province, country, , , ...counts]) => [province, country, ...counts])
-          .filter(([, country]) => country !== 'US'),
-        deathsGlobalDates,
-        globalData,
-        'deceased'
-      )
+        parseLines(
+          deathsGlobalLines
+            .map(([province, country, , , ...counts]) => [province, country, ...counts]),
+          deathsGlobalDates,
+          globalData,
+          'deceased'
+        )
+      }
 
-      parseLines(
-        confirmedUSLines
-          .map(([, , , , , county, state, , , , , ...counts]) => [county, state, ...counts]),
-        confirmedUSDates,
-        usaData,
-        'confirmed'
-      )
+      if (us) {
+        parseLines(
+          confirmedUSLines
+            .map(([, , , , , county, state, , , , , ...counts]) => [county, state, ...counts]),
+          confirmedUSDates,
+          usaData,
+          'confirmed'
+        )
 
-      parseLines(
-        deathsUSLines
-          .map(([, , , , , county, state, , , , , , ...counts]) => [county, state, ...counts]),
-        deathsUSDates,
-        usaData,
-        'deceased'
-      )
+        parseLines(
+          deathsUSLines
+            .map(([, , , , , county, state, , , , , , ...counts]) => [county, state, ...counts]),
+          deathsUSDates,
+          usaData,
+          'deceased'
+        )
+      }
     })
 
-    globalData.USA = usaData
+    if (world && us) {
+      globalData.USA = usaData
+    } else if (us) {
+      globalData = usaData
+    }
 
-    updateState('computing totals')
+    updateState('sorting and computing totals')
 
     await delay(() => {
       totalize(globalData)
 
-      // Drop city data
+      // Drop county data
       for (let country in globalData) {
         if (country === '_total') continue
 
         for (let province in globalData[country]) {
           if (province === '_total') continue
 
-          for (let city in globalData[country][province]) {
-            if (city !== '_total') delete globalData[country][province][city]
+          if (!deep) {
+            delete globalData[country][province]
           }
+        }
+
+        if (limit) {
+          let points = globalData[country]._total
+          if (points[points.length - 1].confirmed < limit) delete globalData[country]
         }
       }
     })

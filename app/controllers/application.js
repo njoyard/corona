@@ -69,8 +69,8 @@ export default class ApplicationController extends Controller {
     return this.model.data
   }
 
-  get worldOption() {
-    return this.model.worldOption
+  get rootOption() {
+    return this.model.rootOption
   }
 
   get regionOptions() {
@@ -125,8 +125,8 @@ export default class ApplicationController extends Controller {
     }
     this.selectedOptions.clear()
 
-    this.worldOption.selected = true
-    this.selectedOptions.pushObject(this.worldOption)
+    this.rootOption.selected = true
+    this.selectedOptions.pushObject(this.rootOption)
   }
 
   get hasSelection() {
@@ -242,7 +242,8 @@ export default class ApplicationController extends Controller {
       xSelection, xLog,
       ySelection, yLog, yChange,
       data,
-      selectedOptions
+      selectedOptions,
+      rootOption
     } = this
 
     let xField = xSelection
@@ -253,7 +254,7 @@ export default class ApplicationController extends Controller {
     let regions = selectedRegions.map(s => {
       let v = s.value
 
-      if (v === 'World') return data
+      if (v === rootOption.value) return data
       if (v.indexOf('|') === -1) return data[v]
 
       let [country, province] = v.split('|')
