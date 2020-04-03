@@ -3,11 +3,11 @@ import { inject as service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import { A } from '@ember/array';
 
-const MIN_LIGHTNESS = 50;
-const MAX_LIGHTNESS = 80;
-const LIGHTNESS_LEVELS = 4;
+const MIN_SATURATION = 25;
+const MAX_SATURATION = 90;
+const SATURATION_LEVELS = 4;
 
-const HUE_VARIANT = 5;
+const HUE_VARIANT = 1;
 
 let crc32 = (function() {
     let table = []
@@ -50,7 +50,7 @@ class RegionOption {
 
     let crc = crc32(value)
     this.hue = Math.floor(crc / HUE_VARIANT) % 360
-    this.saturation = MIN_LIGHTNESS + (Math.floor(crc / (360 * HUE_VARIANT)) % LIGHTNESS_LEVELS) * (MAX_LIGHTNESS - MIN_LIGHTNESS) / LIGHTNESS_LEVELS
+    this.saturation = MIN_SATURATION + (Math.floor(crc / (360 * HUE_VARIANT)) % SATURATION_LEVELS) * (MAX_SATURATION - MIN_SATURATION) / SATURATION_LEVELS
   }
 
   addChild(child) {

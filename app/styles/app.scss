@@ -62,3 +62,10 @@ md-fab-speed-dial {
 .md-dialog-content a {
   color: paper-color($primary, '300');
 }
+
+.swatch {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: middle;
+}

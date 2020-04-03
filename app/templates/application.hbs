@@ -236,7 +236,10 @@
 
         {{#each this.filteredRegions as |option|}}
           <PaperItem as |controls|>
-            <p class="region-option-level-{{option.level}}">{{option.label}}</p>
+            <p class="region-option-level-{{option.level}}">
+              <Swatch @color={{option}} />
+              {{option.label}}
+            </p>
             <div class="md-secondary-container">
               {{#if option.hasChildren}}
                 <controls.button
