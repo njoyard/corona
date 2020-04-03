@@ -40,24 +40,6 @@ function generateDataset(source, xField, xLog, yField, yLog, options = {}) {
   }, options)
 }
 
-function getColor(count, index) {
-  if (count <= 20) {
-    return {
-      hue: index * 360 / count,
-      sat: '75%'
-    }
-  } else {
-    let cnt = Math.ceil(count / 2)
-    let idx = Math.floor(index / 2)
-    let desaturate = index % 2
-
-    return {
-      hue: idx * 360 / cnt,
-      sat: desaturate ? '25%' : '75%'
-    }
-  }
-}
-
 function formatYTick(number) {
   if (number >= 1000000) return `${number/1000000}M`
   if (number >= 1000) return `${number/1000}k`
@@ -264,16 +246,16 @@ export default class ApplicationController extends Controller {
 
     return {
       datasets: regions.map((s, i) => {
-        let { hue, sat } = getColor(regions.length, i)
+        let { hue, saturation, lightness } = selectedOptions[i]
         
         return generateDataset(s._total, xField, xLog, yField, yLog, {
           label: selectedRegions[i].replace(/(.*)\|(.*)/, (m, p1, p2) => `${p1} (${p2})`),
           fill: false,
           lineTension: 0,
-          borderColor: `hsla(${hue}, ${sat}, 65%, 100%)`,
-          backgroundColor: `hsla(${hue}, ${sat}, 65%, 75%)`,
-          hoverBorderColor: `hsla(${hue}, ${sat}, 65%, 100%)`,
-          hoverBackgroundColor: `hsla(${hue}, ${sat}, 65%, 75%)`
+          borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+          backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 75%)`,
+          hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+          hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 75%)`
         })
       })
     }
