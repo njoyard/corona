@@ -183,7 +183,9 @@ export default class ApplicationController extends Controller {
     return {
       responsive: true,
       maintainAspectRatio: false,
-      animation: { duration: 500 },
+      animation: { duration: 0 },
+      hover: { animationDuration: 0 },
+      responsiveAnimationDuration: 0,
       legend: {
         display: showLegend,
         position: 'bottom'
