@@ -7,7 +7,8 @@ module('Integration | Component | swatch', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function(assert) {
-    await render(hbs`<Swatch />`);
+    this.set('color', {})
+    await render(hbs`<Swatch @color={{color}} />`);
 
     assert.equal(this.element.textContent.trim(), '');
   });
