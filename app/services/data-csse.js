@@ -4,7 +4,7 @@ import delay from 'corona/utils/delay'
 
 function parseCSV(csv) {
   return csv
-    .split('\n')
+    .split(/\r\n|\r|\n/g)
     .filter(Boolean)
     .map((l) =>
       l
