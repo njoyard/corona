@@ -211,6 +211,9 @@ export default class ApplicationController extends Controller {
               this.selectedOptions.sortBy('value')[item.datasetIndex]
             )
           }
+        },
+        labels: {
+          boxWidth: 12
         }
       },
       tooltips: {
