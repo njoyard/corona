@@ -204,7 +204,14 @@ export default class ApplicationController extends Controller {
       responsiveAnimationDuration: 0,
       legend: {
         display: showLegend,
-        position: 'bottom'
+        position: 'bottom',
+        onClick: (e, item) => {
+          if (this.selectedOptions.length > 1) {
+            this.toggleRegion(
+              this.selectedOptions.sortBy('value')[item.datasetIndex]
+            )
+          }
+        }
       },
       tooltips: {
         mode: 'nearest',
