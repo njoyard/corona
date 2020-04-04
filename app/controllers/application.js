@@ -228,6 +228,7 @@ export default class ApplicationController extends Controller {
       },
       tooltips: {
         mode: 'nearest',
+        position: 'nearest',
         axis: xSelection === 'confirmed' ? null : 'x',
         intersect: false,
         callbacks: {
@@ -313,7 +314,9 @@ export default class ApplicationController extends Controller {
           fill: false,
           lineTension: 0,
           borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-          backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
+          backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+          hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+          hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
         })
       })
     }
