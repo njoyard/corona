@@ -10,6 +10,8 @@ const SATURATION_LEVELS = 4
 
 const HUE_VARIANT = 1
 
+const DEFAULT_SELECTED_REGIONS = 5
+
 let crc32 = (function () {
   let table = []
   let c
@@ -44,10 +46,9 @@ class RegionOption {
 
   children = A([])
 
-  constructor(value, label, selected = false, level = 0) {
+  constructor(value, label, level = 0) {
     this.value = value
     this.label = label
-    this.selected = selected
     this.level = level
 
     let crc = crc32(value)
@@ -134,16 +135,11 @@ export default class DataService extends Service {
       this.loadingState = state
     }, options)
     let root = options.world ? 'World' : 'USA'
-    let selected = [root]
 
     this.loadingState = 'building region options'
 
     let data = await delay(() => {
-      let rootOption = new RegionOption(
-        root,
-        root,
-        selected.indexOf(root) !== -1
-      )
+      let rootOption = new RegionOption(root, root)
       rootOption.saturation = 0
       rootOption.lightness = 30
       rootOption.setStats(sourceData)
@@ -152,12 +148,7 @@ export default class DataService extends Service {
 
       let countries = Object.keys(sourceData).filter((c) => c !== '_total')
       for (let country of countries) {
-        let countryOption = new RegionOption(
-          country,
-          country,
-          selected.indexOf(country) !== -1,
-          1
-        )
+        let countryOption = new RegionOption(country, country, 1)
 
         countryOption.setStats(sourceData[country])
 
@@ -177,7 +168,6 @@ export default class DataService extends Service {
             let provinceOption = new RegionOption(
               `${country}|${province}`,
               province,
-              selected.indexOf(`${country}|${province}`) !== -1,
               2
             )
             provinceOption.setStats(sourceData[country][province])
@@ -186,6 +176,13 @@ export default class DataService extends Service {
             options.push(provinceOption)
           }
         }
+      }
+
+      for (let country of rootOption.children
+        .sortBy('deceased')
+        .reverse()
+        .slice(0, DEFAULT_SELECTED_REGIONS)) {
+        country.selected = true
       }
 
       let dataset = new DataSet()
