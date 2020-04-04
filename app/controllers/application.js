@@ -25,26 +25,36 @@ function generateDataset(source, xField, xLog, yField, yLog, options = {}) {
     source = source.slice(firstIndex)
   }
 
-  return Object.assign(
-    {
-      data: source.map((point, index) => {
-        let datapoint = {
-          y: point[yField]
-        }
+  let data = source.map((point, index) => {
+    let datapoint = {
+      y: point[yField]
+    }
 
-        if (xField === 'date') {
-          datapoint.t = new Date(point.date)
-        } else if (xField === 'start') {
-          datapoint.x = index
-        } else {
-          datapoint.x = point[xField]
-        }
+    if (xField === 'date') {
+      datapoint.t = new Date(point.date)
+    } else if (xField === 'start') {
+      datapoint.x = index
+    } else {
+      datapoint.x = point[xField]
+    }
 
-        return datapoint
-      })
-    },
-    options
-  )
+    return datapoint
+  })
+
+  if (xField === 'confirmed') {
+    // Remove duplicate points
+    data = data.reduce((points, point) => {
+      let lastPoint = points[points.length - 1]
+
+      if (!lastPoint || lastPoint.x !== point.x || lastPoint.y !== point.y) {
+        points.push(point)
+      }
+
+      return points
+    }, [])
+  }
+
+  return Object.assign({ data }, options)
 }
 
 function formatYTick(number) {
