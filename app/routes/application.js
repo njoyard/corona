@@ -1,14 +1,14 @@
-import Route from '@ember/routing/route';
-import { inject as service } from '@ember/service';
+import Route from '@ember/routing/route'
+import { inject as service } from '@ember/service'
 
 export default class ApplicationRoute extends Route {
-  @service data;
+  @service data
 
   queryParams = {
     dataset: {
       refreshModel: true
     }
-  };
+  }
 
   model(params) {
     let loadingController = this.controllerFor('application-loading')

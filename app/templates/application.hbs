@@ -89,7 +89,7 @@
                 @secondary={{true}}
                 @raised={{true}}
                 @disabled={{eq key this.dataset}}
-                @onClick={{fn (mut this.dataset) key}}>
+                @onClick={{fn this.selectDataset key}}>
                 {{#if (eq key this.dataset)}}Current{{else}}Load{{/if}}
               </controls.button>
             </div>

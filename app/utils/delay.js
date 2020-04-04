@@ -3,7 +3,7 @@ export default function delay(fn, timeout = 0) {
     setTimeout(() => {
       try {
         resolve(fn())
-      } catch(e) {
+      } catch (e) {
         reject(e)
       }
     }, timeout)
