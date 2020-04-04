@@ -91,6 +91,7 @@ export default class ApplicationController extends Controller {
   }
 
   @tracked regionFilter = ''
+  @tracked regionSortBy = '-deceased'
 
   get rootOption() {
     return this.model.rootOption
@@ -154,17 +155,6 @@ export default class ApplicationController extends Controller {
 
   get hasSelection() {
     return this.selectedOptions.length > 0
-  }
-
-  get filteredRegions() {
-    let { regionOptions, regionFilter } = this
-
-    if (!regionFilter) return regionOptions
-
-    let filter = regionFilter.toLowerCase()
-    return regionOptions.filter(
-      (o) => o.value.toLowerCase().indexOf(filter) !== -1
-    )
   }
 
   @tracked xStartOffset = START_OFFSET

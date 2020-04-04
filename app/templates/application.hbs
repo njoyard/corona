@@ -264,7 +264,7 @@
         <PaperItem>
           <p>
             <PaperInput
-              @label="Filter regions"
+              @label="Find regions"
               @value={{this.regionFilter}}
               @onChange={{fn (mut this.regionFilter)}} />
           </p>
@@ -293,33 +293,38 @@
           </div>
         </PaperItem>
 
-        {{#each this.filteredRegions as |option|}}
-          <PaperItem as |controls|>
-            <small class="region-option-level-{{option.level}}">
-              <Swatch @color={{option}} />
-              {{option.label}}
-            </small>
-            <div class="md-secondary-container">
-              {{#if option.hasChildren}}
-                <controls.button
-                  @secondary={{true}}
-                  @iconButton={{true}}
-                  @onClick={{fn this.toggleChildren option}} >
-                  <PaperIcon @icon="done_all">
-                    <PaperTooltip @position="top">
-                      Toggle all {{#if (eq option.level 0)}}countries{{else}}provinces of {{option.label}}{{/if}}
-                    </PaperTooltip>
-                  </PaperIcon>
-                </controls.button>
-              {{/if}}
-              <controls.checkbox
-                @value={{option.selected}}
-                @secondary={{true}}
-                @onChange={{fn this.toggleRegion option}} />
-            </div>
-          </PaperItem>
-        {{/each}}
-        
+        <PaperItem>
+          <p>
+            <PaperTabs
+              class="sorting-tabs"
+              @selected={{this.regionSortBy}}
+              @onChange={{fn (mut this.regionSortBy)}}
+              @stretch={{false}}
+              @primary={{false}}
+              as |tabs|>
+              <tabs.tab @disabled={{true}}>
+                Sort by
+              </tabs.tab>
+              <tabs.tab @value="-deceased">
+                Deaths
+              </tabs.tab>
+              <tabs.tab @value="-confirmed">
+                Cases
+              </tabs.tab>
+              <tabs.tab @value="label">
+                Name
+              </tabs.tab>
+            </PaperTabs>
+          </p>
+        </PaperItem>
+
+        <RegionList
+          @options={{array this.rootOption}}
+          @onToggle={{this.toggleRegion}}
+          @onToggleChildren={{this.toggleChildren}}
+          @sortBy={{this.regionSortBy}}
+          @filterBy="value"
+          @filter={{this.regionFilter}} />
       </PaperList>
     </PaperContent>
   </PaperSidenav>

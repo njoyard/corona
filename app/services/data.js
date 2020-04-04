@@ -35,6 +35,8 @@ class RegionOption {
   @tracked value
   @tracked label
   @tracked level = 0
+  @tracked confirmed
+  @tracked deceased
 
   @tracked hue
   @tracked saturation
@@ -63,6 +65,14 @@ class RegionOption {
 
   get hasChildren() {
     return this.children.length > 0
+  }
+
+  setStats(data) {
+    let points = data._total
+    let lastPoint = points[points.length - 1]
+
+    this.confirmed = lastPoint.confirmed
+    this.deceased = lastPoint.deceased
   }
 }
 
@@ -136,12 +146,11 @@ export default class DataService extends Service {
       )
       rootOption.saturation = 0
       rootOption.lightness = 30
+      rootOption.setStats(sourceData)
 
       let options = [rootOption]
 
-      let countries = Object.keys(sourceData)
-        .filter((c) => c !== '_total')
-        .sort()
+      let countries = Object.keys(sourceData).filter((c) => c !== '_total')
       for (let country of countries) {
         let countryOption = new RegionOption(
           country,
@@ -150,13 +159,15 @@ export default class DataService extends Service {
           1
         )
 
+        countryOption.setStats(sourceData[country])
+
         options.push(countryOption)
         rootOption.addChild(countryOption)
 
         if (Object.keys(sourceData[country]).length > 2) {
-          let provinces = Object.keys(sourceData[country])
-            .filter((p) => p !== '_total')
-            .sort()
+          let provinces = Object.keys(sourceData[country]).filter(
+            (p) => p !== '_total'
+          )
           if (provinces.indexOf('Mainland') !== -1) {
             provinces = provinces.filter((p) => p !== 'Mainland')
             provinces.unshift('Mainland')
@@ -169,6 +180,7 @@ export default class DataService extends Service {
               selected.indexOf(`${country}|${province}`) !== -1,
               2
             )
+            provinceOption.setStats(sourceData[country][province])
 
             countryOption.addChild(provinceOption)
             options.push(provinceOption)

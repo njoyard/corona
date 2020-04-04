@@ -1,0 +1,34 @@
+{{#each this.options as |option|}}
+  {{#if (string-contains (get option @filterBy) @filter)}}
+    <PaperItem as |controls|>
+      <small class="region-option-level-{{option.level}}">
+        <Swatch @color={{option}} />
+        {{option.label}}
+      </small>
+      <div class="md-secondary-container">
+        {{#if option.hasChildren}}
+          <controls.button
+            @secondary={{true}}
+            @iconButton={{true}}
+            @onClick={{fn this.toggleChildren option}}>
+            <PaperIcon @icon="done_all" />
+          </controls.button>
+        {{/if}}
+        <controls.checkbox
+          @value={{option.selected}}
+          @secondary={{true}}
+          @onChange={{fn this.toggle option}} />
+      </div>
+    </PaperItem>
+  {{/if}}
+
+  {{#if option.hasChildren}}
+    <RegionList
+      @options={{option.children}}
+      @onToggle={{this.toggle}}
+      @onToggleChildren={{this.toggleChildren}}
+      @sortBy={{@sortBy}}
+      @filterBy={{@filterBy}}
+      @filter={{@filter}} />
+  {{/if}}
+{{/each}}

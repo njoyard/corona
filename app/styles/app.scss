@@ -96,3 +96,16 @@ svg.loading-icon use {
   fill: rgba(63, 81, 181, 1);
   fill: RGB(var(--primary-500));
 }
+
+.sorting-tabs {
+  margin: 6px 0;
+
+  md-tabs-canvas,
+  md-pagination-wrapper {
+    height: 24px;
+  }
+
+  .md-tab {
+    padding: 0 4px;
+  }
+}
