@@ -15,15 +15,6 @@ $switch-thumb-size: 16px;
   display: inline-block;
 }
 
-.backdrop {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  opacity: 0.25;
-  filter: blur(0.25rem);
-}
-
 .site-nav-container {
   position: absolute;
   top: 0;
