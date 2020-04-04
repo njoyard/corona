@@ -76,6 +76,9 @@ class DataSet {
 export default class DataService extends Service {
   @service dataCsse
 
+  @tracked reloading = false
+  @tracked loadingState = null
+
   datasets = {
     'csse-global-flat': {
       title: 'CSSE (Global, simplified)',
@@ -113,15 +116,17 @@ export default class DataService extends Service {
 
   defaultDataset = 'csse-global-flat'
 
-  async data(dataset, updateState) {
+  async data(dataset) {
     let { dataCsse, datasets, defaultDataset } = this
     let options = datasets[dataset] || datasets[defaultDataset]
 
-    let sourceData = await dataCsse.data(updateState, options)
+    let sourceData = await dataCsse.data((state) => {
+      this.loadingState = state
+    }, options)
     let root = options.world ? 'World' : 'USA'
     let selected = [root]
 
-    updateState('building region options')
+    this.loadingState = 'building region options'
 
     let data = await delay(() => {
       let rootOption = new RegionOption(
@@ -181,7 +186,7 @@ export default class DataService extends Service {
       return dataset
     })
 
-    updateState('starting application')
+    this.loadingState = 'starting application'
 
     await delay(() => {})
 

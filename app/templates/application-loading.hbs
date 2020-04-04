@@ -4,9 +4,16 @@
       <use xlink:href="assets/corona.svg#corona"></use>
     </svg>
 
-    <h1>Starting up...</h1>
-    {{#if this.loadingState}}
-      <i>{{this.loadingState}}</i>
+    <h1>
+      {{#if this.data.reloading}}
+        Loading new dataset...
+      {{else}}
+        Starting up...
+      {{/if}}
+    </h1>
+
+    {{#if this.data.loadingState}}
+      <i>{{this.data.loadingState}}</i>
     {{/if}}
   </div>
 </div>

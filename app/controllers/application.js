@@ -62,6 +62,7 @@ export default class ApplicationController extends Controller {
 
   @action
   selectDataset(ds) {
+    this.data.reloading = true
     this.showSourcesDialog = false
     this.dataset = ds
   }
