@@ -74,34 +74,44 @@ export default class DataService extends Service {
   @service dataCsse;
 
   datasets = {
-    'csse-us': {
-      title: 'CSSE (United States only)',
-      us: true,
-      world: false,
-      deep: false
-    },
-    'csse-global': {
-      title: 'CSSE (Global)',
-      us: false,
-      world: true,
-      deep: true
-    },
     'csse-global-flat': {
       title: 'CSSE (Global, simplified)',
+      description: 'Totals for each country, excluding countries with less than 100 confirmed cases to date.',
       us: false,
       world: true,
       deep: false,
       limit: 100
+    },
+    'csse-global': {
+      title: 'CSSE (Global)',
+      description: 'Totals for each country, including counts for each province for selected countries.',
+      us: false,
+      world: true,
+      deep: true
+    },
+    'csse-us': {
+      title: 'CSSE (United States only)',
+      description: 'United States data with counts for each state.',
+      us: true,
+      world: false,
+      deep: false
+    },
+    'csse-global-us': {
+      title: 'CSSE (Full)',
+      description: 'Complete dataset, including country provinces and US states. Will need a bit more time to load than other datasets.',
+      us: true,
+      world: true,
+      deep: true
     }
   };
 
-  @tracked dataset = 'csse-global-flat'
+  defaultDataset = 'csse-global-flat'
 
-  async data(updateState) {
-    let { dataCsse, dataset, datasets } = this
-    let options = datasets[dataset]
+  async data(dataset, updateState) {
+    let { dataCsse, datasets, defaultDataset } = this
+    let options = datasets[dataset] || datasets[defaultDataset]
 
-    let sourceData = await this.dataCsse.data(updateState, options)
+    let sourceData = await dataCsse.data(updateState, options)
     let root = options.world ? 'World' : 'USA'
     let selected = [root]
 

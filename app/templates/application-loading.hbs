@@ -1,7 +1,9 @@
 <div class="layout-row layout-fill layout-align-center-center">
   <div class="loading-container">
-    <PaperProgressCircular
-      @diameter={{96}} />
+    <svg class="loading-icon md-spin" viewBox="0 0 64 64">
+      <use xlink:href="assets/corona.svg#corona"></use>
+    </svg>
+
     <h1>Starting up...</h1>
     {{#if this.loadingState}}
       <i>{{this.loadingState}}</i>

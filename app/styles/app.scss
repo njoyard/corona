@@ -1,6 +1,5 @@
 $font-size: 8px;
-$baseline-grid: 4px;
-$app-bar-height: 32px;
+$baseline-grid: 6px;
 $checkbox-width: 16px;
 $radio-width: 16px;
 $switch-width: 30px;
@@ -44,7 +43,7 @@ $switch-thumb-size: 16px;
   margin: 4px 0;
 }
 
-md-fab-speed-dial {
+.buttons {
   position: absolute;
   right: 1rem;
   bottom: 1rem;
@@ -75,4 +74,25 @@ md-fab-speed-dial {
   width: 1rem;
   height: 1rem;
   vertical-align: middle;
+}
+
+svg.toolbar-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: $baseline-grid;
+}
+
+svg.toolbar-icon use {
+  fill: rgba(255, 255, 255, 0.87);
+  fill: RGB(var(--primary-500-contrast));
+}
+
+svg.loading-icon {
+  width: 96px;
+  height: 96px;
+}
+
+svg.loading-icon use {
+  fill: rgba(63, 81, 181, 1);
+  fill: RGB(var(--primary-500));
 }

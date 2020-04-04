@@ -1,6 +1,7 @@
 import Controller from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
+import { inject as service } from '@ember/service';
 import moment from 'moment';
 import env from "corona/config/environment";
 
@@ -50,8 +51,13 @@ function formatYTick(number) {
 }
 
 export default class ApplicationController extends Controller {
-  @tracked speedDialOpen = false;
+  @service data;
+
+  queryParams = ['dataset'];
+
+  @tracked dataset = 'csse-global-flat';
   @tracked showAboutDialog = false;
+  @tracked showSourcesDialog = false;
 
   get versionInfo() {
     let info = `This version was built on ${buildDate}`
@@ -64,10 +70,6 @@ export default class ApplicationController extends Controller {
   }
 
   @tracked regionFilter = '';
-
-  get data() {
-    return this.model.data
-  }
 
   get rootOption() {
     return this.model.rootOption
@@ -241,7 +243,7 @@ export default class ApplicationController extends Controller {
     let {
       xSelection, xLog,
       ySelection, yLog, yChange,
-      data,
+      model: { data },
       selectedOptions,
       rootOption
     } = this

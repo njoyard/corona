@@ -27,7 +27,7 @@
         The app uses the latest version available at the time of loading. Just refresh the page to get updated data.
       </p>
       <p>
-        Finally, please note that this data uses officially reported figures, and is only indicative of the actual situation.  They come from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
+        Finally, please note that this data uses officially reported figures, and is only indicative of the actual situation.  It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
       </p>
       <h3>License and developer info</h3>
       <p>
@@ -37,9 +37,65 @@
         Made with <PaperIcon @icon="favorite" /> using <a target="_blank" rel="noopener noreferrer" href="//emberjs.com">EmberJS</a>, <a target="_blank" rel="noopener noreferrer" href="//miguelcobain.github.io/ember-paper">Ember Paper</a> and <a target="_blank" rel="noopener noreferrer" href="//chartjs.org">ChartJS</a>.
       </p>
       <p>
+        Coronavirus icon courtesy of <a target="_blank" rel="noopener noreferrer" href="//www.iconfinder.com/becris">Becris</a>, shared under the <a target="_blank" rel="noopener noreferrer" href="//creativecommons.org/licenses/by-sa/3.0/">Creative Commons CC-BY-SA version 3.0 license</a>.
+      </p>
+      <p>
         {{this.versionInfo}}
       </p>
       <h3>Please stay home.</h3>
+    </PaperDialogContent>
+  </PaperDialog>
+{{/if}}
+
+{{#if this.showSourcesDialog}}
+  <PaperDialog
+    class="flex-50"
+    @onClose={{fn (mut this.showSourcesDialog) false}}
+    @clickOutsideToClose={{true}} >
+    <PaperToolbar>
+      <PaperToolbarTools>
+        <h2>Switch data sources</h2>
+        <span class="flex"></span>
+        <PaperButton
+          @iconButton={{true}}
+          @onClick={{fn (mut this.showSourcesDialog) false}}>
+          <PaperIcon @icon="close" />
+        </PaperButton>
+      </PaperToolbarTools>
+    </PaperToolbar>
+
+    <PaperDialogContent>
+      <h3>Available data sources</h3>
+
+      <p>
+        Data comes from the <a target="_blank" rel="noopener noreferrer" href="//systems.jhu.edu/">Center for Systems Science and Engineering (CSSE)</a> at Johns Hopkins University.  It is <a target="_blank" rel="noopener noreferrer" href="//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series">released openly</a> and updated daily.  They used it to build a <a target="_blank" rel="noopener noreferrer" href="//gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">very nice dashboard</a>, please also check it out.
+      </p>
+      <p>
+        The app uses the latest version available at the time of loading. Just refresh the page to get updated data.
+      </p>
+      <p>
+        Finally, please note that this data uses officially reported figures, and is only indicative of the actual situation.  It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
+      </p>
+
+      <PaperList>
+        {{#each-in this.data.datasets as |key dataset|}}
+          <PaperItem class="md-3-line md-long-text" as |controls|>
+            <div class="md-list-item-text">
+              <h3>{{dataset.title}}</h3>
+              <p>{{dataset.description}}</p>
+            </div>
+            <div class="md-secondary-container">
+              <controls.button
+                @secondary={{true}}
+                @raised={{true}}
+                @disabled={{eq key this.dataset}}
+                @onClick={{fn (mut this.dataset) key}}>
+                {{#if (eq key this.dataset)}}Current{{else}}Load{{/if}}
+              </controls.button>
+            </div>
+          </PaperItem>
+        {{/each-in}}
+      </PaperList>
     </PaperDialogContent>
   </PaperDialog>
 {{/if}}
@@ -72,6 +128,9 @@
 
     <PaperToolbar as |toolbar|>
       <toolbar.tools>
+        <svg class="toolbar-icon" viewBox="0 0 64 64">
+          <use xlink:href="assets/corona.svg#corona"></use>
+        </svg>
         <h1>Covid-19 Charts</h1>
       </toolbar.tools>
     </PaperToolbar>
@@ -279,41 +338,30 @@
   </PaperCard>
 </PaperSidenavContainer>
 
-<PaperSpeedDial
-  @animation="scale"
-  @direction="up"
-  @open={{this.speedDialOpen}}
-  @onToggle={{fn (mut this.speedDialOpen)}}
-  as |dial|>
-  <dial.trigger>
-    <PaperButton @fab={{true}}>
-      <PaperIcon @icon="menu" />
-    </PaperButton>
-  </dial.trigger>
+<div class="buttons">
+  <PaperButton
+    @fab={{true}}
+    @onClick={{fn this.downloadChart}}>
+    <PaperIcon @icon="save_alt">
+      <PaperTooltip @position="top">
+        Download chart as an image
+      </PaperTooltip>
+    </PaperIcon>
+  </PaperButton>
 
-  <dial.actions as |actions|>
-    <actions.action>
-      <PaperButton
-        @mini={{true}}
-        @onClick={{fn this.downloadChart}} >
-        <PaperIcon @icon="save_alt">
-          <PaperTooltip @position="left">
-            Download chart as an image
-          </PaperTooltip>
-        </PaperIcon>
-      </PaperButton>
-    </actions.action>
+  <PaperButton
+    @fab={{true}}
+    @onClick={{fn (mut this.showSourcesDialog)}}>
+    <PaperIcon @icon="list">
+      <PaperTooltip @position="top">
+        Switch data sources
+      </PaperTooltip>
+    </PaperIcon>
+  </PaperButton>
 
-    <actions.action>
-      <PaperButton
-        @mini={{true}}
-        @onClick={{fn (mut this.showAboutDialog)}} >
-        <PaperIcon @icon="help">
-          <PaperTooltip @position="left">
-            About this app
-          </PaperTooltip>
-        </PaperIcon>
-      </PaperButton>
-    </actions.action>
-  </dial.actions>
-</PaperSpeedDial>
+  <PaperButton
+    @fab={{true}}
+    @onClick={{fn (mut this.showAboutDialog)}} >
+    <PaperIcon @icon="help" />
+  </PaperButton>
+</div>
