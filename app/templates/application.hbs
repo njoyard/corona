@@ -192,6 +192,18 @@
           </div>
         </PaperItem>
 
+        {{#if this.yChange}}
+          <PaperItem as |controls|>
+            <small>Moving average (7 day)</small>
+            <div class="md-secondary-container">
+              <controls.switch
+                @secondary={{true}}
+                @value={{this.yMovingAverage}}
+                @onChange={{fn (mut this.yMovingAverage)}} />
+            </div>
+          </PaperItem>
+        {{/if}}
+
         <PaperItem as |controls|>
           <small>Logarithmic scale</small>
           <div class="md-secondary-container">
@@ -345,7 +357,7 @@
           @onToggle={{this.toggleRegion}}
           @onToggleChildren={{this.toggleChildren}}
           @sortBy={{this.regionSortBy}}
-          @filterBy="value"
+          @filterBy="longLabel"
           @filter={{this.regionFilter}}
           @yRatio={{this.yRatio}} />
       </PaperList>

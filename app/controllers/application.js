@@ -22,6 +22,7 @@ export default class ApplicationController extends Controller {
     { ySelection: 'y' },
     { yLog: 'yl' },
     { yChange: 'yc' },
+    { yMovingAverage: 'ya' },
     { yRatio: 'yr' },
     { showLegend: 'l' },
     { stacked: 's' },
@@ -82,6 +83,16 @@ export default class ApplicationController extends Controller {
 
   set yChange(value) {
     this._yChange = value
+  }
+
+  @tracked _yMovingAverage = false
+
+  get yMovingAverage() {
+    return this._yMovingAverage
+  }
+
+  set yMovingAverage(value) {
+    this._yMovingAverage = value
   }
 
   @tracked _yRatio = false
@@ -254,6 +265,7 @@ export default class ApplicationController extends Controller {
       xStartOffset,
       ySelection,
       yChange,
+      yMovingAverage,
       yLog,
       yRatio,
       showLegend,
@@ -274,6 +286,10 @@ export default class ApplicationController extends Controller {
       yLabel = yChange ? 'New confirmed cases' : 'Total confirmed cases'
     } else {
       yLabel = yChange ? 'New deaths' : 'Total deaths'
+    }
+
+    if (yChange && yMovingAverage) {
+      yLabel += ` (7-day moving average)`
     }
 
     if (yRatio) {
@@ -357,13 +373,21 @@ export default class ApplicationController extends Controller {
       ySelection,
       yLog,
       yChange,
+      yMovingAverage,
       yRatio,
       selectedOptions
     } = this
 
     let xField = xSelection
     let yField = ySelection
-    if (yChange) yField = `${yField}Change`
+
+    if (yChange) {
+      if (yMovingAverage) {
+        yField = `${yField}Moving`
+      }
+
+      yField = `${yField}Change`
+    }
 
     return {
       datasets: selectedOptions

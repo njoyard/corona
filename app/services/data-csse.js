@@ -115,6 +115,10 @@ function totalizePopulation(data) {
   }
 }
 
+function avg(array) {
+  return array.reduce((sum, item) => sum + item, 0) / array.length
+}
+
 function derive(data) {
   for (let region in data) {
     if (!region.startsWith('_')) {
@@ -123,9 +127,21 @@ function derive(data) {
   }
 
   let prev = { confirmed: 0, deceased: 0 }
+
+  let confirmedChanges = [0, 0, 0, 0, 0, 0, 0]
+  let deceasedChanges = [0, 0, 0, 0, 0, 0, 0]
+
   for (let point of data._total) {
     point.confirmedChange = point.confirmed - prev.confirmed
     point.deceasedChange = point.deceased - prev.deceased
+
+    confirmedChanges.push(point.confirmedChange)
+    confirmedChanges.shift()
+    point.confirmedMovingChange = avg(confirmedChanges)
+
+    deceasedChanges.push(point.deceasedChange)
+    deceasedChanges.shift()
+    point.deceasedMovingChange = avg(deceasedChanges)
 
     prev = point
   }
