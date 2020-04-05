@@ -2,6 +2,12 @@ import Service from '@ember/service'
 import fetchText from 'corona/utils/fetch-text'
 import delay from 'corona/utils/delay'
 
+const countryReplacements = {
+  US: 'United States',
+  'Taiwan*': 'Taiwan',
+  'Korea, South': 'South Korea'
+}
+
 function parseCSV(csv) {
   return csv
     .split(/\r\n|\r|\n/g)
@@ -44,6 +50,8 @@ function totalize(data) {
   let total = []
 
   for (let region in data) {
+    if (region.startsWith('_')) continue
+
     if (!('_total' in data[region])) {
       totalize(data[region])
     }
@@ -70,7 +78,7 @@ function totalize(data) {
 
 function derive(data) {
   for (let region in data) {
-    if (region !== '_total') {
+    if (!region.startsWith('_')) {
       derive(data[region])
     }
   }
@@ -128,7 +136,9 @@ export default class DataCeseService extends Service {
         parseLines(
           confirmedGlobalLines.map(([province, country, , , ...counts]) => [
             province,
-            country,
+            country in countryReplacements
+              ? countryReplacements[country]
+              : country,
             ...counts
           ]),
           confirmedGlobalDates,
@@ -139,7 +149,9 @@ export default class DataCeseService extends Service {
         parseLines(
           deathsGlobalLines.map(([province, country, , , ...counts]) => [
             province,
-            country,
+            country in countryReplacements
+              ? countryReplacements[country]
+              : country,
             ...counts
           ]),
           deathsGlobalDates,
@@ -178,22 +190,21 @@ export default class DataCeseService extends Service {
     })
 
     if (world && us) {
-      globalData.USA = usaData
+      globalData[countryReplacements.US] = usaData
     } else if (us) {
       globalData = usaData
     }
 
-    updateState('sorting and computing totals')
+    updateState('computing totals')
 
     await delay(() => {
       totalize(globalData)
 
-      // Drop county data
       for (let country in globalData) {
-        if (country === '_total') continue
+        if (country.startsWith('_')) continue
 
         for (let province in globalData[country]) {
-          if (province === '_total') continue
+          if (province.startsWith('_')) continue
 
           if (!deep) {
             delete globalData[country][province]

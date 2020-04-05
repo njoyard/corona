@@ -97,10 +97,6 @@ export default class ApplicationController extends Controller {
     return this.model.rootOption
   }
 
-  get regionOptions() {
-    return this.model.regionOptions
-  }
-
   get selectedOptions() {
     return this.model.selectedOptions
   }
@@ -266,41 +262,18 @@ export default class ApplicationController extends Controller {
   }
 
   get chartData() {
-    let {
-      xSelection,
-      xLog,
-      ySelection,
-      yLog,
-      yChange,
-      model: { data },
-      selectedOptions,
-      rootOption
-    } = this
+    let { xSelection, xLog, ySelection, yLog, yChange, selectedOptions } = this
 
     let xField = xSelection
     let yField = ySelection
     if (yChange) yField = `${yField}Change`
 
-    let selectedRegions = selectedOptions.sortBy('value')
-    let regions = selectedRegions.map((s) => {
-      let v = s.value
-
-      if (v === rootOption.value) return data
-      if (v.indexOf('|') === -1) return data[v]
-
-      let [country, province] = v.split('|')
-      return data[country][province]
-    })
-
     return {
-      datasets: regions.map((s, i) => {
-        let { hue, saturation, lightness } = selectedRegions[i]
+      datasets: selectedOptions.map((option) => {
+        let { hue, saturation, lightness } = option
 
-        return generateDataset(s._total, xField, xLog, yField, yLog, {
-          label: selectedRegions[i].value.replace(
-            /(.*)\|(.*)/,
-            (m, p1, p2) => `${p1} (${p2})`
-          ),
+        return generateDataset(option.points, xField, xLog, yField, yLog, {
+          label: option.longLabel,
           fill: false,
           lineTension: 0,
           borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,

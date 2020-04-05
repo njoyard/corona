@@ -3,6 +3,7 @@ import { inject as service } from '@ember/service'
 import { tracked } from '@glimmer/tracking'
 import { A } from '@ember/array'
 import delay from 'corona/utils/delay'
+import { invalidate, register, codeFor } from 'corona/utils/countrycodes'
 
 const MIN_SATURATION = 25
 const MAX_SATURATION = 90
@@ -34,8 +35,10 @@ let crc32 = (function () {
 
 class RegionOption {
   @tracked selected = false
-  @tracked value
   @tracked label
+  @tracked longLabel
+  @tracked code
+  @tracked points
   @tracked level = 0
   @tracked confirmed
   @tracked deceased
@@ -46,12 +49,13 @@ class RegionOption {
 
   children = A([])
 
-  constructor(value, label, level = 0) {
-    this.value = value
+  constructor(code, label, longLabel, level = 0) {
+    this.code = code
     this.label = label
+    this.longLabel = longLabel
     this.level = level
 
-    let crc = crc32(value)
+    let crc = crc32(longLabel)
     this.hue = Math.floor(crc / HUE_VARIANT) % 360
     this.saturation =
       MIN_SATURATION +
@@ -68,8 +72,8 @@ class RegionOption {
     return this.children.length > 0
   }
 
-  setStats(data) {
-    let points = data._total
+  setData(data) {
+    let points = (this.points = data._total)
     let lastPoint = points[points.length - 1]
 
     this.confirmed = lastPoint.confirmed
@@ -134,30 +138,51 @@ export default class DataService extends Service {
     let sourceData = await dataCsse.data((state) => {
       this.loadingState = state
     }, options)
-    let root = options.world ? 'World' : 'USA'
+    let root = options.world ? 'World' : 'United States'
 
     this.loadingState = 'building region options'
 
     let data = await delay(() => {
-      let rootOption = new RegionOption(root, root)
+      let rootOption = new RegionOption('__', root, root)
       rootOption.saturation = 0
       rootOption.lightness = 30
-      rootOption.setStats(sourceData)
+      rootOption.setData(sourceData)
 
       let options = [rootOption]
 
-      let countries = Object.keys(sourceData).filter((c) => c !== '_total')
-      for (let country of countries) {
-        let countryOption = new RegionOption(country, country, 1)
+      invalidate()
 
-        countryOption.setStats(sourceData[country])
+      let countries = Object.keys(sourceData).filter((c) => !c.startsWith('_'))
+      for (let country of countries) {
+        register(country)
+
+        if (Object.keys(sourceData[country]).length > 2) {
+          let provinces = Object.keys(sourceData[country]).filter(
+            (p) => !p.startsWith('_')
+          )
+
+          for (let province of provinces) {
+            register(country, province)
+          }
+        }
+      }
+
+      for (let country of countries) {
+        let countryOption = new RegionOption(
+          codeFor(country),
+          country,
+          country,
+          1
+        )
+
+        countryOption.setData(sourceData[country])
 
         options.push(countryOption)
         rootOption.addChild(countryOption)
 
         if (Object.keys(sourceData[country]).length > 2) {
           let provinces = Object.keys(sourceData[country]).filter(
-            (p) => p !== '_total'
+            (p) => !p.startsWith('_')
           )
           if (provinces.indexOf('Mainland') !== -1) {
             provinces = provinces.filter((p) => p !== 'Mainland')
@@ -166,11 +191,12 @@ export default class DataService extends Service {
 
           for (let province of provinces) {
             let provinceOption = new RegionOption(
-              `${country}|${province}`,
+              codeFor(country, province),
               province,
+              `${country} (${province})`,
               2
             )
-            provinceOption.setStats(sourceData[country][province])
+            provinceOption.setData(sourceData[country][province])
 
             countryOption.addChild(provinceOption)
             options.push(provinceOption)
@@ -187,9 +213,7 @@ export default class DataService extends Service {
 
       let dataset = new DataSet()
 
-      dataset.data = sourceData
       dataset.rootOption = rootOption
-      dataset.regionOptions = A(options)
       dataset.selectedOptions = A(options.filter((o) => o.selected))
 
       return dataset
