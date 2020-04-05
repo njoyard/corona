@@ -122,12 +122,13 @@
       <p>
         You may use the following link to share the current chart. When opened, the link will show the same graph configuration with the latest available data.
       </p>
-      <PaperInput
-        @textarea={{true}}
-        @readonly={{true}}
-        @onChange={{null}}
-        @passThru={{hash rows=1 cols=300}}
-        @value={{this.shareURL}} />
+      <div class="layout layout-row">
+        <PaperInput
+          class="flex share-input"
+          @readonly={{true}}
+          @onChange={{null}}
+          @value={{this.shareURL}} />
+      </div>
     </PaperDialogContent>
   </PaperDialog>
 {{/if}}
@@ -369,7 +370,7 @@
 <div class="buttons">
   <PaperButton
     @fab={{true}}
-    @onClick={{fn (mut this.showShareDialog) true}}>
+    @onClick={{fn this.share}}>
     <PaperIcon @icon="share">
       <PaperTooltip @position="top">
         Share current chart
