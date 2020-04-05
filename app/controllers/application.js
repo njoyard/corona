@@ -119,6 +119,11 @@ export default class ApplicationController extends Controller {
 
   @tracked showAboutDialog = false
   @tracked showSourcesDialog = false
+  @tracked showShareDialog = false
+
+  get shareURL() {
+    return location.href
+  }
 
   get versionInfo() {
     let info = `This version was built on ${buildDate}`

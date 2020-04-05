@@ -100,6 +100,38 @@
   </PaperDialog>
 {{/if}}
 
+
+{{#if this.showShareDialog}}
+  <PaperDialog
+    class="flex-50"
+    @onClose={{fn (mut this.showShareDialog) false}}
+    @clickOutsideToClose={{true}} >
+    <PaperToolbar>
+      <PaperToolbarTools>
+      <h2>Share this chart</h2>
+        <span class="flex"></span>
+        <PaperButton
+          @iconButton={{true}}
+          @onClick={{fn (mut this.showShareDialog) false}}>
+          <PaperIcon @icon="close" />
+        </PaperButton>
+      </PaperToolbarTools>
+    </PaperToolbar>
+
+    <PaperDialogContent>
+      <p>
+        You may use the following link to share the current chart. When opened, the link will show the same graph configuration with the latest available data.
+      </p>
+      <PaperInput
+        @textarea={{true}}
+        @readonly={{true}}
+        @onChange={{null}}
+        @passThru={{hash rows=1 cols=300}}
+        @value={{this.shareURL}} />
+    </PaperDialogContent>
+  </PaperDialog>
+{{/if}}
+
 {{#if this.downloadURL}}
   <PaperToast
     @duration={{false}}
@@ -337,6 +369,16 @@
 <div class="buttons">
   <PaperButton
     @fab={{true}}
+    @onClick={{fn (mut this.showShareDialog) true}}>
+    <PaperIcon @icon="share">
+      <PaperTooltip @position="top">
+        Share current chart
+      </PaperTooltip>
+    </PaperIcon>
+  </PaperButton>
+
+  <PaperButton
+    @fab={{true}}
     @onClick={{fn this.downloadChart}}>
     <PaperIcon @icon="save_alt">
       <PaperTooltip @position="top">
@@ -347,7 +389,7 @@
 
   <PaperButton
     @fab={{true}}
-    @onClick={{fn (mut this.showSourcesDialog)}}>
+    @onClick={{fn (mut this.showSourcesDialog) true}}>
     <PaperIcon @icon="list">
       <PaperTooltip @position="top">
         Switch data sources
@@ -357,7 +399,7 @@
 
   <PaperButton
     @fab={{true}}
-    @onClick={{fn (mut this.showAboutDialog)}} >
+    @onClick={{fn (mut this.showAboutDialog) true}} >
     <PaperIcon @icon="help" />
   </PaperButton>
 </div>
