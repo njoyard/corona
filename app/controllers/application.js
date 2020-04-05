@@ -118,6 +118,7 @@ export default class ApplicationController extends Controller {
     }, 0)
   }
 
+  @tracked speedDialOpen = false
   @tracked showAboutDialog = false
   @tracked showSourcesDialog = false
   @tracked showShareDialog = false
@@ -140,12 +141,14 @@ export default class ApplicationController extends Controller {
   share() {
     this.showShareDialog = true
 
-    scheduleOnce('afterRender', this, function () {
-      let input = document.querySelector('.share-input input')
+    scheduleOnce('afterRender', this, 'shareFocus')
+  }
 
-      input.focus()
-      input.select()
-    })
+  shareFocus() {
+    let input = document.querySelector('.share-input input')
+
+    input.focus()
+    input.select()
   }
 
   @tracked regionFilter = ''

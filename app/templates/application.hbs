@@ -367,40 +367,69 @@
   </PaperCard>
 </PaperSidenavContainer>
 
-<div class="buttons">
-  <PaperButton
-    @fab={{true}}
-    @onClick={{fn this.share}}>
-    <PaperIcon @icon="share">
-      <PaperTooltip @position="top">
-        Share current chart
-      </PaperTooltip>
-    </PaperIcon>
-  </PaperButton>
+<PaperSpeedDial
+  class="buttons"
+  @direction="up"
+  @animation="scale"
+  @open={{this.speedDialOpen}}
+  @onMouseEnter={{fn (mut this.speedDialOpen) true}}
+  @onMouseLeave={{fn (mut this.speedDialOpen) false}}
+  @onToggle={{fn (mut this.speedDialOpen)}}
+  as |dial|>
 
-  <PaperButton
-    @fab={{true}}
-    @onClick={{fn this.downloadChart}}>
-    <PaperIcon @icon="save_alt">
-      <PaperTooltip @position="top">
-        Download chart as an image
-      </PaperTooltip>
-    </PaperIcon>
-  </PaperButton>
+  <dial.trigger>
+    <PaperButton @fab={{true}}>
+      <PaperIcon @icon="menu" />
+    </PaperButton>
+  </dial.trigger>
 
-  <PaperButton
-    @fab={{true}}
-    @onClick={{fn (mut this.showSourcesDialog) true}}>
-    <PaperIcon @icon="list">
-      <PaperTooltip @position="top">
-        Switch data sources
-      </PaperTooltip>
-    </PaperIcon>
-  </PaperButton>
+  <dial.actions as |actions|>
+    <actions.action>
+      <PaperButton
+        @mini={{true}}
+        @onClick={{fn (mut this.showAboutDialog) true}} >
+        <PaperIcon @icon="help">
+          <PaperTooltip @position="left">
+            About
+          </PaperTooltip>
+        </PaperIcon>
+      </PaperButton>
+    </actions.action>
 
-  <PaperButton
-    @fab={{true}}
-    @onClick={{fn (mut this.showAboutDialog) true}} >
-    <PaperIcon @icon="help" />
-  </PaperButton>
-</div>
+    <actions.action>
+      <PaperButton
+        @mini={{true}}
+        @onClick={{fn (mut this.showSourcesDialog) true}}>
+        <PaperIcon @icon="list">
+          <PaperTooltip @position="left">
+            Switch data sources
+          </PaperTooltip>
+        </PaperIcon>
+      </PaperButton>
+    </actions.action>
+
+    <actions.action>
+      <PaperButton
+        @mini={{true}}
+        @onClick={{fn this.downloadChart}}>
+        <PaperIcon @icon="save_alt">
+          <PaperTooltip @position="left">
+            Download chart as an image
+          </PaperTooltip>
+        </PaperIcon>
+      </PaperButton>
+    </actions.action>
+
+    <actions.action>
+      <PaperButton
+        @mini={{true}}
+        @onClick={{fn this.share}}>
+        <PaperIcon @icon="share">
+          <PaperTooltip @position="left">
+            Share current chart
+          </PaperTooltip>
+        </PaperIcon>
+      </PaperButton>
+    </actions.action>
+  </dial.actions>
+</PaperSpeedDial>

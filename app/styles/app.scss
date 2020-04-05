@@ -47,6 +47,10 @@ $switch-thumb-size: 16px;
   position: absolute;
   right: 1rem;
   bottom: 1rem;
+
+  .md-mini md-icon {
+    font-size: 22px;
+  }
 }
 
 .md-disabled {
