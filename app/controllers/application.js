@@ -110,6 +110,7 @@ export default class ApplicationController extends Controller {
   selectDataset(ds) {
     this.data.reloading = true
     this.showSourcesDialog = false
+    this.selectedOptions.clear()
 
     setTimeout(() => {
       this.dataset = ds
