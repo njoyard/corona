@@ -267,6 +267,7 @@ export default class ApplicationController extends Controller {
     }
 
     return {
+      defaultFontFamily: 'Roboto, "Helvetica Neue", sans-serif;',
       responsive: true,
       maintainAspectRatio: false,
       animation: { duration: 0 },
