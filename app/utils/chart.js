@@ -4,6 +4,7 @@ function generateDataset(
   xLog,
   yField,
   yLog,
+  yRatio,
   startOffset,
   options = {}
 ) {
@@ -23,7 +24,7 @@ function generateDataset(
 
   let data = source.map((point, index) => {
     let datapoint = {
-      y: point[yField]
+      y: Math.round(point[yField] * yRatio * 10) / 10
     }
 
     if (xField === 'date') {

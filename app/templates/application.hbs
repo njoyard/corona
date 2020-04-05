@@ -20,15 +20,7 @@
         This app was largely inspired by Benjamin Ooghe Tabanou's <a target="_blank" rel="noopener noreferrer" href="//boogheta.github.io/coronavirus-countries/">Coronavirus Country Comparator</a>.
       </p>
       <h3>Data sources</h3>
-      <p>
-        Data comes from the <a target="_blank" rel="noopener noreferrer" href="//systems.jhu.edu/">Center for Systems Science and Engineering (CSSE)</a> at Johns Hopkins University.  It is <a target="_blank" rel="noopener noreferrer" href="//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series">released openly</a> and updated daily.  They used it to build a <a target="_blank" rel="noopener noreferrer" href="//gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">very nice dashboard</a>, please also check it out.
-      </p>
-      <p>
-        The app uses the latest version available at the time of loading. Just refresh the page to get updated data.
-      </p>
-      <p>
-        Finally, please note that this data uses officially reported figures, and is only indicative of the actual situation.  It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
-      </p>
+      <AboutData />
       <h3>License and developer info</h3>
       <p>
         The code for this app is <a target="_blank" rel="noopener noreferrer" href="//github.com/njoyard/corona">available on GitHub</a> and released under the terms of the <a target="_blank" rel="noopener noreferrer" href="//raw.githubusercontent.com/njoyard/corona/master/LICENSE">MIT license</a>.
@@ -71,15 +63,7 @@
     <PaperDialogContent>
       <h3>Available data sources</h3>
 
-      <p>
-        Data comes from the <a target="_blank" rel="noopener noreferrer" href="//systems.jhu.edu/">Center for Systems Science and Engineering (CSSE)</a> at Johns Hopkins University.  It is <a target="_blank" rel="noopener noreferrer" href="//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series">released openly</a> and updated daily.  They used it to build a <a target="_blank" rel="noopener noreferrer" href="//gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">very nice dashboard</a>, please also check it out.
-      </p>
-      <p>
-        The app uses the latest version available at the time of loading. Just refresh the page to get updated data.
-      </p>
-      <p>
-        Finally, please note that this data uses officially reported figures, and is only indicative of the actual situation.  It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
-      </p>
+      <AboutData />
 
       <PaperList>
         {{#each-in this.data.datasets as |key dataset|}}
@@ -218,6 +202,16 @@
           </div>
         </PaperItem>
 
+        <PaperItem as |controls|>
+          <small>Population ratio</small>
+          <div class="md-secondary-container">
+            <controls.switch
+              @secondary={{true}}
+              @value={{this.yRatio}}
+              @onChange={{fn (mut this.yRatio)}} />
+          </div>
+        </PaperItem>
+
         <PaperDivider />
 
         <PaperSubheader>Horizontal axis</PaperSubheader>
@@ -352,7 +346,8 @@
           @onToggleChildren={{this.toggleChildren}}
           @sortBy={{this.regionSortBy}}
           @filterBy="value"
-          @filter={{this.regionFilter}} />
+          @filter={{this.regionFilter}}
+          @yRatio={{this.yRatio}} />
       </PaperList>
     </PaperContent>
   </PaperSidenav>
@@ -378,7 +373,7 @@
   @open={{this.speedDialOpen}}
   @onMouseEnter={{fn (mut this.speedDialOpen) true}}
   @onMouseLeave={{fn (mut this.speedDialOpen) false}}
-  @onToggle={{fn (mut this.speedDialOpen)}}
+  @onToggle={{fn (mut this.speedDialOpen) true}}
   as |dial|>
 
   <dial.trigger>

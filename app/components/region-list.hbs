@@ -1,10 +1,17 @@
 {{#each this.options as |option|}}
   {{#if (string-contains (get option @filterBy) @filter)}}
-    <PaperItem as |controls|>
+    <PaperItem class={{if (and @yRatio (not option.population)) "md-disabled"}} as |controls|>
+      {{#if (and @yRatio (not option.population))}}
+        <PaperTooltip @position="right">
+          No population data for this region
+        </PaperTooltip>
+      {{/if}}
+
       <small class="region-option-level-{{option.level}}">
-        <Swatch @color={{option}} />
+        <Swatch @color={{if (and @yRatio (not option.population)) (hash hue=0 saturation=0 lightness=80) option}} />
         {{option.label}}
       </small>
+
       <div class="md-secondary-container">
         {{#if option.hasChildren}}
           <controls.button
@@ -14,9 +21,11 @@
             <PaperIcon @icon="done_all" />
           </controls.button>
         {{/if}}
+
         <controls.checkbox
           @value={{option.selected}}
           @secondary={{true}}
+          @disabled={{and @yRatio (not option.population)}}
           @onChange={{fn this.toggle option}} />
       </div>
     </PaperItem>
@@ -29,6 +38,7 @@
       @onToggleChildren={{this.toggleChildren}}
       @sortBy={{@sortBy}}
       @filterBy={{@filterBy}}
-      @filter={{@filter}} />
+      @filter={{@filter}}
+      @yRatio={{@yRatio}} />
   {{/if}}
 {{/each}}

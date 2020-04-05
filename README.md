@@ -12,11 +12,9 @@ This app was largely inspired by Benjamin Ooghe Tabanou's [Coronavirus Country C
 
 ### Data sources
 
-Data comes from the [Center for Systems Science and Engineering (CSSE)](https://systems.jhu.edu/) at Johns Hopkins University. It is [released openly](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series) and updated daily. They used it to build a [very nice dashboard](https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6), please also check it out.
+Data comes from the [Center for Systems Science and Engineering (CSSE)](https://systems.jhu.edu/) at Johns Hopkins University. It is [released openly](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series) and updated daily. They used it to build a [very nice dashboard](https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6), please also check it out. Please note that this data uses officially reported figures, and is only indicative of the actual situation. They come from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
 
-The app uses the latest version available at the time of loading. Just refresh the page to get updated data.
-
-Finally, please note that this data uses officially reported figures, and is only indicative of the actual situation. They come from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
+Population data comes from [The World Bank](https://data.worldbank.org/indicator/SP.POP.TOTL), except for US states population which is included in CESE data.
 
 ### License and developer info
 

@@ -1,4 +1,4 @@
-import Service from '@ember/service'
+import Service, { inject as service } from '@ember/service'
 import fetchText from 'corona/utils/fetch-text'
 import delay from 'corona/utils/delay'
 
@@ -6,6 +6,19 @@ const countryReplacements = {
   US: 'United States',
   'Taiwan*': 'Taiwan',
   'Korea, South': 'South Korea'
+}
+
+const populationReplacements = {
+  'Congo (Brazzaville)': 'Congo, Rep.',
+  'Congo (Kinshasa)': 'Congo, Dem. Rep.',
+  Czechia: 'Czech Republic',
+  'Korea, South': 'Korea, Rep.',
+  Kyrgyzstan: 'Kyrgyz Republic',
+  'Saint Lucia': 'St. Lucia',
+  'Saint Vincent and the Grenadines': 'St. Vincent and the Grenadines',
+  Slovakia: 'Slovak Republic',
+  'Saint Kitts and Nevis': 'St. Kitts and Nevis',
+  US: 'United States'
 }
 
 function parseCSV(csv) {
@@ -26,10 +39,19 @@ function parseDate(date) {
 }
 
 function parseLines(lines, dates, data, key) {
-  for (let [province, country, ...counts] of lines) {
+  for (let [province, country, pmeta, cmeta, ...counts] of lines) {
     if (!province) province = 'Mainland'
-    if (!(country in data)) data[country] = {}
+
+    if (!(country in data)) {
+      data[country] = {}
+    }
+
+    if (cmeta && !data[country]._meta) data[country]._meta = cmeta
+
     if (!(province in data[country])) data[country][province] = { _total: [] }
+
+    if (pmeta && !data[country][province]._meta)
+      data[country][province]._meta = pmeta
 
     counts.forEach((count, index) => {
       let date = dates[index]
@@ -76,6 +98,23 @@ function totalize(data) {
   data._total.sortBy('date')
 }
 
+function totalizePopulation(data) {
+  data._meta = data._meta || {}
+
+  if (!data._meta.population) {
+    data._meta.population = 0
+
+    for (let region in data) {
+      if (region.startsWith('_')) continue
+
+      totalizePopulation(data[region])
+
+      if (data[region]._meta.population)
+        data._meta.population += data[region]._meta.population
+    }
+  }
+}
+
 function derive(data) {
   for (let region in data) {
     if (!region.startsWith('_')) {
@@ -93,6 +132,8 @@ function derive(data) {
 }
 
 export default class DataCeseService extends Service {
+  @service dataWorldbank
+
   getURL(type, scope) {
     return `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${type}_${scope}.csv`
   }
@@ -129,6 +170,29 @@ export default class DataCeseService extends Service {
     let globalData = {}
     let usaData = {}
 
+    let worldPopulation = world
+      ? await this.dataWorldbank.getWorldPopulation(updateState)
+      : {}
+
+    function getPopulation(country) {
+      let key = (populationReplacements[country] || country).toLowerCase()
+
+      if (!(key in worldPopulation)) {
+        let candidates = Object.keys(worldPopulation).filter((k) =>
+          k.startsWith(key)
+        )
+
+        if (candidates.length === 1) {
+          key = candidates[0]
+        } else {
+          console.warn(`No population data for ${country}`)
+          return null
+        }
+      }
+
+      return worldPopulation[key]
+    }
+
     updateState('parsing CSSE data')
 
     await delay(() => {
@@ -136,9 +200,9 @@ export default class DataCeseService extends Service {
         parseLines(
           confirmedGlobalLines.map(([province, country, , , ...counts]) => [
             province,
-            country in countryReplacements
-              ? countryReplacements[country]
-              : country,
+            countryReplacements[country] || country,
+            null,
+            { population: getPopulation(country) },
             ...counts
           ]),
           confirmedGlobalDates,
@@ -149,9 +213,9 @@ export default class DataCeseService extends Service {
         parseLines(
           deathsGlobalLines.map(([province, country, , , ...counts]) => [
             province,
-            country in countryReplacements
-              ? countryReplacements[country]
-              : country,
+            countryReplacements[country] || country,
+            null,
+            { population: getPopulation(country) },
             ...counts
           ]),
           deathsGlobalDates,
@@ -166,6 +230,8 @@ export default class DataCeseService extends Service {
             ([, , , , , county, state, , , , , ...counts]) => [
               county,
               state,
+              null,
+              null,
               ...counts
             ]
           ),
@@ -176,9 +242,11 @@ export default class DataCeseService extends Service {
 
         parseLines(
           deathsUSLines.map(
-            ([, , , , , county, state, , , , , , ...counts]) => [
+            ([, , , , , county, state, , , , , population, ...counts]) => [
               county,
               state,
+              { population: Number(population) },
+              null,
               ...counts
             ]
           ),
@@ -199,6 +267,7 @@ export default class DataCeseService extends Service {
 
     await delay(() => {
       totalize(globalData)
+      totalizePopulation(globalData)
 
       for (let country in globalData) {
         if (country.startsWith('_')) continue

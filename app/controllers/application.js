@@ -22,6 +22,7 @@ export default class ApplicationController extends Controller {
     { ySelection: 'y' },
     { yLog: 'yl' },
     { yChange: 'yc' },
+    { yRatio: 'yr' },
     { showLegend: 'l' },
     { stacked: 's' },
     { selectedRegionCodes: 'r' }
@@ -81,6 +82,16 @@ export default class ApplicationController extends Controller {
 
   set yChange(value) {
     this._yChange = value
+  }
+
+  @tracked _yRatio = false
+
+  get yRatio() {
+    return this._yRatio
+  }
+
+  set yRatio(value) {
+    this._yRatio = value
   }
 
   @tracked _showLegend = true
@@ -244,6 +255,7 @@ export default class ApplicationController extends Controller {
       ySelection,
       yChange,
       yLog,
+      yRatio,
       showLegend,
       stacked
     } = this
@@ -262,6 +274,10 @@ export default class ApplicationController extends Controller {
       yLabel = yChange ? 'New confirmed cases' : 'Total confirmed cases'
     } else {
       yLabel = yChange ? 'New deaths' : 'Total deaths'
+    }
+
+    if (yRatio) {
+      yLabel = `${yLabel} (per million people)`
     }
 
     return {
@@ -335,34 +351,45 @@ export default class ApplicationController extends Controller {
   }
 
   get chartData() {
-    let { xSelection, xLog, ySelection, yLog, yChange, selectedOptions } = this
+    let {
+      xSelection,
+      xLog,
+      ySelection,
+      yLog,
+      yChange,
+      yRatio,
+      selectedOptions
+    } = this
 
     let xField = xSelection
     let yField = ySelection
     if (yChange) yField = `${yField}Change`
 
     return {
-      datasets: selectedOptions.map((option) => {
-        let { hue, saturation, lightness } = option
+      datasets: selectedOptions
+        .filter((o) => !yRatio || o.population)
+        .map((option) => {
+          let { hue, saturation, lightness, population } = option
 
-        return generateDataset(
-          option.points,
-          xField,
-          xLog,
-          yField,
-          yLog,
-          START_OFFSET,
-          {
-            label: option.longLabel,
-            fill: false,
-            lineTension: 0,
-            borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-            backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-            hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-            hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
-          }
-        )
-      })
+          return generateDataset(
+            option.points,
+            xField,
+            xLog,
+            yField,
+            yLog,
+            yRatio ? 1000000 / population : 1,
+            START_OFFSET,
+            {
+              label: option.longLabel,
+              fill: false,
+              lineTension: 0,
+              borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+              backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+              hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+              hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
+            }
+          )
+        })
     }
   }
 

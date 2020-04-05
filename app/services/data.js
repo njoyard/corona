@@ -42,6 +42,7 @@ class RegionOption {
   @tracked level = 0
   @tracked confirmed
   @tracked deceased
+  @tracked population
 
   @tracked hue
   @tracked saturation
@@ -75,6 +76,10 @@ class RegionOption {
   setData(data) {
     let points = (this.points = data._total)
     let lastPoint = points[points.length - 1]
+
+    if (data._meta) {
+      this.population = data._meta.population
+    }
 
     this.confirmed = lastPoint.confirmed
     this.deceased = lastPoint.deceased
@@ -185,10 +190,11 @@ export default class DataService extends Service {
         options.push(countryOption)
         rootOption.addChild(countryOption)
 
-        if (Object.keys(sourceData[country]).length > 2) {
-          let provinces = Object.keys(sourceData[country]).filter(
-            (p) => !p.startsWith('_')
-          )
+        let provinces = Object.keys(sourceData[country]).filter(
+          (k) => !k.startsWith('_')
+        )
+
+        if (provinces.length > 1) {
           if (provinces.indexOf('Mainland') !== -1) {
             provinces = provinces.filter((p) => p !== 'Mainland')
             provinces.unshift('Mainland')
