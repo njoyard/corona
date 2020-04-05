@@ -122,10 +122,7 @@ export default class ApplicationController extends Controller {
   @tracked showAboutDialog = false
   @tracked showSourcesDialog = false
   @tracked showShareDialog = false
-
-  get shareURL() {
-    return location.href
-  }
+  @tracked shareURL = location.href
 
   get versionInfo() {
     let info = `This version was built on ${buildDate}`
@@ -139,6 +136,7 @@ export default class ApplicationController extends Controller {
 
   @action
   share() {
+    this.shareURL = location.href
     this.showShareDialog = true
 
     scheduleOnce('afterRender', this, 'shareFocus')
