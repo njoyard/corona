@@ -85,7 +85,6 @@ class DataSet {
   @tracked selectedOptions
   @tracked rootOption
   @tracked regionOptions
-  @tracked selectedOptions
 }
 
 export default class DataService extends Service {
@@ -95,8 +94,8 @@ export default class DataService extends Service {
   @tracked loadingState = null
 
   datasets = {
-    'csse-global-flat': {
-      title: 'CSSE (Global, simplified)',
+    flat: {
+      title: 'Global simplified data',
       description:
         'Totals for each country, excluding countries with less than 100 confirmed cases to date.',
       us: false,
@@ -104,23 +103,23 @@ export default class DataService extends Service {
       deep: false,
       limit: 100
     },
-    'csse-global': {
-      title: 'CSSE (Global)',
+    global: {
+      title: 'Global data with provinces',
       description:
         'Totals for each country, including counts for each province for selected countries.',
       us: false,
       world: true,
       deep: true
     },
-    'csse-us': {
-      title: 'CSSE (United States only)',
+    us: {
+      title: 'United States',
       description: 'United States data with counts for each state.',
       us: true,
       world: false,
       deep: false
     },
-    'csse-global-us': {
-      title: 'CSSE (Full)',
+    full: {
+      title: 'Global data with provinces and US states',
       description:
         'Complete dataset, including country provinces and US states. Will need a bit more time to load than other datasets.',
       us: true,
@@ -129,11 +128,15 @@ export default class DataService extends Service {
     }
   }
 
-  defaultDataset = 'csse-global-flat'
+  defaultDataset = 'flat'
 
-  async data(dataset) {
+  async data(dataset, selectedRegionCodes) {
     let { dataCsse, datasets, defaultDataset } = this
     let options = datasets[dataset] || datasets[defaultDataset]
+
+    let selected = selectedRegionCodes
+      ? new Set(selectedRegionCodes.split('-'))
+      : new Set()
 
     let sourceData = await dataCsse.data((state) => {
       this.loadingState = state
@@ -147,6 +150,7 @@ export default class DataService extends Service {
       rootOption.saturation = 0
       rootOption.lightness = 30
       rootOption.setData(sourceData)
+      rootOption.selected = selected.has(rootOption.code)
 
       let options = [rootOption]
 
@@ -176,6 +180,7 @@ export default class DataService extends Service {
         )
 
         countryOption.setData(sourceData[country])
+        countryOption.selected = selected.has(countryOption.code)
 
         options.push(countryOption)
         rootOption.addChild(countryOption)
@@ -197,6 +202,7 @@ export default class DataService extends Service {
               2
             )
             provinceOption.setData(sourceData[country][province])
+            provinceOption.selected = selected.has(provinceOption.code)
 
             countryOption.addChild(provinceOption)
             options.push(provinceOption)
@@ -204,16 +210,20 @@ export default class DataService extends Service {
         }
       }
 
-      for (let country of rootOption.children
-        .sortBy('deceased')
-        .reverse()
-        .slice(0, DEFAULT_SELECTED_REGIONS)) {
-        country.selected = true
+      if (!selected.size) {
+        // No selection, select countries with top deaths
+        for (let country of rootOption.children
+          .sortBy('deceased')
+          .reverse()
+          .slice(0, DEFAULT_SELECTED_REGIONS)) {
+          country.selected = true
+        }
       }
 
       let dataset = new DataSet()
 
       dataset.rootOption = rootOption
+      dataset.regionOptions = A(options)
       dataset.selectedOptions = A(options.filter((o) => o.selected))
 
       return dataset

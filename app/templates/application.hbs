@@ -268,8 +268,9 @@
               @value={{this.regionFilter}}
               @onChange={{fn (mut this.regionFilter)}} />
           </p>
-          <div class="md-secondary-container align-with-input">
-            {{#if this.regionFilter}}
+
+          {{#if this.regionFilter}}
+            <div class="md-secondary-container align-with-input">
               <PaperButton
                 @iconButton={{true}}
                 @onClick={{fn (mut this.regionFilter) ""}} >
@@ -279,18 +280,8 @@
                   </PaperTooltip>
                 </PaperIcon>
               </PaperButton>
-            {{/if}}
-
-            <PaperButton
-              @iconButton={{true}}
-              @onClick={{fn this.resetRegions}} >
-              <PaperIcon @icon="replay">
-                <PaperTooltip @position="top">
-                  Reset region list to World only
-                </PaperTooltip>
-              </PaperIcon>
-            </PaperButton>
-          </div>
+            </div>
+          {{/if}}
         </PaperItem>
 
         <PaperItem>

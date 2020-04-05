@@ -12,6 +12,6 @@ export default class ApplicationRoute extends Route {
 
   model(params) {
     this.data.loadingState = 'initializing'
-    return this.data.data(params.dataset, params.regions)
+    return this.data.data(params.dataset, params.selectedRegionCodes)
   }
 }

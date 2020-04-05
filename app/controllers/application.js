@@ -4,77 +4,116 @@ import { action } from '@ember/object'
 import { inject as service } from '@ember/service'
 import moment from 'moment'
 import env from 'corona/config/environment'
+import { generateDataset, formatYTick } from 'corona/utils/chart'
 
 const { buildID, buildDate } = env.APP
 
 const LEGEND_LIMIT = 20
-const START_OFFSET = 10
-
-function generateDataset(source, xField, xLog, yField, yLog, options = {}) {
-  // Remove zeroes for log scales
-  if (xLog) {
-    source = source.filter((p) => p[xField])
-  }
-
-  if (yLog) {
-    source = source.filter((p) => p[yField])
-  }
-
-  if (xField === 'start') {
-    let firstIndex = source.findIndex((p) => p[yField] >= START_OFFSET)
-    source = source.slice(firstIndex)
-  }
-
-  let data = source.map((point, index) => {
-    let datapoint = {
-      y: point[yField]
-    }
-
-    if (xField === 'date') {
-      datapoint.t = new Date(point.date)
-    } else if (xField === 'start') {
-      datapoint.x = index
-    } else {
-      datapoint.x = point[xField]
-    }
-
-    return datapoint
-  })
-
-  if (xField === 'confirmed') {
-    // Remove duplicate points
-    data = data.reduce((points, point) => {
-      let lastPoint = points[points.length - 1]
-
-      if (!lastPoint || lastPoint.x !== point.x || lastPoint.y !== point.y) {
-        points.push(point)
-      }
-
-      return points
-    }, [])
-  }
-
-  return Object.assign({ data }, options)
-}
-
-function formatYTick(number) {
-  if (number >= 1000000) return `${number / 1000000}M`
-  if (number >= 1000) return `${number / 1000}k`
-  return `${number}`
-}
+const START_OFFSET = 50
 
 export default class ApplicationController extends Controller {
   @service data
 
-  queryParams = ['dataset']
+  queryParams = [
+    { dataset: 'd' },
+    { xSelection: 'x' },
+    { xLog: 'xl' },
+    { ySelection: 'y' },
+    { yLog: 'yl' },
+    { yChange: 'yc' },
+    { showLegend: 'l' },
+    { stacked: 's' },
+    { selectedRegionCodes: 'r' }
+  ]
 
-  @tracked dataset = 'csse-global-flat'
+  /*
+    ---- START WORKAROUND for https://github.com/emberjs/ember.js/issues/18715 ----
+
+    Performance issue with @tracked queryParams
+  */
+
+  @tracked _xSelection = 'date'
+
+  get xSelection() {
+    return this._xSelection
+  }
+
+  set xSelection(value) {
+    this._xSelection = value
+  }
+
+  @tracked _xLog = false
+
+  get xLog() {
+    return this._xLog
+  }
+
+  set xLog(value) {
+    this._xLog = value
+  }
+
+  @tracked _ySelection = 'confirmed'
+
+  get ySelection() {
+    return this._ySelection
+  }
+
+  set ySelection(value) {
+    this._ySelection = value
+  }
+
+  @tracked _yLog = false
+
+  get yLog() {
+    return this._yLog
+  }
+
+  set yLog(value) {
+    this._yLog = value
+  }
+
+  @tracked _yChange = false
+
+  get yChange() {
+    return this._yChange
+  }
+
+  set yChange(value) {
+    this._yChange = value
+  }
+
+  @tracked _showLegend = true
+
+  get showLegend() {
+    return this._showLegend
+  }
+
+  set showLegend(value) {
+    this._showLegend = value
+  }
+
+  @tracked _stacked = false
+
+  get stacked() {
+    return this._stacked
+  }
+
+  set stacked(value) {
+    this._stacked = value
+  }
+
+  /* ---- END WORKAROUND ---- */
+
+  @tracked dataset = 'flat'
 
   @action
   selectDataset(ds) {
     this.data.reloading = true
     this.showSourcesDialog = false
-    this.dataset = ds
+
+    setTimeout(() => {
+      this.dataset = ds
+    }, 0)
   }
 
   @tracked showAboutDialog = false
@@ -97,8 +136,41 @@ export default class ApplicationController extends Controller {
     return this.model.rootOption
   }
 
+  get regionOptions() {
+    return this.model.regionOptions
+  }
+
   get selectedOptions() {
     return this.model.selectedOptions
+  }
+
+  set selectedRegionCodes(value) {
+    if (!this.model) return
+
+    let { selectedOptions, regionOptions } = this
+    let codes = new Set(value.split('-'))
+
+    for (let option of selectedOptions) {
+      if (codes.has(option.code)) {
+        codes.delete(option.code)
+      } else {
+        selectedOptions.removeObject(option)
+      }
+    }
+
+    selectedOptions.pushObjects(
+      [...codes].map((c) => regionOptions.findBy('code', c)).filter(Boolean)
+    )
+
+    if (this.selectedOptions.length > LEGEND_LIMIT) {
+      this.showLegend = false
+    }
+  }
+
+  get selectedRegionCodes() {
+    if (!this.model) return ''
+
+    return this.selectedOptions.map((o) => o.code).join('-')
   }
 
   @action
@@ -138,31 +210,11 @@ export default class ApplicationController extends Controller {
     }
   }
 
-  @action
-  resetRegions() {
-    for (let option of this.selectedOptions) {
-      option.selected = false
-    }
-    this.selectedOptions.clear()
-
-    this.rootOption.selected = true
-    this.selectedOptions.pushObject(this.rootOption)
-  }
-
   get hasSelection() {
     return this.selectedOptions.length > 0
   }
 
   @tracked xStartOffset = START_OFFSET
-  @tracked xSelection = 'date'
-  @tracked xLog = false
-
-  @tracked ySelection = 'confirmed'
-  @tracked yLog = false
-  @tracked yChange = false
-
-  @tracked showLegend = true
-  @tracked stacked = false
 
   get chartOptions() {
     let {
@@ -272,15 +324,23 @@ export default class ApplicationController extends Controller {
       datasets: selectedOptions.map((option) => {
         let { hue, saturation, lightness } = option
 
-        return generateDataset(option.points, xField, xLog, yField, yLog, {
-          label: option.longLabel,
-          fill: false,
-          lineTension: 0,
-          borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-          backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-          hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-          hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
-        })
+        return generateDataset(
+          option.points,
+          xField,
+          xLog,
+          yField,
+          yLog,
+          START_OFFSET,
+          {
+            label: option.longLabel,
+            fill: false,
+            lineTension: 0,
+            borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+            backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+            hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+            hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
+          }
+        )
       })
     }
   }
