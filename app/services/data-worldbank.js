@@ -3,7 +3,7 @@ import fetchText from 'corona/utils/fetch-text'
 
 export default class DataWorldBankService extends Service {
   popUrl =
-    'http://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?mrv=1&format=json&per_page=300'
+    'https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?mrv=1&format=json&per_page=300'
 
   async getWorldPopulation(updateState) {
     updateState('downloading Worldbank population data')
