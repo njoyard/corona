@@ -375,7 +375,8 @@ export default class ApplicationController extends Controller {
       yChange,
       yMovingAverage,
       yRatio,
-      selectedOptions
+      selectedOptions,
+      stacked
     } = this
 
     let xField = xSelection
@@ -405,7 +406,7 @@ export default class ApplicationController extends Controller {
             START_OFFSET,
             {
               label: option.longLabel,
-              fill: false,
+              fill: stacked && xSelection === 'date',
               lineTension: 0,
               borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
               backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
