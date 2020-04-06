@@ -154,7 +154,7 @@ export default class DataCeseService extends Service {
     return `https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${type}_${scope}.csv`
   }
 
-  async data(updateState, { us, world, deep, limit }) {
+  async data(updateState, { us, world, root, deep, limit }) {
     updateState('downloading CSSE data')
 
     let [
@@ -277,6 +277,8 @@ export default class DataCeseService extends Service {
       globalData[countryReplacements.US] = usaData
     } else if (us) {
       globalData = usaData
+    } else if (root) {
+      globalData = globalData[root]
     }
 
     updateState('computing totals')

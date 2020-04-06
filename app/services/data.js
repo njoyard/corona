@@ -123,6 +123,20 @@ export default class DataService extends Service {
       world: false,
       deep: false
     },
+    china: {
+      title: 'China',
+      description: 'China only with counts for each province',
+      us: false,
+      world: true,
+      root: 'China'
+    },
+    australia: {
+      title: 'Australia',
+      description: 'Australia only with counts for each province',
+      us: false,
+      world: true,
+      root: 'Australia'
+    },
     full: {
       title: 'Global data with provinces and US states',
       description:
@@ -146,7 +160,7 @@ export default class DataService extends Service {
     let sourceData = await dataCsse.data((state) => {
       this.loadingState = state
     }, options)
-    let root = options.world ? 'World' : 'United States'
+    let root = options.root || (options.world ? 'World' : 'United States')
 
     this.loadingState = 'building region options'
 
