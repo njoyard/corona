@@ -411,7 +411,7 @@ export default class ApplicationController extends Controller {
             START_OFFSET,
             {
               label: option.longLabel,
-              fill: stacked && xSelection === 'date',
+              fill: stacked && !yLog && xSelection === 'date',
               lineTension: 0,
               borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
               backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
