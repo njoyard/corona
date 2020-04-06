@@ -397,11 +397,24 @@
   <PaperCard class="flex layout-fill layout-column layout-stretch" as |card|>
     <card.content class="flex">
       {{#if this.hasSelection}}
-        <EmberChart
-          @type="line"
-          @data={{this.chartData}}
-          @options={{this.chartOptions}}
-          @plugins={{this.chartPlugins}} />
+        {{!--
+          Workaround for chartjs-plugin-crosshair bug with log scales: we have to use a different
+          chart instance when the chart was initially loaded with a log scale. This #if ensures
+          we switch to a different component instance whenever toggling xLog.
+           --}}
+        {{#if this.xLog}}
+          <EmberChart
+            @type="line"
+            @data={{this.chartData}}
+            @options={{this.chartOptions}}
+            @plugins={{this.chartPlugins}} />
+        {{else}}
+          <EmberChart
+            @type="line"
+            @data={{this.chartData}}
+            @options={{this.chartOptions}}
+            @plugins={{this.chartPlugins}} />
+        {{/if}}
       {{else}}
         Please select at least one region
       {{/if}}

@@ -426,26 +426,28 @@ export default class ApplicationController extends Controller {
         ]
       },
       plugins: {
-        crosshair: {
-          line: {
-            color: '#888',
-            width: 1
-          },
-          snap: {
-            enabled: true
-          },
-          zoom: {
-            enabled: !xLog,
-            zoomboxBackgroundColor: 'rgba(128, 128, 128,0.2)',
-            zoomboxBorderColor: '#888'
-          },
-          callbacks: {
-            beforeZoom(from, to) {
-              controller.send('applyZoom', Number(from), Number(to))
-              return false
+        crosshair: xLog
+          ? false
+          : {
+              line: {
+                color: '#888',
+                width: 1
+              },
+              snap: {
+                enabled: true
+              },
+              zoom: {
+                enabled: !xLog,
+                zoomboxBackgroundColor: 'rgba(128, 128, 128,0.2)',
+                zoomboxBorderColor: '#888'
+              },
+              callbacks: {
+                beforeZoom(from, to) {
+                  controller.send('applyZoom', Number(from), Number(to))
+                  return false
+                }
+              }
             }
-          }
-        }
       }
     }
   }
