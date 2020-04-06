@@ -404,12 +404,11 @@ export default class ApplicationController extends Controller {
   get chartData() {
     let {
       xSelection,
-      xLog,
       ySelection,
-      yLog,
       yChange,
       yMovingAverage,
       yRatio,
+      yLog,
       selectedOptions,
       stacked
     } = this
@@ -434,14 +433,13 @@ export default class ApplicationController extends Controller {
           return generateDataset(
             option.points,
             xField,
-            xLog,
             yField,
-            yLog,
             yRatio ? 1000000 / population : 1,
+            yLog,
             START_OFFSET,
             {
               label: option.longLabel,
-              fill: stacked && !yLog && xSelection === 'date',
+              fill: stacked && xSelection === 'date',
               lineTension: 0,
               borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
               backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,

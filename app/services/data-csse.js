@@ -137,11 +137,11 @@ function derive(data) {
 
     confirmedChanges.push(point.confirmedChange)
     confirmedChanges.shift()
-    point.confirmedMovingChange = avg(confirmedChanges)
+    point.confirmedMovingChange = Math.round(avg(confirmedChanges))
 
     deceasedChanges.push(point.deceasedChange)
     deceasedChanges.shift()
-    point.deceasedMovingChange = avg(deceasedChanges)
+    point.deceasedMovingChange = Math.round(avg(deceasedChanges))
 
     prev = point
   }

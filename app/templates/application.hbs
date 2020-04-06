@@ -316,7 +316,7 @@
         <PaperItem class={{if (eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
           {{#if (eq this.xSelection "confirmed")}}
             <PaperTooltip @position="right">
-              Unavailable when showing confirmed cases on X axis
+              Only available when using date or days since {{this.xStartOffset}}th case on the X axis
             </PaperTooltip>
           {{/if}}
 

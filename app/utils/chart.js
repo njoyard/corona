@@ -1,22 +1,12 @@
 function generateDataset(
   source,
   xField,
-  xLog,
   yField,
-  yLog,
   yRatio,
+  yLog,
   startOffset,
   options = {}
 ) {
-  // Remove zeroes for log scales
-  if (xLog) {
-    source = source.filter((p) => p[xField])
-  }
-
-  if (yLog) {
-    source = source.filter((p) => p[yField])
-  }
-
   if (xField === 'start') {
     let firstIndex = source.findIndex((p) => p[yField] >= startOffset)
     source = source.slice(firstIndex)
@@ -25,6 +15,11 @@ function generateDataset(
   let data = source.map((point, index) => {
     let datapoint = {
       y: Math.round(point[yField] * yRatio * 10) / 10
+    }
+
+    if (yLog && datapoint.y < 1) {
+      // Clamp negative logs to 0
+      datapoint.y = 0
     }
 
     if (xField === 'date') {
