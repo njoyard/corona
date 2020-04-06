@@ -229,6 +229,12 @@
         <PaperSubheader>Horizontal axis</PaperSubheader>
 
         <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
+          {{#if this.xLog}}
+            <PaperTooltip @position="right">
+              Unavailable when using logarithmic scale on the X axis
+            </PaperTooltip>
+          {{/if}}
+
           <small>Date</small>
           <div class="md-secondary-container">
             <controls.radio
@@ -241,6 +247,12 @@
         </PaperItem>
 
         <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
+          {{#if this.xLog}}
+            <PaperTooltip @position="right">
+              Unavailable when using logarithmic scale
+            </PaperTooltip>
+          {{/if}}
+
           <small>Day since {{this.xStartOffset}}th case</small>
           <div class="md-secondary-container">
             <controls.radio
@@ -253,6 +265,12 @@
         </PaperItem>
 
         <PaperItem class={{if this.stacked "md-disabled"}} as |controls|>
+          {{#if this.stacked}}
+            <PaperTooltip @position="right">
+              Unavailable with a stacked chart
+            </PaperTooltip>
+          {{/if}}
+
           <small>Confirmed cases</small>
           <div class="md-secondary-container">
             <controls.radio
@@ -265,6 +283,12 @@
         </PaperItem>
 
         <PaperItem class={{if (not-eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
+          {{#if (not-eq this.xSelection "confirmed")}}
+            <PaperTooltip @position="right">
+              Only available when showing confirmed cases on the X axis
+            </PaperTooltip>
+          {{/if}}
+
           <small>Logarithmic scale</small>
           <div class="md-secondary-container">
             <controls.switch
@@ -290,6 +314,12 @@
         </PaperItem>
 
         <PaperItem class={{if (eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
+          {{#if (eq this.xSelection "confirmed")}}
+            <PaperTooltip @position="right">
+              Unavailable when showing confirmed cases on X axis
+            </PaperTooltip>
+          {{/if}}
+
           <small>Stacked</small>
           <div class="md-secondary-container">
             <controls.switch
