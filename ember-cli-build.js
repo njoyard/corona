@@ -1,14 +1,9 @@
-'use strict';
+'use strict'
 
-const EmberApp = require('ember-cli/lib/broccoli/ember-app');
+const EmberApp = require('ember-cli/lib/broccoli/ember-app')
 
-module.exports = function(defaults) {
-  let app = new EmberApp(defaults, {
-    'ember-bootstrap': {
-      'bootstrapVersion': 4,
-      'importBootstrapCSS': true
-    }
-  });
+module.exports = function (defaults) {
+  let app = new EmberApp(defaults, {})
 
   // Use `app.import` to add additional libraries to the generated
   // output files.
@@ -23,5 +18,9 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
-  return app.toTree();
-};
+  app.import(
+    'node_modules/chartjs-plugin-crosshair/dist/chartjs-plugin-crosshair.js'
+  )
+
+  return app.toTree()
+}

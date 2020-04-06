@@ -301,12 +301,36 @@ export default class ApplicationController extends Controller {
       yLabel = `${yLabel} (per million people)`
     }
 
+    let pluginConfig = {}
+
+    if (xSelection !== 'confirmed') {
+      pluginConfig.crosshair = {
+        line: {
+          color: '#888',
+          width: 1
+        },
+        snap: {
+          enabled: true
+        },
+        zoom: {
+          enabled: false, // TODO: save/restore zoom to/from querystring
+          zoomboxBackgroundColor: 'rgba(128, 128, 128,0.2)',
+          zoomboxBorderColor: '#888',
+          zoomButtonText: 'Reset Zoom',
+          zoomButtonClass: 'reset-zoom md-button md-raised'
+        }
+      }
+    }
+
     return {
       defaultFontFamily: 'Roboto, "Helvetica Neue", sans-serif;',
       responsive: true,
       maintainAspectRatio: false,
       animation: { duration: 0 },
-      hover: { animationDuration: 0 },
+      hover: {
+        animationDuration: 0,
+        intersect: false
+      },
       responsiveAnimationDuration: 0,
       legend: {
         display: showLegend,
@@ -372,7 +396,8 @@ export default class ApplicationController extends Controller {
             stacked
           }
         ]
-      }
+      },
+      plugins: pluginConfig
     }
   }
 
