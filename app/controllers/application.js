@@ -336,6 +336,11 @@ export default class ApplicationController extends Controller {
           }
         }
       },
+      elements: {
+        point: {
+          radius: 2
+        }
+      },
       scales: {
         xAxes: [
           {
