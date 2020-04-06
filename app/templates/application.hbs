@@ -400,7 +400,8 @@
         <EmberChart
           @type="line"
           @data={{this.chartData}}
-          @options={{this.chartOptions}} />
+          @options={{this.chartOptions}}
+          @plugins={{this.chartPlugins}} />
       {{else}}
         Please select at least one region
       {{/if}}

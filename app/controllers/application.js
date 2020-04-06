@@ -5,9 +5,10 @@ import { inject as service } from '@ember/service'
 import { scheduleOnce } from '@ember/runloop'
 import moment from 'moment'
 import env from 'corona/config/environment'
-import { generateDataset, formatYTick } from 'corona/utils/chart'
+import { generateDataset, formatYTick, plugins } from 'corona/utils/chart'
 
 const { buildID, buildDate } = env.APP
+const { hideTooltipOnLegend } = plugins
 
 const LEGEND_LIMIT = 20
 const START_OFFSET = 50
@@ -257,6 +258,10 @@ export default class ApplicationController extends Controller {
   }
 
   @tracked xStartOffset = START_OFFSET
+
+  get chartPlugins() {
+    return [hideTooltipOnLegend]
+  }
 
   get chartOptions() {
     let {

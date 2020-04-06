@@ -60,4 +60,14 @@ function formatYTick(number) {
   return `${number}`
 }
 
-export { generateDataset, formatYTick }
+const plugins = {
+  hideTooltipOnLegend: {
+    beforeEvent(chart, e) {
+      if (e.type === 'mousemove') {
+        chart.tooltip._options.enabled = e.y < chart.chartArea.bottom
+      }
+    }
+  }
+}
+
+export { generateDataset, formatYTick, plugins }
