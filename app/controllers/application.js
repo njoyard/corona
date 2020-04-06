@@ -20,6 +20,8 @@ export default class ApplicationController extends Controller {
     { dataset: 'd' },
     { xSelection: 'x' },
     { xLog: 'xl' },
+    { xMin: 'x1' },
+    { xMax: 'x2' },
     { ySelection: 'y' },
     { yLog: 'yl' },
     { yChange: 'yc' },
@@ -54,6 +56,26 @@ export default class ApplicationController extends Controller {
 
   set xLog(value) {
     this._xLog = value
+  }
+
+  @tracked _xMin
+
+  get xMin() {
+    return this._xMin
+  }
+
+  set xMin(value) {
+    this._xMin = value
+  }
+
+  @tracked _xMax
+
+  get xMax() {
+    return this._xMax
+  }
+
+  set xMax(value) {
+    this._xMax = value
   }
 
   @tracked _ySelection = 'confirmed'
@@ -259,6 +281,18 @@ export default class ApplicationController extends Controller {
 
   @tracked xStartOffset = START_OFFSET
 
+  @action
+  setXSelection(xSelection) {
+    this.send('applyZoom', null, null)
+    this.xSelection = xSelection
+  }
+
+  @action
+  setXLog(xLog) {
+    this.send('applyZoom', null, null)
+    this.xLog = xLog
+  }
+
   get chartPlugins() {
     return [hideTooltipOnLegend]
   }
@@ -268,6 +302,8 @@ export default class ApplicationController extends Controller {
       xSelection,
       xLog,
       xStartOffset,
+      xMin,
+      xMax,
       ySelection,
       yChange,
       yMovingAverage,
@@ -276,6 +312,8 @@ export default class ApplicationController extends Controller {
       showLegend,
       stacked
     } = this
+
+    let controller = this
 
     let xLabel, yLabel
 
@@ -301,26 +339,11 @@ export default class ApplicationController extends Controller {
       yLabel = `${yLabel} (per million people)`
     }
 
-    let pluginConfig = {}
+    let xTicksConfig = {}
 
-    if (xSelection !== 'confirmed') {
-      pluginConfig.crosshair = {
-        line: {
-          color: '#888',
-          width: 1
-        },
-        snap: {
-          enabled: true
-        },
-        zoom: {
-          enabled: false, // TODO: save/restore zoom to/from querystring
-          zoomboxBackgroundColor: 'rgba(128, 128, 128,0.2)',
-          zoomboxBorderColor: '#888',
-          zoomButtonText: 'Reset Zoom',
-          zoomButtonClass: 'reset-zoom md-button md-raised'
-        }
-      }
-    }
+    if (xMin) xTicksConfig.min = Number(xMin)
+    if (xMax) xTicksConfig.max = Number(xMax)
+    if (xSelection === 'confirmed') xTicksConfig.callback = formatYTick
 
     return {
       defaultFontFamily: 'Roboto, "Helvetica Neue", sans-serif;',
@@ -375,11 +398,15 @@ export default class ApplicationController extends Controller {
           {
             type:
               xSelection === 'date' ? 'time' : xLog ? 'logarithmic' : 'linear',
+            time: {
+              unit: 'day'
+            },
             scaleLabel: {
               display: true,
-              labelString: xLabel
+              labelString: xLabel,
+              fontSize: 14
             },
-            ticks: xSelection === 'confirmed' ? { callback: formatYTick } : {}
+            ticks: xTicksConfig
           }
         ],
         yAxes: [
@@ -388,7 +415,8 @@ export default class ApplicationController extends Controller {
             type: yLog ? 'logarithmic' : 'linear',
             scaleLabel: {
               display: true,
-              labelString: yLabel
+              labelString: yLabel,
+              fontSize: 14
             },
             ticks: {
               callback: formatYTick
@@ -397,7 +425,28 @@ export default class ApplicationController extends Controller {
           }
         ]
       },
-      plugins: pluginConfig
+      plugins: {
+        crosshair: {
+          line: {
+            color: '#888',
+            width: 1
+          },
+          snap: {
+            enabled: true
+          },
+          zoom: {
+            enabled: !xLog,
+            zoomboxBackgroundColor: 'rgba(128, 128, 128,0.2)',
+            zoomboxBorderColor: '#888'
+          },
+          callbacks: {
+            beforeZoom(from, to) {
+              controller.send('applyZoom', Number(from), Number(to))
+              return false
+            }
+          }
+        }
+      }
     }
   }
 
@@ -456,5 +505,12 @@ export default class ApplicationController extends Controller {
   @action
   downloadChart() {
     this.downloadURL = document.querySelector('canvas').toDataURL('image/png')
+  }
+
+  @action
+  applyZoom(from, to) {
+    this.xMin = from
+    this.xMax = to
+    this.notifyPropertyChange('chartOptions')
   }
 }

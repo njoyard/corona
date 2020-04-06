@@ -50,9 +50,21 @@ function generateDataset(
 }
 
 function formatYTick(number) {
-  if (number >= 1000000) return `${number / 1000000}M`
-  if (number >= 1000) return `${number / 1000}k`
-  return `${number}`
+  let suffix = ''
+
+  if (number >= 1000000) {
+    number = number / 1000000
+    suffix = 'M'
+  } else if (number >= 1000) {
+    number = number / 1000
+    suffix = 'k'
+  }
+
+  if (number !== Math.floor(number)) {
+    number = number.toFixed(2).replace(/0+$/, '')
+  }
+
+  return `${number}${suffix}`
 }
 
 const plugins = {

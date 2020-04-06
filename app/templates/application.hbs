@@ -242,7 +242,7 @@
               @value="date"
               @disabled={{this.xLog}}
               @secondary={{true}}
-              @onChange={{fn (mut this.xSelection)}} />
+              @onChange={{fn this.setXSelection}} />
           </div>
         </PaperItem>
 
@@ -260,7 +260,7 @@
               @value="start"
               @disabled={{this.xLog}}
               @secondary={{true}}
-              @onChange={{fn (mut this.xSelection)}} />
+              @onChange={{fn this.setXSelection}} />
           </div>
         </PaperItem>
 
@@ -278,7 +278,7 @@
               @value="confirmed"
               @secondary={{true}}
               @disabled={{this.stacked}}
-              @onChange={{fn (mut this.xSelection)}} />
+              @onChange={{fn this.setXSelection}} />
           </div>
         </PaperItem>
 
@@ -295,7 +295,7 @@
               @secondary={{true}}
               @value={{this.xLog}}
               @disabled={{not-eq this.xSelection "confirmed"}}
-              @onChange={{fn (mut this.xLog)}} />
+              @onChange={{fn this.setXLog}} />
           </div>
         </PaperItem>
 
@@ -408,6 +408,15 @@
     </card.content>
   </PaperCard>
 </PaperSidenavContainer>
+
+{{#if (or this.xMin this.xMax)}}
+  <PaperButton
+    class="reset-zoom"
+    @raised={{true}}
+    @onClick={{fn this.applyZoom null null}}>
+    Reset zoom
+  </PaperButton>
+{{/if}}
 
 <PaperSpeedDial
   class="buttons"
