@@ -108,14 +108,6 @@ export default class DataService extends Service {
       deep: false,
       limit: 100
     },
-    global: {
-      title: 'Global data with provinces',
-      description:
-        'Totals for each country, including counts for each province for selected countries.',
-      us: false,
-      world: true,
-      deep: true
-    },
     us: {
       title: 'United States',
       description: 'United States data with counts for each state.',
@@ -125,17 +117,27 @@ export default class DataService extends Service {
     },
     china: {
       title: 'China',
-      description: 'China only with counts for each province',
+      description:
+        'China only with counts for each province (population ratio not available yet)',
       us: false,
       world: true,
       root: 'China'
     },
     australia: {
       title: 'Australia',
-      description: 'Australia only with counts for each province',
+      description:
+        'Australia only with counts for each province (population ratio not available yet)',
       us: false,
       world: true,
       root: 'Australia'
+    },
+    global: {
+      title: 'Global data with provinces',
+      description:
+        'Totals for each country, including counts for each province for selected countries.',
+      us: false,
+      world: true,
+      deep: true
     },
     full: {
       title: 'Global data with provinces and US states',
