@@ -142,10 +142,11 @@
   </PaperToast>
 {{/if}}
 
-<PaperSidenavContainer class="layout-fill site-nav-container">
+<PaperSidenavContainer class="layout-fill site-nav-container {{if this.media.isNarrow "narrow-container"}}">
   <PaperSidenav
     class="md-whiteframe"
-    @lockedOpen={{true}}>
+    @open={{this.sideNavOpen}}
+    @lockedOpen={{this.sideNavLockedOpen}}>
 
     <PaperToolbar as |toolbar|>
       <toolbar.tools>
@@ -153,6 +154,12 @@
           <use xlink:href="assets/corona.svg#corona"></use>
         </svg>
         <h1>Covid-19 Charts</h1>
+        {{#if this.media.isNarrow}}
+          <span class="flex"></span>
+          <PaperButton @iconButton={{true}} @onClick={{fn (mut this.sideNavOpen) false}}>
+            <PaperIcon @icon="chevron_left" />
+          </PaperButton>
+        {{/if}}
       </toolbar.tools>
     </PaperToolbar>
 
@@ -398,11 +405,11 @@
     <card.content class="flex">
       {{#if this.hasSelection}}
         {{!--
-          Workaround for chartjs-plugin-crosshair bug with log scales: we have to use a different
-          chart instance when the chart was initially loaded with a log scale. This #if ensures
-          we switch to a different component instance whenever toggling xLog.
+            Force recreation of the chart when switching xLog or media (eg. tablet rotation)
+            - xLog to workaround a bug in chartjs-plugin-crosshair
+            - media to force a resize of the chart that would be otherwise undetected by its responsive option
            --}}
-        {{#if this.xLog}}
+        {{#if (eq this.xLog this.media.isWide)}}
           <EmberChart
             @type="line"
             @data={{this.chartData}}
@@ -422,6 +429,16 @@
   </PaperCard>
 </PaperSidenavContainer>
 
+{{#if (and this.media.isNarrow (not this.sideNavOpen))}}
+  <PaperButton
+    class="open-sidenav"
+    @fab={{true}}
+    @primary={{true}}
+    @onClick={{fn (mut this.sideNavOpen) true}}>
+    <PaperIcon @icon="chevron_right" />
+  </PaperButton>
+{{/if}}
+
 {{#if (or this.xMin this.xMax)}}
   <PaperButton
     class="reset-zoom"
@@ -436,9 +453,7 @@
   @direction="up"
   @animation="scale"
   @open={{this.speedDialOpen}}
-  @onMouseEnter={{fn (mut this.speedDialOpen) true}}
-  @onMouseLeave={{fn (mut this.speedDialOpen) false}}
-  @onToggle={{fn (mut this.speedDialOpen) true}}
+  @onToggle={{fn (mut this.speedDialOpen)}}
   as |dial|>
 
   <dial.trigger>

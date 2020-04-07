@@ -15,6 +15,7 @@ const START_OFFSET = 50
 
 export default class ApplicationController extends Controller {
   @service data
+  @service media
 
   queryParams = [
     { dataset: 'd' },
@@ -161,6 +162,20 @@ export default class ApplicationController extends Controller {
     setTimeout(() => {
       this.dataset = ds
     }, 0)
+  }
+
+  @tracked _sideNavOpen = null
+
+  get sideNavOpen() {
+    return this.media.isWide ? null : this._sideNavOpen
+  }
+
+  set sideNavOpen(value) {
+    this._sideNavOpen = value
+  }
+
+  get sideNavLockedOpen() {
+    return this.media.isWide
   }
 
   @tracked speedDialOpen = false

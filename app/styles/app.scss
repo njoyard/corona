@@ -23,6 +23,10 @@ $switch-thumb-size: 16px;
   bottom: 0;
 }
 
+.site-nav-container.narrow-container md-content {
+  overflow-y: hidden;
+}
+
 .site-nav-container md-content {
   overflow-x: hidden;
 }
@@ -41,6 +45,12 @@ $switch-thumb-size: 16px;
 
 .site-nav-container md-radio-button {
   margin: 4px 0;
+}
+
+.open-sidenav {
+  position: absolute;
+  left: 1rem;
+  top: 1rem;
 }
 
 .buttons {
