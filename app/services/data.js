@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking'
 import { A } from '@ember/array'
 import delay from 'corona/utils/delay'
 import { invalidate, register, codeFor } from 'corona/utils/countrycodes'
+import { datasets, defaultDataset } from 'corona/utils/datasets'
 
 const MIN_SATURATION = 25
 const MAX_SATURATION = 90
@@ -98,58 +99,9 @@ export default class DataService extends Service {
   @tracked reloading = false
   @tracked loadingState = null
 
-  datasets = {
-    flat: {
-      title: 'Global simplified data',
-      description:
-        'Totals for each country, excluding countries with less than 100 confirmed cases to date.',
-      us: false,
-      world: true,
-      deep: false,
-      limit: 100
-    },
-    us: {
-      title: 'United States',
-      description: 'United States data with counts for each state.',
-      us: true,
-      world: false,
-      deep: false
-    },
-    china: {
-      title: 'China',
-      description:
-        'China only with counts for each province (population ratio not available yet)',
-      us: false,
-      world: true,
-      root: 'China'
-    },
-    australia: {
-      title: 'Australia',
-      description:
-        'Australia only with counts for each province (population ratio not available yet)',
-      us: false,
-      world: true,
-      root: 'Australia'
-    },
-    global: {
-      title: 'Global data with provinces',
-      description:
-        'Totals for each country, including counts for each province for selected countries.',
-      us: false,
-      world: true,
-      deep: true
-    },
-    full: {
-      title: 'Global data with provinces and US states',
-      description:
-        'Complete dataset, including country provinces and US states. Will need a bit more time to load than other datasets.',
-      us: true,
-      world: true,
-      deep: true
-    }
-  }
+  datasets = datasets
 
-  defaultDataset = 'flat'
+  defaultDataset = defaultDataset
 
   async data(dataset, selectedRegionCodes) {
     let { dataCsse, datasets, defaultDataset } = this

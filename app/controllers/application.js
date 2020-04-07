@@ -6,6 +6,7 @@ import { scheduleOnce } from '@ember/runloop'
 import moment from 'moment'
 import env from 'corona/config/environment'
 import { generateDataset, formatYTick, plugins } from 'corona/utils/chart'
+import presets from 'corona/utils/presets'
 
 const { buildID, buildDate } = env.APP
 const { hideTooltipOnLegend } = plugins
@@ -191,7 +192,15 @@ export default class ApplicationController extends Controller {
   @tracked showAboutDialog = false
   @tracked showSourcesDialog = false
   @tracked showShareDialog = false
+  @tracked showPresetDialog = false
   @tracked shareURL = location.href
+
+  presets = presets
+
+  @action selectPreset(preset) {
+    this.setProperties(preset.params)
+    this.showPresetDialog = false
+  }
 
   get versionInfo() {
     let info = `This version was built on ${buildDate}`
