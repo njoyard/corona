@@ -359,17 +359,25 @@ export default class ApplicationController extends Controller {
     }
 
     if (ySelection === 'confirmed') {
-      yLabel = yChange ? 'New confirmed cases' : 'Total confirmed cases'
+      yLabel = yChange
+        ? 'Daily increase in confirmed cases'
+        : 'Total confirmed cases'
     } else {
-      yLabel = yChange ? 'New deaths' : 'Total deaths'
+      yLabel = yChange ? 'Daily increase in deaths' : 'Total deaths'
     }
 
+    let yLabelDetails = []
+
     if (yChange && yMovingAverage) {
-      yLabel += ` (7-day moving average)`
+      yLabelDetails.push('7-day moving average')
     }
 
     if (yRatio) {
-      yLabel = `${yLabel} (per million people)`
+      yLabelDetails.push('per million people')
+    }
+
+    if (yLabelDetails.length) {
+      yLabel = `${yLabel} (${yLabelDetails.join(', ')})`
     }
 
     let xTicksConfig = {}

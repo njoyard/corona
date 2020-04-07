@@ -217,175 +217,103 @@
       <PaperList>
         <PaperSubheader>Vertical axis</PaperSubheader>
 
-        <PaperItem as |controls|>
-          <small>Confirmed cases</small>
-          <div class="md-secondary-container">
-            <controls.radio
-              @groupValue={{this.ySelection}}
-              @value="confirmed"
-              @secondary={{true}}
-              @onChange={{fn (mut this.ySelection)}} />
-          </div>
-        </PaperItem>
+        <MenuRadio
+          @onChange={{fn (mut this.ySelection)}}
+          @groupValue={{this.ySelection}}
+          @value="confirmed">
+          Confirmed cases
+        </MenuRadio>
 
-        <PaperItem as |controls|>
-          <small>Deaths</small>
-          <div class="md-secondary-container">
-            <controls.radio
-              @groupValue={{this.ySelection}}
-              @value="deceased"
-              @secondary={{true}}
-              @onChange={{fn (mut this.ySelection)}} />
-          </div>
-        </PaperItem>
+        <MenuRadio
+          @onChange={{fn (mut this.ySelection)}}
+          @groupValue={{this.ySelection}}
+          @value="deceased">
+          Deaths
+        </MenuRadio>
 
-        <PaperItem as |controls|>
-          <small>Daily change</small>
-          <div class="md-secondary-container">
-            <controls.switch
-              @secondary={{true}}
-              @value={{this.yChange}}
-              @onChange={{fn (mut this.yChange)}} />
-          </div>
-        </PaperItem>
+        <MenuSwitch
+          @value={{this.yRatio}}
+          @onChange={{fn (mut this.yRatio)}}>
+          Per capita
+        </MenuSwitch>
+
+        <MenuSwitch
+          @value={{this.yChange}}
+          @onChange={{fn (mut this.yChange)}}>
+          Daily change
+        </MenuSwitch>
 
         {{#if this.yChange}}
-          <PaperItem as |controls|>
-            <small class="sub-option">Moving average (7 day)</small>
-            <div class="md-secondary-container">
-              <controls.switch
-                @secondary={{true}}
-                @value={{this.yMovingAverage}}
-                @onChange={{fn (mut this.yMovingAverage)}} />
-            </div>
-          </PaperItem>
+          <MenuSwitch
+            @value={{this.yMovingAverage}}
+            @onChange={{fn (mut this.yMovingAverage)}}
+            @subOption={{true}}>
+            7-day moving average
+          </MenuSwitch>
         {{/if}}
 
-        <PaperItem as |controls|>
-          <small>Logarithmic scale</small>
-          <div class="md-secondary-container">
-            <controls.switch
-              @secondary={{true}}
-              @value={{this.yLog}}
-              @onChange={{fn (mut this.yLog)}} />
-          </div>
-        </PaperItem>
-
-        <PaperItem as |controls|>
-          <small>Population ratio</small>
-          <div class="md-secondary-container">
-            <controls.switch
-              @secondary={{true}}
-              @value={{this.yRatio}}
-              @onChange={{fn (mut this.yRatio)}} />
-          </div>
-        </PaperItem>
+        <MenuSwitch
+          @value={{this.yLog}}
+          @onChange={{fn (mut this.yLog)}}>
+          Logarithmic scale
+        </MenuSwitch>
 
         <PaperDivider />
 
         <PaperSubheader>Horizontal axis</PaperSubheader>
 
-        <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
-          {{#if this.xLog}}
-            <PaperTooltip @position="right">
-              Unavailable when using logarithmic scale on the X axis
-            </PaperTooltip>
-          {{/if}}
+        <MenuRadio
+          @onChange={{fn this.setXSelection}}
+          @groupValue={{this.xSelection}}
+          @value="date"
+          @disabled={{this.xLog}}
+          @disabledTooltip="Unavailable when using logarithmic scale on the X axis">
+          Date
+        </MenuRadio>
 
-          <small>Date</small>
-          <div class="md-secondary-container">
-            <controls.radio
-              @groupValue={{this.xSelection}}
-              @value="date"
-              @disabled={{this.xLog}}
-              @secondary={{true}}
-              @onChange={{fn this.setXSelection}} />
-          </div>
-        </PaperItem>
+        <MenuRadio
+          @onChange={{fn this.setXSelection}}
+          @groupValue={{this.xSelection}}
+          @value="start"
+          @disabled={{this.xLog}}
+          @disabledTooltip="Unavailable when using logarithmic scale on the X axis">
+          Day since {{this.xStartOffset}}th case
+        </MenuRadio>
 
-        <PaperItem class={{if this.xLog "md-disabled"}} as |controls|>
-          {{#if this.xLog}}
-            <PaperTooltip @position="right">
-              Unavailable when using logarithmic scale
-            </PaperTooltip>
-          {{/if}}
+        <MenuRadio
+          @onChange={{fn this.setXSelection}}
+          @groupValue={{this.xSelection}}
+          @value="confirmed"
+          @disabled={{this.stacked}}
+          @disabledTooltip="Unavailable with a stacked chart">
+          Confirmed cases
+        </MenuRadio>
 
-          <small>Day since {{this.xStartOffset}}th case</small>
-          <div class="md-secondary-container">
-            <controls.radio
-              @groupValue={{this.xSelection}}
-              @value="start"
-              @disabled={{this.xLog}}
-              @secondary={{true}}
-              @onChange={{fn this.setXSelection}} />
-          </div>
-        </PaperItem>
-
-        <PaperItem class={{if this.stacked "md-disabled"}} as |controls|>
-          {{#if this.stacked}}
-            <PaperTooltip @position="right">
-              Unavailable with a stacked chart
-            </PaperTooltip>
-          {{/if}}
-
-          <small>Confirmed cases</small>
-          <div class="md-secondary-container">
-            <controls.radio
-              @groupValue={{this.xSelection}}
-              @value="confirmed"
-              @secondary={{true}}
-              @disabled={{this.stacked}}
-              @onChange={{fn this.setXSelection}} />
-          </div>
-        </PaperItem>
-
-        <PaperItem class={{if (not-eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
-          {{#if (not-eq this.xSelection "confirmed")}}
-            <PaperTooltip @position="right">
-              Only available when showing confirmed cases on the X axis
-            </PaperTooltip>
-          {{/if}}
-
-          <small>Logarithmic scale</small>
-          <div class="md-secondary-container">
-            <controls.switch
-              @secondary={{true}}
-              @value={{this.xLog}}
-              @disabled={{not-eq this.xSelection "confirmed"}}
-              @onChange={{fn this.setXLog}} />
-          </div>
-        </PaperItem>
+        <MenuSwitch
+          @value={{this.xLog}}
+          @onChange={{fn this.setXLog}}
+          @disabled={{not-eq this.xSelection "confirmed"}}
+          @disabledTooltip="Only available when showing confirmed cases on the X axis">
+          Logarithmic scale
+        </MenuSwitch>
 
         <PaperDivider />
 
         <PaperSubheader>Chart options</PaperSubheader>
 
-        <PaperItem as |controls|>
-          <small>Show legend</small>
-          <div class="md-secondary-container">
-            <controls.switch
-              @secondary={{true}}
-              @value={{this.showLegend}}
-              @onChange={{fn (mut this.showLegend)}} />
-          </div>
-        </PaperItem>
+        <MenuSwitch
+          @value={{this.showLegend}}
+          @onChange={{fn (mut this.showLegend)}}>
+          Show legend
+        </MenuSwitch>
 
-        <PaperItem class={{if (eq this.xSelection "confirmed") "md-disabled"}} as |controls|>
-          {{#if (eq this.xSelection "confirmed")}}
-            <PaperTooltip @position="right">
-              Only available when using date or days since {{this.xStartOffset}}th case on the X axis
-            </PaperTooltip>
-          {{/if}}
-
-          <small>Stacked</small>
-          <div class="md-secondary-container">
-            <controls.switch
-              @secondary={{true}}
-              @value={{this.stacked}}
-              @disabled={{eq this.xSelection "confirmed"}}
-              @onChange={{fn (mut this.stacked)}} />
-          </div>
-        </PaperItem>
+        <MenuSwitch
+          @value={{this.stacked}}
+          @onChange={{fn (mut this.stacked)}}
+          @disabled={{eq this.xSelection "confirmed"}}
+          @disabledTooltip="Only available when using date or days since {{this.xStartOffset}}th case on the X axis">
+          Stacked chart
+        </MenuSwitch>
 
         <PaperDivider />
 
