@@ -392,12 +392,11 @@
         <PaperSubheader>Regions</PaperSubheader>
 
         <PaperItem>
-          <p>
-            <PaperInput
-              @label="Find regions"
-              @value={{this.regionFilter}}
-              @onChange={{fn (mut this.regionFilter)}} />
-          </p>
+          <PaperInput
+            class="flex-100"
+            @label="Find regions"
+            @value={{this.regionFilter}}
+            @onChange={{fn (mut this.regionFilter)}} />
 
           {{#if this.regionFilter}}
             <div class="md-secondary-container align-with-input">
