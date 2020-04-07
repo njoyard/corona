@@ -68,6 +68,10 @@ $switch-thumb-size: 16px;
   color: rgba(0, 0, 0, 0.38);
 }
 
+md-list-item.md-clickable:hover {
+  background-color: #eee;
+}
+
 .region-option-level-1,
 .sub-option {
   padding-left: 1rem;
