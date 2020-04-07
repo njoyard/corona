@@ -167,7 +167,16 @@ export default class ApplicationController extends Controller {
   @tracked _sideNavOpen = null
 
   get sideNavOpen() {
-    return this.media.isWide ? null : this._sideNavOpen
+    let newValue = this.media.isWide ? null : this._sideNavOpen
+
+    if (this.chart && newValue !== this._sideNavOpen) {
+      // Force resize of the chart, needed because the sidenav animation
+      // when switching between narrow and wide screen (eg. when rotating
+      // the device) prevents chartjs detecting the resize
+      setTimeout(() => this.chart.resize(), 1500)
+    }
+
+    return newValue
   }
 
   set sideNavOpen(value) {
@@ -515,6 +524,13 @@ export default class ApplicationController extends Controller {
           )
         })
     }
+  }
+
+  chart = null
+
+  @action
+  chartChanged(chart) {
+    this.chart = chart
   }
 
   @tracked downloadURL = null
