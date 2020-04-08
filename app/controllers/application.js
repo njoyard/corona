@@ -510,7 +510,7 @@ export default class ApplicationController extends Controller {
 
     if (yChange) {
       if (yMovingAverage) {
-        yField = `${yField}Moving`
+        yField = `${yField}Weekly`
       }
 
       yField = `${yField}Change`

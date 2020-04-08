@@ -5,6 +5,7 @@ import { A } from '@ember/array'
 import delay from 'corona/utils/delay'
 import { invalidate, register, codeFor } from 'corona/utils/countrycodes'
 import { datasets, defaultDataset } from 'corona/utils/datasets'
+import compute from 'corona/utils/compute'
 
 const MIN_SATURATION = 25
 const MAX_SATURATION = 90
@@ -33,6 +34,15 @@ let crc32 = (function () {
     return (crc ^ -1) >>> 0
   }
 })()
+
+function recCompute(data) {
+  for (let region in data) {
+    if (region.startsWith('_')) continue
+    recCompute(data[region])
+  }
+
+  compute(data._total)
+}
 
 class RegionOption {
   @tracked selected = false
@@ -115,6 +125,10 @@ export default class DataService extends Service {
       this.loadingState = state
     }, options)
     let root = options.root || (options.world ? 'World' : 'United States')
+
+    this.loadingState = 'computing daily changes'
+
+    await delay(() => recCompute(sourceData))
 
     this.loadingState = 'building region options'
 
