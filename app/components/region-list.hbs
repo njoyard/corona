@@ -1,34 +1,44 @@
 {{#each this.options as |option|}}
   {{#if (string-contains (get option @filterBy) @filter)}}
-    <PaperItem class={{if (and @yRatio (not option.population)) "md-disabled"}} as |controls|>
-      {{#if (and @yRatio (not option.population))}}
-        <PaperTooltip @position="right">
-          No population data for this region
-        </PaperTooltip>
-      {{/if}}
-
-      <small class="region-option-level-{{option.level}}">
-        <Swatch @color={{if (and @yRatio (not option.population)) (hash hue=0 saturation=0 lightness=80) option}} />
-        {{option.label}}
-      </small>
-
-      <div class="md-secondary-container">
-        {{#if option.hasChildren}}
-          <controls.button
-            @secondary={{true}}
-            @iconButton={{true}}
-            @onClick={{fn this.toggleChildren option}}>
-            <PaperIcon @icon="done_all" />
-          </controls.button>
+    {{#let
+      (if (and @requiresPopulation (not option.population))
+       "No population data for this region"
+       (if (and @requiresRecovered (not option.recovered))
+        "No recovered data for this region"
+        null
+       )
+      )
+      as |disabled|}}
+      <PaperItem class={{if disabled "md-disabled"}} as |controls|>
+        {{#if disabled}}
+          <PaperTooltip @position="right">
+            {{disabled}}
+          </PaperTooltip>
         {{/if}}
 
-        <controls.checkbox
-          @value={{option.selected}}
-          @secondary={{true}}
-          @disabled={{and @yRatio (not option.population)}}
-          @onChange={{fn this.toggle option}} />
-      </div>
-    </PaperItem>
+        <small class="region-option-level-{{option.level}}">
+          <Swatch @color={{if disabled (hash hue=0 saturation=0 lightness=80) option}} />
+          {{option.label}}
+        </small>
+
+        <div class="md-secondary-container">
+          {{#if option.hasChildren}}
+            <controls.button
+              @secondary={{true}}
+              @iconButton={{true}}
+              @onClick={{fn this.toggleChildren option}}>
+              <PaperIcon @icon="done_all" />
+            </controls.button>
+          {{/if}}
+
+          <controls.checkbox
+            @value={{option.selected}}
+            @secondary={{true}}
+            @disabled={{not (is-empty disabled)}}
+            @onChange={{fn this.toggle option}} />
+        </div>
+      </PaperItem>
+    {{/let}}
   {{/if}}
 
   {{#if option.hasChildren}}
@@ -39,6 +49,7 @@
       @sortBy={{@sortBy}}
       @filterBy={{@filterBy}}
       @filter={{@filter}}
-      @yRatio={{@yRatio}} />
+      @requiresRecovered={{@requiresRecovered}}
+      @requiresPopulation={{@requiresPopulation}} />
   {{/if}}
 {{/each}}

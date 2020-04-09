@@ -160,6 +160,13 @@ export default class ApplicationController extends Controller {
     this.showSourcesDialog = false
     this.selectedOptions.clear()
 
+    if (
+      ds === 'us' &&
+      (this.ySelection === 'recovered' || this.ySelection === 'active ')
+    ) {
+      this.ySelection = 'confirmed'
+    }
+
     setTimeout(() => {
       this.dataset = ds
     }, 0)
@@ -518,7 +525,12 @@ export default class ApplicationController extends Controller {
 
     return {
       datasets: selectedOptions
-        .filter((o) => !yRatio || o.population)
+        .filter(
+          (o) =>
+            (!yRatio || o.population) &&
+            ((ySelection !== 'recovered' && ySelection !== 'active') ||
+              o.recovered)
+        )
         .map((option) => {
           let { hue, saturation, lightness, population } = option
 

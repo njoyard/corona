@@ -231,6 +231,27 @@
           Deaths
         </MenuRadio>
 
+        {{#if (not-eq this.dataset "us")}}
+          <MenuRadio
+            @onChange={{fn (mut this.ySelection)}}
+            @groupValue={{this.ySelection}}
+            @value="recovered">
+            Recovered
+          </MenuRadio>
+
+          <MenuRadio
+            @onChange={{fn (mut this.ySelection)}}
+            @groupValue={{this.ySelection}}
+            @value="active">
+            Active
+            <PaperIcon @icon="help" @size={{18}}>
+              <PaperTooltip @position="right">
+                Computed by subtracting deaths and recovered cases from confirmed cases
+              </PaperTooltip>
+            </PaperIcon>
+          </MenuRadio>
+        {{/if}}
+
         <MenuSwitch
           @value={{this.yRatio}}
           @onChange={{fn (mut this.yRatio)}}>
@@ -373,7 +394,8 @@
           @sortBy={{this.regionSortBy}}
           @filterBy="longLabel"
           @filter={{this.regionFilter}}
-          @yRatio={{this.yRatio}} />
+          @requiresPopulation={{this.yRatio}}
+          @requiresRecovered={{or (eq this.ySelection "recovered") (eq this.ySelection "active")}} />
       </PaperList>
     </PaperContent>
   </PaperSidenav>

@@ -59,7 +59,7 @@ function parseLines(lines, dates, data, key) {
       let existing = data[country][province]._total.find((p) => p.date === date)
 
       if (!existing) {
-        existing = { date, confirmed: 0, deceased: 0 }
+        existing = { date, confirmed: 0, deceased: 0, recovered: 0 }
         data[country][province]._total.push(existing)
       }
 
@@ -84,11 +84,13 @@ function totalize(data) {
       if (existing) {
         if (point.confirmed) existing.confirmed += point.confirmed
         if (point.deceased) existing.deceased += point.deceased
+        if (point.recovered) existing.recovered += point.recovered
       } else {
         total.push({
           date: point.date,
           confirmed: point.confirmed,
-          deceased: point.deceased
+          deceased: point.deceased,
+          recovered: point.recovered || 0
         })
       }
     }
@@ -128,6 +130,7 @@ export default class DataCeseService extends Service {
     let [
       confirmedGlobalLines,
       deathsGlobalLines,
+      recoveredGlobalLines,
       confirmedUSLines,
       deathsUSLines
     ] = (
@@ -138,6 +141,9 @@ export default class DataCeseService extends Service {
         world
           ? fetchText(this.getURL('deaths', 'global'))
           : Promise.resolve(''),
+        world
+          ? fetchText(this.getURL('recovered', 'global'))
+          : Promise.resolve(''),
         us ? fetchText(this.getURL('confirmed', 'US')) : Promise.resolve(''),
         us ? fetchText(this.getURL('deaths', 'US')) : Promise.resolve('')
       ])
@@ -147,6 +153,8 @@ export default class DataCeseService extends Service {
       world && confirmedGlobalLines.shift().slice(4).map(parseDate)
     let deathsGlobalDates =
       world && deathsGlobalLines.shift().slice(4).map(parseDate)
+    let recoveredGlobalDates =
+      world && recoveredGlobalLines.shift().slice(4).map(parseDate)
     let confirmedUSDates =
       us && confirmedUSLines.shift().slice(11).map(parseDate)
     let deathsUSDates = us && deathsUSLines.shift().slice(12).map(parseDate)
@@ -205,6 +213,19 @@ export default class DataCeseService extends Service {
           deathsGlobalDates,
           globalData,
           'deceased'
+        )
+
+        parseLines(
+          recoveredGlobalLines.map(([province, country, , , ...counts]) => [
+            province,
+            countryReplacements[country] || country,
+            null,
+            { population: getPopulation(country) },
+            ...counts
+          ]),
+          recoveredGlobalDates,
+          globalData,
+          'recovered'
         )
       }
 

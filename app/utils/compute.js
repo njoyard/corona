@@ -39,8 +39,20 @@ const computedFields = {
   confirmedChange: derive('confirmed'),
   confirmedWeeklyChange: movingAverage('confirmedChange', 7),
 
+  recoveredChange: derive('recovered'),
+  recoveredWeeklyChange: movingAverage('recoveredChange', 7),
+
   deceasedChange: derive('deceased'),
-  deceasedWeeklyChange: movingAverage('deceasedChange', 7)
+  deceasedWeeklyChange: movingAverage('deceasedChange', 7),
+
+  active: {
+    depends: ['confirmed', 'recovered', 'deceased'],
+    compute(point) {
+      return point.confirmed - (point.recovered + point.deceased)
+    }
+  },
+  activeChange: derive('active'),
+  activeWeeklyChange: movingAverage('activeChange', 7)
 }
 
 let fieldOrder = []

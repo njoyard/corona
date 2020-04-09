@@ -54,6 +54,7 @@ class RegionOption {
   @tracked confirmed
   @tracked deceased
   @tracked population
+  @tracked recovered
 
   @tracked hue
   @tracked saturation
@@ -94,6 +95,7 @@ class RegionOption {
 
     this.confirmed = lastPoint.confirmed
     this.deceased = lastPoint.deceased
+    this.recovered = lastPoint.recovered
   }
 }
 
