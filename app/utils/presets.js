@@ -94,6 +94,25 @@ const presets = {
 
       stacked: false
     }
+  }),
+
+  active: new Preset({
+    title: 'Evolution of active cases per capita',
+    description: `
+      Shows the evolution of estimated active cases (subtracting deaths and recoveries from confirmed cases) per million inhabitants for each
+      selected region since the 50th confirmed case.
+    `,
+    params: {
+      xSelection: 'start',
+      xLog: false,
+
+      ySelection: 'active',
+      yChange: false,
+      yLog: false,
+      yRatio: true,
+
+      stacked: false
+    }
   })
 }
 
