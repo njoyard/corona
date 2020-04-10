@@ -369,8 +369,12 @@ export default class ApplicationController extends Controller {
       yLabel = yChange
         ? 'Daily increase in confirmed cases'
         : 'Total confirmed cases'
-    } else {
+    } else if (ySelection === 'deceased') {
       yLabel = yChange ? 'Daily increase in deaths' : 'Total deaths'
+    } else if (ySelection === 'recovered') {
+      yLabel = yChange ? 'Daily increase in recoveries' : 'Total recoveries'
+    } else if (ySelection === 'active') {
+      yLabel = yChange ? 'Daily increase in active cases' : 'Total active cases'
     }
 
     let yLabelDetails = []
