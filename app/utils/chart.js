@@ -1,3 +1,5 @@
+import { bignum } from 'corona/utils/format'
+
 function generateDataset(
   source,
   xField,
@@ -5,10 +7,11 @@ function generateDataset(
   yRatio,
   yLog,
   startOffset,
+  startField,
   options = {}
 ) {
   if (xField === 'start') {
-    let firstIndex = source.findIndex((p) => p[yField] >= startOffset)
+    let firstIndex = source.findIndex((p) => p[startField] >= startOffset)
     source = source.slice(firstIndex)
   }
 
@@ -50,21 +53,7 @@ function generateDataset(
 }
 
 function formatYTick(number) {
-  let suffix = ''
-
-  if (number >= 1000000) {
-    number = number / 1000000
-    suffix = 'M'
-  } else if (number >= 1000) {
-    number = number / 1000
-    suffix = 'k'
-  }
-
-  if (number !== Math.floor(number)) {
-    number = number.toFixed(2).replace(/0+$/, '')
-  }
-
-  return `${number}${suffix}`
+  return bignum(number)
 }
 
 const plugins = {

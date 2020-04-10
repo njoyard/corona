@@ -7,12 +7,13 @@ import moment from 'moment'
 import env from 'corona/config/environment'
 import { generateDataset, formatYTick, plugins } from 'corona/utils/chart'
 import presets from 'corona/utils/presets'
+import { ordinal } from 'corona/utils/format'
 
 const { buildID, buildDate } = env.APP
 const { hideTooltipOnLegend } = plugins
 
 const LEGEND_LIMIT = 20
-const START_OFFSET = 50
+const XOFFSET_STEPS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
 
 export default class ApplicationController extends Controller {
   @service data
@@ -24,6 +25,7 @@ export default class ApplicationController extends Controller {
     { xLog: 'xl' },
     { xMin: 'x1' },
     { xMax: 'x2' },
+    { xStartOffset: 'xs' },
     { ySelection: 'y' },
     { yLog: 'yl' },
     { yChange: 'yc' },
@@ -78,6 +80,16 @@ export default class ApplicationController extends Controller {
 
   set xMax(value) {
     this._xMax = value
+  }
+
+  @tracked _xStartOffset = 5
+
+  get xStartOffset() {
+    return this._xStartOffset
+  }
+
+  set xStartOffset(value) {
+    this._xStartOffset = value
   }
 
   @tracked _ySelection = 'confirmed'
@@ -319,8 +331,6 @@ export default class ApplicationController extends Controller {
     return this.selectedOptions.length > 0
   }
 
-  @tracked xStartOffset = START_OFFSET
-
   @action
   setXSelection(xSelection) {
     this.send('applyZoom', null, null)
@@ -333,6 +343,10 @@ export default class ApplicationController extends Controller {
     this.xLog = xLog
   }
 
+  get xStartOffsetOrdinal() {
+    return ordinal(XOFFSET_STEPS[this.xStartOffset])
+  }
+
   get chartPlugins() {
     return [hideTooltipOnLegend]
   }
@@ -341,7 +355,7 @@ export default class ApplicationController extends Controller {
     let {
       xSelection,
       xLog,
-      xStartOffset,
+      xStartOffsetOrdinal,
       xMin,
       xMax,
       ySelection,
@@ -360,7 +374,7 @@ export default class ApplicationController extends Controller {
     if (xSelection === 'date') {
       xLabel = 'Date'
     } else if (xSelection === 'start') {
-      xLabel = `Days since ${xStartOffset}th confirmed case`
+      xLabel = `Days since ${xStartOffsetOrdinal} confirmed case`
     } else {
       xLabel = 'Confirmed cases'
     }
@@ -433,7 +447,7 @@ export default class ApplicationController extends Controller {
             if (xSelection === 'date') {
               return moment(point.t).format('ll')
             } else if (xSelection === 'start') {
-              return `Day ${item.xLabel} since ${xStartOffset}th confirmed case`
+              return `Day ${item.xLabel} since ${xStartOffsetOrdinal} confirmed case`
             } else {
               return `${item.xLabel} confirmed cases`
             }
@@ -507,6 +521,7 @@ export default class ApplicationController extends Controller {
   get chartData() {
     let {
       xSelection,
+      xStartOffset,
       ySelection,
       yChange,
       yMovingAverage,
@@ -544,7 +559,8 @@ export default class ApplicationController extends Controller {
             yField,
             yRatio ? 1000000 / population : 1,
             yLog,
-            START_OFFSET,
+            XOFFSET_STEPS[xStartOffset],
+            'confirmed',
             {
               label: option.longLabel,
               fill: stacked && xSelection === 'date',

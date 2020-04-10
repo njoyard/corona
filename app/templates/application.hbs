@@ -301,8 +301,17 @@
           @value="start"
           @disabled={{this.xLog}}
           @disabledTooltip="Unavailable when using logarithmic scale on the X axis">
-          Day since {{this.xStartOffset}}th case
+          Day since {{this.xStartOffsetOrdinal}} case
         </MenuRadio>
+
+        {{#if (eq this.xSelection "start")}}
+          <MenuSlider
+            @onChange={{fn (mut this.xStartOffset)}}
+            @value={{this.xStartOffset}}
+            @min={{0}}
+            @max={{9}}
+            @subOption={{true}} />
+        {{/if}}
 
         <MenuRadio
           @onChange={{fn this.setXSelection}}

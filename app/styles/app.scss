@@ -46,6 +46,23 @@ $switch-thumb-size: 16px;
   md-radio-button {
     margin: 4px 0;
   }
+
+  md-slider {
+    height: 32px;
+    margin-right: 16px;
+
+    .md-track-container {
+      top: 15px;
+    }
+
+    .md-thumb {
+      top: 6px;
+    }
+
+    .md-focus-ring {
+      top: -1px;
+    }
+  }
 }
 
 .open-sidenav {
