@@ -263,9 +263,7 @@
 
         <MenuSwitch
           @value={{this.yChange}}
-          @onChange={{fn (mut this.yChange)}}
-          @disabled={{this.yLog}}
-          @disabledTooltip="Unavailable with a logarithmic scale">
+          @onChange={{fn (mut this.yChange)}}>
           Daily change
         </MenuSwitch>
 
@@ -280,9 +278,7 @@
 
         <MenuSwitch
           @value={{this.yLog}}
-          @onChange={{fn (mut this.yLog)}}
-          @disabled={{this.yChange}}
-          @disabledTooltip="Unavailable with daily change">
+          @onChange={{fn (mut this.yLog)}}>
           Logarithmic scale
         </MenuSwitch>
 
