@@ -5,12 +5,11 @@ import { inject as service } from '@ember/service'
 import { scheduleOnce } from '@ember/runloop'
 import moment from 'moment'
 import env from 'corona/config/environment'
-import { generateDataset, formatYTick, plugins } from 'corona/utils/chart'
+import { generateDataset, formatYTick, formatXDate } from 'corona/utils/chart'
 import presets from 'corona/utils/presets'
 import { ordinal } from 'corona/utils/format'
 
 const { buildID, buildDate } = env.APP
-const { hideTooltipOnLegend } = plugins
 
 const LEGEND_LIMIT = 20
 const XOFFSET_STEPS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
@@ -23,8 +22,6 @@ export default class ApplicationController extends Controller {
     { dataset: 'd' },
     { xSelection: 'x' },
     { xLog: 'xl' },
-    { xMin: 'x1' },
-    { xMax: 'x2' },
     { xStartOffset: 'xs' },
     { ySelection: 'y' },
     { yLog: 'yl' },
@@ -60,26 +57,6 @@ export default class ApplicationController extends Controller {
 
   set xLog(value) {
     this._xLog = value
-  }
-
-  @tracked _xMin
-
-  get xMin() {
-    return this._xMin
-  }
-
-  set xMin(value) {
-    this._xMin = value
-  }
-
-  @tracked _xMax
-
-  get xMax() {
-    return this._xMax
-  }
-
-  set xMax(value) {
-    this._xMax = value
   }
 
   @tracked _xStartOffset = 5
@@ -348,7 +325,7 @@ export default class ApplicationController extends Controller {
   }
 
   get chartPlugins() {
-    return [hideTooltipOnLegend]
+    return []
   }
 
   get chartOptions() {
@@ -356,8 +333,6 @@ export default class ApplicationController extends Controller {
       xSelection,
       xLog,
       xStartOffsetOrdinal,
-      xMin,
-      xMax,
       ySelection,
       yChange,
       yMovingAverage,
@@ -366,8 +341,6 @@ export default class ApplicationController extends Controller {
       showLegend,
       stacked
     } = this
-
-    let controller = this
 
     let xLabel, yLabel
 
@@ -407,20 +380,22 @@ export default class ApplicationController extends Controller {
 
     let xTicksConfig = {}
 
-    if (xMin) xTicksConfig.min = Number(xMin)
-    if (xMax) xTicksConfig.max = Number(xMax)
     if (xSelection === 'confirmed') xTicksConfig.callback = formatYTick
+    if (xSelection === 'date') xTicksConfig.callback = formatXDate
 
     return {
-      defaultFontFamily: 'Roboto, "Helvetica Neue", sans-serif;',
+      fontFamily: 'Roboto, "Helvetica Neue", sans-serif;',
       responsive: true,
       maintainAspectRatio: false,
-      animation: { duration: 0 },
+      animation: {
+        duration: 0,
+        active: { duration: 0 },
+        resize: { duration: 0 }
+      },
       hover: {
-        animationDuration: 0,
+        mode: 'dataset',
         intersect: false
       },
-      responsiveAnimationDuration: 0,
       legend: {
         display: showLegend,
         position: 'bottom',
@@ -460,61 +435,34 @@ export default class ApplicationController extends Controller {
         }
       },
       scales: {
-        xAxes: [
-          {
-            type:
-              xSelection === 'date' ? 'time' : xLog ? 'logarithmic' : 'linear',
-            time: {
-              unit: 'day'
-            },
-            scaleLabel: {
-              display: true,
-              labelString: xLabel,
-              fontSize: 14
-            },
-            ticks: xTicksConfig
-          }
-        ],
-        yAxes: [
-          {
-            position: 'right',
-            type: yLog ? 'logarithmic' : 'linear',
-            scaleLabel: {
-              display: true,
-              labelString: yLabel,
-              fontSize: 14
-            },
-            ticks: {
-              callback: formatYTick
-            },
-            stacked
-          }
-        ]
+        x: {
+          type:
+            xSelection === 'date' ? 'time' : xLog ? 'logarithmic' : 'linear',
+          time: {
+            unit: 'day'
+          },
+          scaleLabel: {
+            display: true,
+            labelString: xLabel,
+            fontSize: 14
+          },
+          ticks: xTicksConfig
+        },
+        y: {
+          position: 'right',
+          type: yLog ? 'logarithmic' : 'linear',
+          scaleLabel: {
+            display: true,
+            labelString: yLabel,
+            fontSize: 14
+          },
+          ticks: {
+            callback: formatYTick
+          },
+          stacked
+        }
       },
-      plugins: {
-        crosshair: xLog
-          ? false
-          : {
-              line: {
-                color: '#888',
-                width: 1
-              },
-              snap: {
-                enabled: true
-              },
-              zoom: {
-                enabled: !xLog,
-                zoomboxBackgroundColor: 'rgba(128, 128, 128,0.2)',
-                zoomboxBorderColor: '#888'
-              },
-              callbacks: {
-                beforeZoom(from, to) {
-                  controller.send('applyZoom', Number(from), Number(to))
-                  return false
-                }
-              }
-            }
-      }
+      plugins: {}
     }
   }
 
@@ -567,8 +515,12 @@ export default class ApplicationController extends Controller {
               lineTension: 0,
               borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
               backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+              borderWidth: 2,
               hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-              hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
+              hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+              hoverBorderWidth: 3,
+              pointRadius: 1,
+              pointHoverRadius: 1
             }
           )
         })
@@ -587,12 +539,5 @@ export default class ApplicationController extends Controller {
   @action
   downloadChart() {
     this.downloadURL = document.querySelector('canvas').toDataURL('image/png')
-  }
-
-  @action
-  applyZoom(from, to) {
-    this.xMin = from
-    this.xMax = to
-    this.notifyPropertyChange('chartOptions')
   }
 }

@@ -26,10 +26,11 @@
     "babel-eslint": "^10.1.0",
     "bootstrap": "^4.3.1",
     "broccoli-asset-rev": "^3.0.0",
+    "chart.js": "^3.0.0-alpha",
+    "chartjs-adapter-moment": "^0.1.1",
     "ember-cli": "~3.17.0",
     "ember-cli-app-version": "^3.2.0",
     "ember-cli-babel": "^7.18.0",
-    "ember-cli-chart": "^3.6.0",
     "ember-cli-dependency-checker": "^3.2.0",
     "ember-cli-htmlbars": "^4.2.3",
     "ember-cli-inject-live-reload": "^2.0.2",
@@ -66,7 +67,5 @@
   "ember": {
     "edition": "octane"
   },
-  "dependencies": {
-    "chartjs-plugin-crosshair": "^1.1.4"
-  }
+  "dependencies": {}
 }

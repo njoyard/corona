@@ -1,4 +1,5 @@
 import { bignum } from 'corona/utils/format'
+import moment from 'moment'
 
 function generateDataset(
   source,
@@ -56,14 +57,11 @@ function formatYTick(number) {
   return bignum(number)
 }
 
-const plugins = {
-  hideTooltipOnLegend: {
-    beforeEvent(chart, e) {
-      if (e.type === 'mousemove') {
-        chart.tooltip._options.enabled = e.y < chart.chartArea.bottom
-      }
-    }
-  }
+function formatXDate(date) {
+  let mom = moment(date)
+  return mom.isValid() ? mom.format('MMM D') : date
 }
 
-export { generateDataset, formatYTick, plugins }
+const plugins = {}
+
+export { generateDataset, formatYTick, formatXDate, plugins }

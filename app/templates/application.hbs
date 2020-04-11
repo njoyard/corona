@@ -417,14 +417,14 @@
       {{#if this.hasSelection}}
         {{!-- Force recreation of the chart when switching xLog to workaround a bug in chartjs-plugin-crosshair --}}
         {{#if this.xLog}}
-          <EmberChart
+          <Chart
             @type="line"
             @data={{this.chartData}}
             @options={{this.chartOptions}}
             @plugins={{this.chartPlugins}}
             @onChart={{fn this.chartChanged}} />
         {{else}}
-          <EmberChart
+          <Chart
             @type="line"
             @data={{this.chartData}}
             @options={{this.chartOptions}}
@@ -445,15 +445,6 @@
     @primary={{true}}
     @onClick={{fn (mut this.sideNavOpen) true}}>
     <PaperIcon @icon="chevron_right" />
-  </PaperButton>
-{{/if}}
-
-{{#if (or this.xMin this.xMax)}}
-  <PaperButton
-    class="reset-zoom"
-    @raised={{true}}
-    @onClick={{fn this.applyZoom null null}}>
-    Reset zoom
   </PaperButton>
 {{/if}}
 

@@ -1,4 +1,5 @@
 import Component from '@glimmer/component'
+import { htmlSafe } from '@ember/template'
 
 export default class SwatchComponent extends Component {
   get style() {
@@ -7,6 +8,9 @@ export default class SwatchComponent extends Component {
         color: { hue, saturation, lightness }
       }
     } = this
-    return `background-color: hsla(${hue}, ${saturation}%, ${lightness}%, 100%);`
+
+    return htmlSafe(
+      `background-color: hsla(${hue}, ${saturation}%, ${lightness}%, 100%);`
+    )
   }
 }

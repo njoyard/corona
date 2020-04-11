@@ -22,8 +22,9 @@ module.exports = function (defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
 
+  app.import('node_modules/chart.js/dist/Chart.js')
   app.import(
-    'node_modules/chartjs-plugin-crosshair/dist/chartjs-plugin-crosshair.js'
+    'node_modules/chartjs-adapter-moment/dist/chartjs-adapter-moment.js'
   )
 
   return app.toTree()
