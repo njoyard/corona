@@ -7,15 +7,9 @@ function generateDataset(
   yField,
   yRatio,
   yLog,
-  startOffset,
-  startField,
+  stacked,
   options = {}
 ) {
-  if (xField === 'start') {
-    let firstIndex = source.findIndex((p) => p[startField] >= startOffset)
-    source = source.slice(firstIndex)
-  }
-
   let data = source.map((point, index) => {
     let datapoint = {
       y: Math.round(point[yField] * yRatio * 10) / 10
@@ -26,10 +20,10 @@ function generateDataset(
       datapoint.y = 0
     }
 
-    if (xField === 'date') {
+    if (xField === 'start') {
+      return datapoint.y
+    } else if (xField === 'date') {
       datapoint.t = new Date(point.date)
-    } else if (xField === 'start') {
-      datapoint.x = index
     } else {
       datapoint.x = point[xField]
     }

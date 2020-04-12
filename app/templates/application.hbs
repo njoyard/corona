@@ -287,7 +287,7 @@
         <PaperSubheader>Horizontal axis</PaperSubheader>
 
         <MenuRadio
-          @onChange={{fn this.setXSelection}}
+          @onChange={{fn (mut this.xSelection)}}
           @groupValue={{this.xSelection}}
           @value="date"
           @disabled={{this.xLog}}
@@ -296,7 +296,7 @@
         </MenuRadio>
 
         <MenuRadio
-          @onChange={{fn this.setXSelection}}
+          @onChange={{fn (mut this.xSelection)}}
           @groupValue={{this.xSelection}}
           @value="start"
           @disabled={{this.xLog}}
@@ -314,7 +314,7 @@
         {{/if}}
 
         <MenuRadio
-          @onChange={{fn this.setXSelection}}
+          @onChange={{fn (mut this.xSelection)}}
           @groupValue={{this.xSelection}}
           @value="confirmed"
           @disabled={{this.stacked}}
@@ -324,7 +324,7 @@
 
         <MenuSwitch
           @value={{this.xLog}}
-          @onChange={{fn this.setXLog}}
+          @onChange={{fn (mut this.xLog)}}
           @disabled={{not-eq this.xSelection "confirmed"}}
           @disabledTooltip="Only available when showing confirmed cases on the X axis">
           Logarithmic scale
@@ -344,8 +344,8 @@
           @value={{this.stacked}}
           @onChange={{fn (mut this.stacked)}}
           @disabled={{eq this.xSelection "confirmed"}}
-          @disabledTooltip="Only available when using date or days since {{this.xStartOffset}}th case on the X axis">
-          Stacked chart
+          @disabledTooltip="Unavailable when showing confirmed cases on the X axis">
+          Stacked bars
         </MenuSwitch>
 
         <PaperDivider />

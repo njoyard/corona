@@ -142,6 +142,7 @@ export default class ApplicationController extends Controller {
   /* ---- END WORKAROUND ---- */
 
   @tracked dataset = 'flat'
+  @tracked xStartField = 'confirmed'
 
   @action
   selectDataset(ds) {
@@ -238,6 +239,32 @@ export default class ApplicationController extends Controller {
     return this.model.selectedOptions
   }
 
+  get drawableOptions() {
+    let {
+      selectedOptions,
+      yRatio,
+      ySelection,
+      xSelection,
+      xStartOffset,
+      xStartField
+    } = this
+
+    let options = selectedOptions.filter(
+      (o) =>
+        (!yRatio || o.population) &&
+        ((ySelection !== 'recovered' && ySelection !== 'active') || o.recovered)
+    )
+
+    if (xSelection === 'start') {
+      let startOffset = XOFFSET_STEPS[xStartOffset]
+      options = options.filter(
+        ({ points }) => points[points.length - 1][xStartField] >= startOffset
+      )
+    }
+
+    return options
+  }
+
   set selectedRegionCodes(value) {
     if (!this.model) return
 
@@ -308,18 +335,6 @@ export default class ApplicationController extends Controller {
     return this.selectedOptions.length > 0
   }
 
-  @action
-  setXSelection(xSelection) {
-    this.send('applyZoom', null, null)
-    this.xSelection = xSelection
-  }
-
-  @action
-  setXLog(xLog) {
-    this.send('applyZoom', null, null)
-    this.xLog = xLog
-  }
-
   get xStartOffsetOrdinal() {
     return ordinal(XOFFSET_STEPS[this.xStartOffset])
   }
@@ -383,6 +398,13 @@ export default class ApplicationController extends Controller {
     if (xSelection === 'confirmed') xTicksConfig.callback = formatYTick
     if (xSelection === 'date') xTicksConfig.callback = formatXDate
 
+    let xAxisType = 'time'
+
+    if (xSelection === 'start') xAxisType = 'category'
+    if (xSelection === 'confirmed') xAxisType = xLog ? 'logarithmic' : 'linear'
+
+    let yAxisType = yLog ? 'logarithmic' : 'linear'
+
     return {
       fontFamily: 'Roboto, "Helvetica Neue", sans-serif;',
       responsive: true,
@@ -407,7 +429,9 @@ export default class ApplicationController extends Controller {
           }
         },
         labels: {
-          boxWidth: 12
+          // Compensate for lack of border in stacked mode
+          boxHeight: stacked ? 14 : 12,
+          boxWidth: stacked ? 14 : 12
         }
       },
       tooltips: {
@@ -421,9 +445,9 @@ export default class ApplicationController extends Controller {
             if (xSelection === 'date') {
               return moment(point.t).format('ll')
             } else if (xSelection === 'start') {
-              return `Day ${item.xLabel} since ${xStartOffsetOrdinal} confirmed case`
+              return `Day ${item.index} since ${xStartOffsetOrdinal} confirmed case`
             } else {
-              return `${item.xLabel} confirmed cases`
+              return `${item.index} confirmed cases`
             }
           }
         }
@@ -435,8 +459,7 @@ export default class ApplicationController extends Controller {
       },
       scales: {
         x: {
-          type:
-            xSelection === 'date' ? 'time' : xLog ? 'logarithmic' : 'linear',
+          type: xAxisType,
           time: {
             unit: 'day'
           },
@@ -445,11 +468,12 @@ export default class ApplicationController extends Controller {
             labelString: xLabel,
             fontSize: 14
           },
-          ticks: xTicksConfig
+          ticks: xTicksConfig,
+          stacked
         },
         y: {
           position: 'right',
-          type: yLog ? 'logarithmic' : 'linear',
+          type: yAxisType,
           scaleLabel: {
             display: true,
             labelString: yLabel,
@@ -474,7 +498,7 @@ export default class ApplicationController extends Controller {
       yMovingAverage,
       yRatio,
       yLog,
-      selectedOptions,
+      drawableOptions,
       stacked
     } = this
 
@@ -489,41 +513,87 @@ export default class ApplicationController extends Controller {
       yField = `${yField}Change`
     }
 
-    return {
-      datasets: selectedOptions
-        .filter(
-          (o) =>
-            (!yRatio || o.population) &&
-            ((ySelection !== 'recovered' && ySelection !== 'active') ||
-              o.recovered)
-        )
-        .map((option) => {
-          let { hue, saturation, lightness, population } = option
+    let drawOptions = {}
+    let alpha = '100%'
 
-          return generateDataset(
-            option.points,
-            xField,
-            yField,
-            yRatio ? 1000000 / population : 1,
-            yLog,
-            XOFFSET_STEPS[xStartOffset],
-            'confirmed',
+    if (stacked) {
+      alpha = '75%'
+      drawOptions.type = 'bar'
+      drawOptions.borderWidth = 0
+    } else {
+      drawOptions.fill = false
+      drawOptions.lineTension = 0
+      drawOptions.borderWidth = 2
+      drawOptions.hoverBorderWidth = 3
+      drawOptions.pointRadius = 1
+      drawOptions.pointHoverRadius = 1
+    }
+
+    let offsets = []
+    let zeroes = []
+    let zeroPoint = {}
+    let pointCount = null
+
+    if (xSelection === 'start') {
+      pointCount = Math.max(...drawableOptions.map((o) => o.points.length))
+
+      let startOffset = XOFFSET_STEPS[xStartOffset]
+      let xStartField = 'confirmed'
+
+      offsets = drawableOptions.map(({ points }) => {
+        return points.findIndex((p) => p[xStartField] >= startOffset)
+      })
+
+      let minOffset = Math.min(...offsets)
+      pointCount -= minOffset
+
+      if (stacked) {
+        zeroes = offsets.map((o) => o - minOffset)
+        zeroPoint[yField] = 0
+      }
+    }
+
+    let data = {
+      datasets: drawableOptions.map((option, index) => {
+        let { hue, saturation, lightness, population, points } = option
+
+        if (xSelection === 'start') {
+          points = points.slice(offsets[index])
+
+          if (stacked && zeroes[index]) {
+            // Add zero-value points for correct stacking
+            points = points.concat(
+              [...Array(zeroes[index])].map(() => zeroPoint)
+            )
+          }
+        }
+
+        return generateDataset(
+          points,
+          xField,
+          yField,
+          yRatio ? 1000000 / population : 1,
+          yLog,
+          stacked,
+          Object.assign(
             {
               label: option.longLabel,
-              fill: stacked && xSelection === 'date',
-              lineTension: 0,
-              borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-              backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-              borderWidth: 2,
+              borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`,
+              backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`,
               hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-              hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-              hoverBorderWidth: 3,
-              pointRadius: 1,
-              pointHoverRadius: 1
-            }
+              hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
+            },
+            drawOptions
           )
-        })
+        )
+      })
     }
+
+    if (xSelection === 'start') {
+      data.labels = [...Array(pointCount)].map((_, index) => index)
+    }
+
+    return data
   }
 
   chart = null
