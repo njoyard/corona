@@ -413,7 +413,6 @@ export default class ApplicationController extends Controller {
       tooltips: {
         mode: 'nearest',
         position: 'nearest',
-        axis: xSelection === 'confirmed' ? null : 'x',
         intersect: false,
         callbacks: {
           title: function ([item], { datasets }) {
