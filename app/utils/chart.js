@@ -10,7 +10,7 @@ function generateDataset(
   stacked,
   options = {}
 ) {
-  let data = source.map((point, index) => {
+  let data = source.map((point) => {
     let datapoint = {
       y: Math.round(point[yField] * yRatio * 10) / 10
     }
