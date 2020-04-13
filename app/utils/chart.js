@@ -246,7 +246,7 @@ function generateChartData({
   if (ySelection.indexOf('-') !== -1) {
     let [option] = drawableOptions
     datasetSources = ySelection.split('-').map((yField) => {
-      let { label, hue } = yFieldOptions[yField]
+      let { label, hue, saturation, lightness } = yFieldOptions[yField]
 
       if (yChange) {
         if (yMovingAverage) {
@@ -262,8 +262,8 @@ function generateChartData({
         yField,
         label: `${label} in ${option.longLabel}`,
         hue,
-        saturation: 80,
-        lightness: 65
+        saturation,
+        lightness
       }
     })
   } else {
@@ -351,23 +351,37 @@ const yFieldOptions = {
   confirmed: {
     order: 0,
     label: 'Confirmed',
-    hue: 60
+    hue: 40,
+    saturation: 60,
+    lightness: 65
   },
   deceased: {
     order: 1,
     label: 'Deaths',
-    hue: 0
+    hue: 0,
+    saturation: 0,
+    lightness: 40
   },
   recovered: {
     order: 2,
     label: 'Recovered',
-    hue: 120
+    hue: 220,
+    saturation: 60,
+    lightness: 65
   },
   active: {
     order: 3,
     label: 'Active (estimated)',
-    hue: 30
+    hue: 0,
+    saturation: 60,
+    lightness: 65
   }
 }
 
-export { generateChartData, generateChartOptions, plugins, xOffsetOptions }
+export {
+  generateChartData,
+  generateChartOptions,
+  plugins,
+  xOffsetOptions,
+  yFieldOptions
+}

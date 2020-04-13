@@ -6,16 +6,14 @@ import { scheduleOnce } from '@ember/runloop'
 import {
   generateChartData,
   generateChartOptions,
-  xOffsetOptions
+  xOffsetOptions,
+  yFieldOptions
 } from 'corona/utils/chart'
 import presets from 'corona/utils/presets'
 import { ordinal } from 'corona/utils/format'
 
-const LEGEND_LIMIT = 20
-const YSELECTION_ORDER = ['confirmed', 'deceased', 'recovered', 'active']
-
 function compareYSelections(a, b) {
-  return YSELECTION_ORDER.indexOf(a) - YSELECTION_ORDER.indexOf(b)
+  return yFieldOptions[a].order - yFieldOptions[b].order
 }
 
 export default class ApplicationController extends Controller {
@@ -286,10 +284,6 @@ export default class ApplicationController extends Controller {
     selectedOptions.pushObjects(
       [...codes].map((c) => regionOptions.findBy('code', c)).filter(Boolean)
     )
-
-    if (this.selectedOptions.length > LEGEND_LIMIT) {
-      this.showLegend = false
-    }
   }
 
   get selectedRegionCodes() {
@@ -300,29 +294,25 @@ export default class ApplicationController extends Controller {
 
   @action
   toggleRegion(option) {
+    let { selectedOptions, ySelection } = this
+
     option.selected = !option.selected
 
     if (option.selected) {
-      this.selectedOptions.pushObject(option)
+      selectedOptions.pushObject(option)
     } else {
-      this.selectedOptions.removeObject(option)
+      selectedOptions.removeObject(option)
     }
 
-    if (this.selectedOptions.length > LEGEND_LIMIT) {
-      this.showLegend = false
-    }
-
-    if (
-      this.selectedOptions.length > 1 &&
-      this.ySelection.indexOf('-') !== -1
-    ) {
+    if (selectedOptions.length > 1 && ySelection.indexOf('-') !== -1) {
       // Select first ySelection
-      this.ySelection = this.ySelection.split('-')[0]
+      this.ySelection = ySelection.split('-')[0]
     }
   }
 
   @action
   toggleChildren(option) {
+    let { selectedOptions, ySelection } = this
     let allSelected = option.children.every((c) => c.selected)
     let targetState = allSelected ? false : true
 
@@ -331,23 +321,16 @@ export default class ApplicationController extends Controller {
         child.selected = targetState
 
         if (targetState) {
-          this.selectedOptions.pushObject(child)
+          selectedOptions.pushObject(child)
         } else {
-          this.selectedOptions.removeObject(child)
+          selectedOptions.removeObject(child)
         }
       }
     }
 
-    if (this.selectedOptions.length > LEGEND_LIMIT) {
-      this.showLegend = false
-    }
-
-    if (
-      this.selectedOptions.length > 1 &&
-      this.ySelection.indexOf('-') !== -1
-    ) {
+    if (selectedOptions.length > 1 && ySelection.indexOf('-') !== -1) {
       // Select first ySelection
-      this.ySelection = this.ySelection.split('-')[0]
+      this.ySelection = ySelection.split('-')[0]
     }
   }
 
