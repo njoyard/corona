@@ -199,6 +199,8 @@ export default class ApplicationController extends Controller {
   presets = presets
 
   @action selectPreset(preset) {
+    if (preset.singleRegion) this.selectFirstRegion()
+
     this.setProperties(preset.params)
     this.showPresetDialog = false
   }
@@ -346,6 +348,31 @@ export default class ApplicationController extends Controller {
     ) {
       // Select first ySelection
       this.ySelection = this.ySelection.split('-')[0]
+    }
+  }
+
+  selectFirstRegion() {
+    let { selectedOptions, regionSortBy, regionOptions } = this
+
+    if (selectedOptions.length !== 1) {
+      let options = selectedOptions.length ? selectedOptions : regionOptions
+
+      if (regionSortBy) {
+        let reverse = regionSortBy.startsWith('-')
+        let key = reverse ? regionSortBy.substr(1) : regionSortBy
+        let sorted = options.sortBy(key)
+        options = reverse ? sorted.reverse() : sorted
+      }
+
+      let firstOption = options.firstObject
+
+      firstOption.selected = true
+      for (let option of selectedOptions) {
+        if (option !== firstOption) option.selected = false
+      }
+
+      selectedOptions.clear()
+      selectedOptions.pushObject(firstOption)
     }
   }
 

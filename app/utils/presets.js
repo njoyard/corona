@@ -4,10 +4,12 @@ class Preset {
   title = null
   _description = null
   params = null
+  singleRegion = null
 
-  constructor({ title, description, params }) {
+  constructor({ title, description, singleRegion, params }) {
     this.title = title
     this._description = description
+    this.singleRegion = singleRegion
     this.params = params
   }
 
@@ -26,6 +28,7 @@ const presets = {
     params: {
       xSelection: 'start',
       xLog: false,
+      xStartOffset: 5,
 
       ySelection: 'confirmed',
       yChange: true,
@@ -105,6 +108,7 @@ const presets = {
     params: {
       xSelection: 'start',
       xLog: false,
+      xStartOffset: 5,
 
       ySelection: 'active',
       yChange: false,
@@ -112,6 +116,27 @@ const presets = {
       yRatio: true,
 
       stacked: false
+    }
+  }),
+
+  single: new Preset({
+    title: 'State of a single region',
+    description: `
+      Shows deaths, recoveries and estimated active cases in a single region. If you currently have multiple regions selected, this will
+      show data for the first one only.
+    `,
+    singleRegion: true,
+    params: {
+      xSelection: 'start',
+      xLog: false,
+      xStartOffset: 5,
+
+      ySelection: 'deceased-recovered-active',
+      yChange: false,
+      yLog: false,
+      yRatio: false,
+
+      stacked: true
     }
   })
 }
