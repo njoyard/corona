@@ -3,16 +3,18 @@ import { tracked } from '@glimmer/tracking'
 import { action } from '@ember/object'
 import { inject as service } from '@ember/service'
 import { scheduleOnce } from '@ember/runloop'
-import moment from 'moment'
 import env from 'corona/config/environment'
-import { generateDataset, formatYTick, formatXDate } from 'corona/utils/chart'
+import {
+  generateChartData,
+  generateChartOptions,
+  xOffsetOptions
+} from 'corona/utils/chart'
 import presets from 'corona/utils/presets'
 import { ordinal } from 'corona/utils/format'
 
 const { buildID, buildDate } = env.APP
 
 const LEGEND_LIMIT = 20
-const XOFFSET_STEPS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
 
 export default class ApplicationController extends Controller {
   @service data
@@ -256,7 +258,7 @@ export default class ApplicationController extends Controller {
     )
 
     if (xSelection === 'start') {
-      let startOffset = XOFFSET_STEPS[xStartOffset]
+      let startOffset = xOffsetOptions[xStartOffset]
       options = options.filter(
         ({ points }) => points[points.length - 1][xStartField] >= startOffset
       )
@@ -336,7 +338,7 @@ export default class ApplicationController extends Controller {
   }
 
   get xStartOffsetOrdinal() {
-    return ordinal(XOFFSET_STEPS[this.xStartOffset])
+    return ordinal(xOffsetOptions[this.xStartOffset])
   }
 
   get chartPlugins() {
@@ -344,256 +346,15 @@ export default class ApplicationController extends Controller {
   }
 
   get chartOptions() {
-    let {
-      xSelection,
-      xLog,
-      xStartOffsetOrdinal,
-      ySelection,
-      yChange,
-      yMovingAverage,
-      yLog,
-      yRatio,
-      showLegend,
-      stacked
-    } = this
-
-    let xLabel, yLabel
-
-    if (xSelection === 'date') {
-      xLabel = 'Date'
-    } else if (xSelection === 'start') {
-      xLabel = `Days since ${xStartOffsetOrdinal} confirmed case`
-    } else {
-      xLabel = 'Confirmed cases'
-    }
-
-    if (ySelection === 'confirmed') {
-      yLabel = yChange
-        ? 'Daily increase in confirmed cases'
-        : 'Total confirmed cases'
-    } else if (ySelection === 'deceased') {
-      yLabel = yChange ? 'Daily increase in deaths' : 'Total deaths'
-    } else if (ySelection === 'recovered') {
-      yLabel = yChange ? 'Daily increase in recoveries' : 'Total recoveries'
-    } else if (ySelection === 'active') {
-      yLabel = yChange ? 'Daily increase in active cases' : 'Total active cases'
-    }
-
-    let yLabelDetails = []
-
-    if (yChange && yMovingAverage) {
-      yLabelDetails.push('7-day moving average')
-    }
-
-    if (yRatio) {
-      yLabelDetails.push('per million people')
-    }
-
-    if (yLabelDetails.length) {
-      yLabel = `${yLabel} (${yLabelDetails.join(', ')})`
-    }
-
-    let xTicksConfig = {}
-
-    if (xSelection === 'confirmed') xTicksConfig.callback = formatYTick
-    if (xSelection === 'date') xTicksConfig.callback = formatXDate
-
-    let xAxisType = 'time'
-
-    if (xSelection === 'start') xAxisType = 'category'
-    if (xSelection === 'confirmed') xAxisType = xLog ? 'logarithmic' : 'linear'
-
-    let yAxisType = yLog ? 'logarithmic' : 'linear'
-
-    return {
-      fontFamily: 'Roboto, "Helvetica Neue", sans-serif;',
-      responsive: true,
-      maintainAspectRatio: false,
-      animation: {
-        duration: 0,
-        active: { duration: 0 },
-        resize: { duration: 0 }
-      },
-      hover: {
-        mode: 'dataset',
-        intersect: false
-      },
-      legend: {
-        display: showLegend,
-        position: 'bottom',
-        onClick: (e, item) => {
-          if (this.selectedOptions.length > 1) {
-            this.toggleRegion(
-              this.selectedOptions.sortBy('value')[item.datasetIndex]
-            )
-          }
-        },
-        labels: {
-          // Compensate for lack of border in stacked mode
-          boxHeight: stacked ? 14 : 12,
-          boxWidth: stacked ? 14 : 12
-        }
-      },
-      tooltips: {
-        mode: 'nearest',
-        position: 'nearest',
-        intersect: false,
-        callbacks: {
-          title: function ([item], { datasets }) {
-            let point = datasets[item.datasetIndex].data[item.index]
-
-            if (xSelection === 'date') {
-              return moment(point.t).format('ll')
-            } else if (xSelection === 'start') {
-              return `Day ${item.index} since ${xStartOffsetOrdinal} confirmed case`
-            } else {
-              return `${item.index} confirmed cases`
-            }
-          }
-        }
-      },
-      elements: {
-        point: {
-          radius: 2
-        }
-      },
-      scales: {
-        x: {
-          type: xAxisType,
-          time: {
-            unit: 'day'
-          },
-          scaleLabel: {
-            display: true,
-            labelString: xLabel,
-            fontSize: 14
-          },
-          ticks: xTicksConfig,
-          stacked
-        },
-        y: {
-          position: 'right',
-          type: yAxisType,
-          scaleLabel: {
-            display: true,
-            labelString: yLabel,
-            fontSize: 14
-          },
-          ticks: {
-            callback: formatYTick
-          },
-          stacked
-        }
-      },
-      plugins: {}
-    }
+    return generateChartOptions(this, (dsIndex) => {
+      if (this.selectedOptions.length > 1) {
+        this.toggleRegion(this.selectedOptions.sortBy('value')[dsIndex])
+      }
+    })
   }
 
   get chartData() {
-    let {
-      xSelection,
-      xStartOffset,
-      ySelection,
-      yChange,
-      yMovingAverage,
-      yRatio,
-      yLog,
-      drawableOptions,
-      stacked
-    } = this
-
-    let xField = xSelection
-    let yField = ySelection
-
-    if (yChange) {
-      if (yMovingAverage) {
-        yField = `${yField}Weekly`
-      }
-
-      yField = `${yField}Change`
-    }
-
-    let drawOptions = {}
-    let alpha = '100%'
-
-    if (stacked) {
-      alpha = '75%'
-      drawOptions.type = 'bar'
-      drawOptions.borderWidth = 0
-    } else {
-      drawOptions.fill = false
-      drawOptions.lineTension = 0
-      drawOptions.borderWidth = 2
-      drawOptions.hoverBorderWidth = 3
-      drawOptions.pointRadius = 1
-      drawOptions.pointHoverRadius = 1
-    }
-
-    let offsets = []
-    let zeroes = []
-    let zeroPoint = {}
-    let pointCount = null
-
-    if (xSelection === 'start') {
-      pointCount = Math.max(...drawableOptions.map((o) => o.points.length))
-
-      let startOffset = XOFFSET_STEPS[xStartOffset]
-      let xStartField = 'confirmed'
-
-      offsets = drawableOptions.map(({ points }) => {
-        return points.findIndex((p) => p[xStartField] >= startOffset)
-      })
-
-      let minOffset = Math.min(...offsets)
-      pointCount -= minOffset
-
-      if (stacked) {
-        zeroes = offsets.map((o) => o - minOffset)
-        zeroPoint[yField] = 0
-      }
-    }
-
-    let data = {
-      datasets: drawableOptions.map((option, index) => {
-        let { hue, saturation, lightness, population, points } = option
-
-        if (xSelection === 'start') {
-          points = points.slice(offsets[index])
-
-          if (stacked && zeroes[index]) {
-            // Add zero-value points for correct stacking
-            points = points.concat(
-              [...Array(zeroes[index])].map(() => zeroPoint)
-            )
-          }
-        }
-
-        return generateDataset(
-          points,
-          xField,
-          yField,
-          yRatio ? 1000000 / population : 1,
-          yLog,
-          stacked,
-          Object.assign(
-            {
-              label: option.longLabel,
-              borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`,
-              backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`,
-              hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-              hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
-            },
-            drawOptions
-          )
-        )
-      })
-    }
-
-    if (xSelection === 'start') {
-      data.labels = [...Array(pointCount)].map((_, index) => index)
-    }
-
-    return data
+    return generateChartData(this)
   }
 
   chart = null
