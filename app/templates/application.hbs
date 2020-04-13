@@ -1,146 +1,19 @@
-{{#if this.showAboutDialog}}
-  <PaperDialog
-    class="flex-50"
-    @onClose={{fn (mut this.showAboutDialog) false}}
-    @clickOutsideToClose={{true}} >
-    <PaperToolbar>
-      <PaperToolbarTools>
-        <h2>About this application</h2>
-        <span class="flex"></span>
-        <PaperButton
-          @iconButton={{true}}
-          @onClick={{fn (mut this.showAboutDialog) false}}>
-          <PaperIcon @icon="close" />
-        </PaperButton>
-      </PaperToolbarTools>
-    </PaperToolbar>
+<AboutDialog
+  @visible={{this.showAboutDialog}}
+  @onClose={{fn (mut this.showAboutDialog) false}} />
 
-    <PaperDialogContent>
-      <p>
-        This app was largely inspired by Benjamin Ooghe Tabanou's <a target="_blank" rel="noopener noreferrer" href="//boogheta.github.io/coronavirus-countries/">Coronavirus Country Comparator</a>.
-      </p>
-      <h3>Data sources</h3>
-      <AboutData />
-      <h3>License and developer info</h3>
-      <p>
-        The code for this app is <a target="_blank" rel="noopener noreferrer" href="//github.com/njoyard/corona">available on GitHub</a> and released under the terms of the <a target="_blank" rel="noopener noreferrer" href="//raw.githubusercontent.com/njoyard/corona/master/LICENSE">MIT license</a>.
-      </p>
-      <p>
-        Made with <PaperIcon @icon="favorite" /> using <a target="_blank" rel="noopener noreferrer" href="//emberjs.com">EmberJS</a>, <a target="_blank" rel="noopener noreferrer" href="//miguelcobain.github.io/ember-paper">Ember Paper</a> and <a target="_blank" rel="noopener noreferrer" href="//chartjs.org">ChartJS</a>.
-      </p>
-      <p>
-        Coronavirus icon courtesy of <a target="_blank" rel="noopener noreferrer" href="//www.iconfinder.com/becris">Becris</a>, shared under the <a target="_blank" rel="noopener noreferrer" href="//creativecommons.org/licenses/by-sa/3.0/">Creative Commons CC-BY-SA version 3.0 license</a>.
-      </p>
-      <p>
-        {{this.versionInfo}}
-      </p>
-      <p>
-        You can see <a target="_blank" rel="noopener noreferrer" href="//stats.njoyard.fr">access stats here</a>. No personal information is recorded (and no cookies are used), the only information kept is: URL, time of access, referrer URL (when available), browser user-agent string, screen size and country (deduced from the IP, but the IP itself is not saved).
-      </p>
-      <h3>Contact</h3>
-      <p>
-        Please use <a target="_blank" rel="noopener noreferrer" href="//github.com/njoyard/corona/issues">Github Issues</a> for any issue with this app. You can also reach me <a target="_blank" rel="noopener noreferrer" href="http://twitter.com/MeringuemanKe">on twitter</a>.
-      </p>
-      <h3>Please stay home.</h3>
-    </PaperDialogContent>
-  </PaperDialog>
-{{/if}}
+<SourcesDialog
+  @visible={{this.showSourcesDialog}}
+  @onClose={{fn (mut this.showSourcesDialog) false}}
+  @datasets={{this.data.datasets}}
+  @currentDataset={{this.dataset}}
+  @onSelectDataset={{this.selectDataset}} />
 
-{{#if this.showSourcesDialog}}
-  <PaperDialog
-    class="flex-50"
-    @onClose={{fn (mut this.showSourcesDialog) false}}
-    @clickOutsideToClose={{true}} >
-    <PaperToolbar>
-      <PaperToolbarTools>
-        <h2>Switch data sources</h2>
-        <span class="flex"></span>
-        <PaperButton
-          @iconButton={{true}}
-          @onClick={{fn (mut this.showSourcesDialog) false}}>
-          <PaperIcon @icon="close" />
-        </PaperButton>
-      </PaperToolbarTools>
-    </PaperToolbar>
-
-    <PaperDialogContent>
-      <h3>Available data sources</h3>
-
-      <AboutData />
-
-      <PaperList>
-        {{#each-in this.data.datasets as |key dataset|}}
-          <PaperItem class="md-2-line md-long-text" as |controls|>
-            <div class="md-list-item-text">
-              <h3>{{dataset.title}}</h3>
-              <p>{{dataset.description}}</p>
-            </div>
-            <div class="md-secondary-container">
-              <controls.button
-                @secondary={{true}}
-                @raised={{true}}
-                @disabled={{eq key this.dataset}}
-                @onClick={{fn this.selectDataset key}}>
-                {{#if (eq key this.dataset)}}Current{{else}}Load{{/if}}
-              </controls.button>
-            </div>
-          </PaperItem>
-        {{/each-in}}
-      </PaperList>
-    </PaperDialogContent>
-  </PaperDialog>
-{{/if}}
-
-{{#if this.showPresetDialog}}
-  <PaperDialog
-    class="flex-50"
-    @onClose={{fn (mut this.showPresetDialog) false}}
-    @clickOutsideToClose={{true}} >
-    <PaperToolbar>
-      <PaperToolbarTools>
-        <h2>Select a chart preset</h2>
-        <span class="flex"></span>
-        <PaperButton
-          @iconButton={{true}}
-          @onClick={{fn (mut this.showPresetDialog) false}}>
-          <PaperIcon @icon="close" />
-        </PaperButton>
-      </PaperToolbarTools>
-    </PaperToolbar>
-
-    <PaperDialogContent>
-      <div class="layout-row layout-wrap layout-align-center-stretch layout-xs-column">
-        {{#each-in this.presets as |id preset|}}
-          <PaperCard
-            class="preset-card flex-46 flex-gt-sm-23"
-            as |card|>
-            <card.image
-              @src="assets/preset-{{id}}.png"
-              @alt={{preset.title}}
-              @title={{preset.title}} />
-            <card.title as |title|>
-              <title.text as |text|>
-                <text.headline>
-                  {{preset.title}}
-                </text.headline>
-              </title.text>
-            </card.title>
-            <card.content>
-              {{preset.description}}
-            </card.content>
-            <card.actions>
-              <PaperButton
-                @onClick={{fn this.selectPreset preset}}>
-                Apply
-              </PaperButton>
-            </card.actions>
-          </PaperCard>
-        {{/each-in}}
-      </div>
-    </PaperDialogContent>
-  </PaperDialog>
-{{/if}}
-
+<PresetDialog
+  @visible={{this.showPresetDialog}}
+  @onClose={{fn (mut this.showPresetDialog) false}}
+  @presets={{this.presets}}
+  @onSelectPreset={{this.selectPreset}} />
 
 {{#if this.showShareDialog}}
   <PaperDialog

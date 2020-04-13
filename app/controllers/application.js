@@ -3,7 +3,6 @@ import { tracked } from '@glimmer/tracking'
 import { action } from '@ember/object'
 import { inject as service } from '@ember/service'
 import { scheduleOnce } from '@ember/runloop'
-import env from 'corona/config/environment'
 import {
   generateChartData,
   generateChartOptions,
@@ -11,8 +10,6 @@ import {
 } from 'corona/utils/chart'
 import presets from 'corona/utils/presets'
 import { ordinal } from 'corona/utils/format'
-
-const { buildID, buildDate } = env.APP
 
 const LEGEND_LIMIT = 20
 
@@ -199,16 +196,6 @@ export default class ApplicationController extends Controller {
   @action selectPreset(preset) {
     this.setProperties(preset.params)
     this.showPresetDialog = false
-  }
-
-  get versionInfo() {
-    let info = `This version was built on ${buildDate}`
-
-    if (buildID) {
-      info += ` from commit ${buildID}`
-    }
-
-    return `${info}.`
   }
 
   @action

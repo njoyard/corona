@@ -1,0 +1,49 @@
+{{#if @visible}}
+  <PaperDialog
+    class="flex-50"
+    @onClose={{@onClose}}
+    @clickOutsideToClose={{true}} >
+    <PaperToolbar>
+      <PaperToolbarTools>
+        <h2>Select a chart preset</h2>
+        <span class="flex"></span>
+        <PaperButton
+          @iconButton={{true}}
+          @onClick={{@onClose}}>
+          <PaperIcon @icon="close" />
+        </PaperButton>
+      </PaperToolbarTools>
+    </PaperToolbar>
+
+    <PaperDialogContent>
+      <div class="layout-row layout-wrap layout-align-center-stretch layout-xs-column">
+        {{#each-in @presets as |id preset|}}
+          <PaperCard
+            class="preset-card flex-46 flex-gt-sm-23"
+            as |card|>
+            <card.image
+              @src="assets/preset-{{id}}.png"
+              @alt={{preset.title}}
+              @title={{preset.title}} />
+            <card.title as |title|>
+              <title.text as |text|>
+                <text.headline>
+                  {{preset.title}}
+                </text.headline>
+              </title.text>
+            </card.title>
+            <card.content>
+              {{preset.description}}
+            </card.content>
+            <card.actions>
+              <PaperButton
+                @onClick={{fn @onSelectPreset preset}}>
+                Apply
+              </PaperButton>
+            </card.actions>
+          </PaperCard>
+        {{/each-in}}
+      </div>
+    </PaperDialogContent>
+  </PaperDialog>
+{{/if}}

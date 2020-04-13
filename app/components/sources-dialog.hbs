@@ -1,0 +1,45 @@
+
+{{#if @visible}}
+  <PaperDialog
+    class="flex-50"
+    @onClose={{@onClose}}
+    @clickOutsideToClose={{true}} >
+    <PaperToolbar>
+      <PaperToolbarTools>
+        <h2>Switch data sources</h2>
+        <span class="flex"></span>
+        <PaperButton
+          @iconButton={{true}}
+          @onClick={{@onClose}}>
+          <PaperIcon @icon="close" />
+        </PaperButton>
+      </PaperToolbarTools>
+    </PaperToolbar>
+
+    <PaperDialogContent>
+      <h3>Available data sources</h3>
+
+      <AboutData />
+
+      <PaperList>
+        {{#each-in @datasets as |key dataset|}}
+          <PaperItem class="md-2-line md-long-text" as |controls|>
+            <div class="md-list-item-text">
+              <h3>{{dataset.title}}</h3>
+              <p>{{dataset.description}}</p>
+            </div>
+            <div class="md-secondary-container">
+              <controls.button
+                @secondary={{true}}
+                @raised={{true}}
+                @disabled={{eq key @currentDataset}}
+                @onClick={{fn @onSelectDataset key}}>
+                {{#if (eq key @currentDataset)}}Current{{else}}Load{{/if}}
+              </controls.button>
+            </div>
+          </PaperItem>
+        {{/each-in}}
+      </PaperList>
+    </PaperDialogContent>
+  </PaperDialog>
+{{/if}}
