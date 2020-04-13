@@ -12,6 +12,11 @@ import presets from 'corona/utils/presets'
 import { ordinal } from 'corona/utils/format'
 
 const LEGEND_LIMIT = 20
+const YSELECTION_ORDER = ['confirmed', 'deceased', 'recovered', 'active']
+
+function compareYSelections(a, b) {
+  return YSELECTION_ORDER.indexOf(a) - YSELECTION_ORDER.indexOf(b)
+}
 
 export default class ApplicationController extends Controller {
   @service data
@@ -228,6 +233,14 @@ export default class ApplicationController extends Controller {
     return this.model.selectedOptions
   }
 
+  get hasSingleOption() {
+    return this.selectedOptions.length < 2
+  }
+
+  get hasSelection() {
+    return this.selectedOptions.length > 0
+  }
+
   get drawableOptions() {
     let {
       selectedOptions,
@@ -296,6 +309,14 @@ export default class ApplicationController extends Controller {
     if (this.selectedOptions.length > LEGEND_LIMIT) {
       this.showLegend = false
     }
+
+    if (
+      this.selectedOptions.length > 1 &&
+      this.ySelection.indexOf('-') !== -1
+    ) {
+      // Select first ySelection
+      this.ySelection = this.ySelection.split('-')[0]
+    }
   }
 
   @action
@@ -318,14 +339,38 @@ export default class ApplicationController extends Controller {
     if (this.selectedOptions.length > LEGEND_LIMIT) {
       this.showLegend = false
     }
-  }
 
-  get hasSelection() {
-    return this.selectedOptions.length > 0
+    if (
+      this.selectedOptions.length > 1 &&
+      this.ySelection.indexOf('-') !== -1
+    ) {
+      // Select first ySelection
+      this.ySelection = this.ySelection.split('-')[0]
+    }
   }
 
   get xStartOffsetOrdinal() {
     return ordinal(xOffsetOptions[this.xStartOffset])
+  }
+
+  @action
+  ySelect(selection) {
+    if (this.hasSingleOption) {
+      let { ySelection } = this
+      let selected = new Set(ySelection.split('-'))
+
+      // Refuse deselection if what was clicked was the only selected item
+      if (selected.size === 1 && selected.has(selection)) return
+
+      // Toggle selection
+      selected.has(selection)
+        ? selected.delete(selection)
+        : selected.add(selection)
+
+      this.ySelection = [...selected].sort(compareYSelections).join('-')
+    } else {
+      this.ySelection = selection
+    }
   }
 
   get chartPlugins() {

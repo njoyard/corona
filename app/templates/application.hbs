@@ -93,39 +93,72 @@
       <PaperList>
         <PaperSubheader>Vertical axis</PaperSubheader>
 
-        <MenuRadio
-          @onChange={{fn (mut this.ySelection)}}
-          @groupValue={{this.ySelection}}
-          @value="confirmed">
-          Confirmed cases
-        </MenuRadio>
+        {{#if this.hasSingleOption}}
+          <MenuCheckbox
+            @onChange={{fn this.ySelect "confirmed"}}
+            @value={{string-contains this.ySelection "confirmed"}}>
+            Confirmed cases
+          </MenuCheckbox>
 
-        <MenuRadio
-          @onChange={{fn (mut this.ySelection)}}
-          @groupValue={{this.ySelection}}
-          @value="deceased">
-          Deaths
-        </MenuRadio>
+          <MenuCheckbox
+            @onChange={{fn this.ySelect "deceased"}}
+            @value={{string-contains this.ySelection "deceased"}}>
+            Deaths
+          </MenuCheckbox>
 
-        {{#if (not-eq this.dataset "us")}}
+          {{#if (not-eq this.dataset "us")}}
+            <MenuCheckbox
+              @onChange={{fn this.ySelect "recovered"}}
+              @value={{string-contains this.ySelection "recovered"}}>
+              Recovered
+            </MenuCheckbox>
+
+            <MenuCheckbox
+              @onChange={{fn this.ySelect "active"}}
+              @value={{string-contains this.ySelection "active"}}>
+              Active (estimated)
+              <PaperIcon @icon="help" @size={{18}}>
+                <PaperTooltip @position="right">
+                  Computed by subtracting deaths and recovered cases from confirmed cases
+                </PaperTooltip>
+              </PaperIcon>
+            </MenuCheckbox>
+          {{/if}}
+        {{else}}
           <MenuRadio
-            @onChange={{fn (mut this.ySelection)}}
+            @onChange={{fn this.ySelect "confirmed"}}
             @groupValue={{this.ySelection}}
-            @value="recovered">
-            Recovered
+            @value="confirmed">
+            Confirmed cases
           </MenuRadio>
 
           <MenuRadio
-            @onChange={{fn (mut this.ySelection)}}
+            @onChange={{fn this.ySelect "deceased"}}
             @groupValue={{this.ySelection}}
-            @value="active">
-            Active (estimated)
-            <PaperIcon @icon="help" @size={{18}}>
-              <PaperTooltip @position="right">
-                Computed by subtracting deaths and recovered cases from confirmed cases
-              </PaperTooltip>
-            </PaperIcon>
+            @value="deceased">
+            Deaths
           </MenuRadio>
+
+          {{#if (not-eq this.dataset "us")}}
+            <MenuRadio
+              @onChange={{fn this.ySelect "recovered"}}
+              @groupValue={{this.ySelection}}
+              @value="recovered">
+              Recovered
+            </MenuRadio>
+
+            <MenuRadio
+              @onChange={{fn this.ySelect "active"}}
+              @groupValue={{this.ySelection}}
+              @value="active">
+              Active (estimated)
+              <PaperIcon @icon="help" @size={{18}}>
+                <PaperTooltip @position="right">
+                  Computed by subtracting deaths and recovered cases from confirmed cases
+                </PaperTooltip>
+              </PaperIcon>
+            </MenuRadio>
+          {{/if}}
         {{/if}}
 
         <MenuSwitch

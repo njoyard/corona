@@ -26,7 +26,9 @@ function generateChartOptions(
     xLabel = 'Confirmed cases'
   }
 
-  if (ySelection === 'confirmed') {
+  if (ySelection.indexOf('-') !== -1) {
+    yLabel = yChange ? 'Daily increase' : 'Count'
+  } else if (ySelection === 'confirmed') {
     yLabel = yChange
       ? 'Daily increase in confirmed cases'
       : 'Total confirmed cases'
@@ -199,14 +201,6 @@ function generateChartData({
   let xField = xSelection
   let yField = ySelection
 
-  if (yChange) {
-    if (yMovingAverage) {
-      yField = `${yField}Weekly`
-    }
-
-    yField = `${yField}Change`
-  }
-
   let drawOptions = {}
   let alpha = '100%'
 
@@ -247,39 +241,90 @@ function generateChartData({
     }
   }
 
-  let data = {
-    datasets: drawableOptions.map((option, index) => {
-      let { hue, saturation, lightness, population, points } = option
+  let datasetSources
 
-      if (xSelection === 'start') {
-        points = points.slice(offsets[index])
+  if (ySelection.indexOf('-') !== -1) {
+    let [option] = drawableOptions
+    datasetSources = ySelection.split('-').map((yField) => {
+      let { label, hue } = yFieldOptions[yField]
 
-        if (stacked && zeroes[index]) {
-          // Add zero-value points for correct stacking
-          points = points.concat([...Array(zeroes[index])].map(() => zeroPoint))
+      if (yChange) {
+        if (yMovingAverage) {
+          yField = `${yField}Weekly`
         }
+
+        yField = `${yField}Change`
       }
 
-      return generateDataset(
-        {
-          points,
-          xField,
-          yField,
-          yRatio: yRatio ? 1000000 / population : 1,
-          yLog
-        },
-        Object.assign(
-          {
-            label: option.longLabel,
-            borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`,
-            backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`,
-            hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
-            hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
-          },
-          drawOptions
-        )
-      )
+      return {
+        index: 0,
+        option,
+        yField,
+        label: `${label} in ${option.longLabel}`,
+        hue,
+        saturation: 80,
+        lightness: 65
+      }
     })
+  } else {
+    if (yChange) {
+      if (yMovingAverage) {
+        yField = `${yField}Weekly`
+      }
+
+      yField = `${yField}Change`
+    }
+
+    datasetSources = drawableOptions.map((option, index) => {
+      return {
+        index,
+        option,
+        yField,
+        label: option.longLabel,
+        hue: option.hue,
+        saturation: option.saturation,
+        lightness: option.lightness
+      }
+    })
+  }
+
+  let data = {
+    datasets: datasetSources.map(
+      ({ option, yField, label, hue, saturation, lightness, index }) => {
+        let { population, points } = option
+
+        if (xSelection === 'start') {
+          points = points.slice(offsets[index])
+
+          if (stacked && zeroes[index]) {
+            // Add zero-value points for correct stacking
+            points = points.concat(
+              [...Array(zeroes[index])].map(() => zeroPoint)
+            )
+          }
+        }
+
+        return generateDataset(
+          {
+            points,
+            xField,
+            yField,
+            yRatio: yRatio ? 1000000 / population : 1,
+            yLog
+          },
+          Object.assign(
+            {
+              label,
+              borderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`,
+              backgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`,
+              hoverBorderColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`,
+              hoverBackgroundColor: `hsla(${hue}, ${saturation}%, ${lightness}%, 100%)`
+            },
+            drawOptions
+          )
+        )
+      }
+    )
   }
 
   if (xSelection === 'start') {
@@ -301,5 +346,28 @@ function formatXDate(date) {
 const plugins = {}
 
 const xOffsetOptions = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000]
+
+const yFieldOptions = {
+  confirmed: {
+    order: 0,
+    label: 'Confirmed',
+    hue: 60
+  },
+  deceased: {
+    order: 1,
+    label: 'Deaths',
+    hue: 0
+  },
+  recovered: {
+    order: 2,
+    label: 'Recovered',
+    hue: 120
+  },
+  active: {
+    order: 3,
+    label: 'Active (estimated)',
+    hue: 30
+  }
+}
 
 export { generateChartData, generateChartOptions, plugins, xOffsetOptions }
