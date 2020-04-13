@@ -150,7 +150,7 @@ export default class ApplicationController extends Controller {
   selectDataset(ds) {
     this.data.reloading = true
     this.showSourcesDialog = false
-    this.selectedOptions.clear()
+    this.selectedRegions.clear()
 
     if (
       ds === 'us' &&
@@ -221,29 +221,25 @@ export default class ApplicationController extends Controller {
   @tracked regionFilter = ''
   @tracked regionSortBy = '-deceased'
 
-  get rootOption() {
-    return this.model.rootOption
+  get rootRegion() {
+    return this.model.rootRegion
   }
 
   get regionOptions() {
     return this.model.regionOptions
   }
 
-  get selectedOptions() {
-    return this.model.selectedOptions
+  get selectedRegions() {
+    return this.model.selectedRegions
   }
 
-  get hasSingleOption() {
-    return this.selectedOptions.length < 2
+  get selectedRegionCount() {
+    return this.selectedRegions.length
   }
 
-  get hasSelection() {
-    return this.selectedOptions.length > 0
-  }
-
-  get drawableOptions() {
+  get drawableRegions() {
     let {
-      selectedOptions,
+      selectedRegions,
       yRatio,
       ySelection,
       xSelection,
@@ -251,37 +247,37 @@ export default class ApplicationController extends Controller {
       xStartField
     } = this
 
-    let options = selectedOptions.filter(
-      (o) =>
-        (!yRatio || o.population) &&
-        ((ySelection !== 'recovered' && ySelection !== 'active') || o.recovered)
+    let regions = selectedRegions.filter(
+      (r) =>
+        (!yRatio || r.population) &&
+        ((ySelection !== 'recovered' && ySelection !== 'active') || r.recovered)
     )
 
     if (xSelection === 'start') {
       let startOffset = xOffsetOptions[xStartOffset]
-      options = options.filter(
+      regions = regions.filter(
         ({ points }) => points[points.length - 1][xStartField] >= startOffset
       )
     }
 
-    return options
+    return regions
   }
 
   set selectedRegionCodes(value) {
     if (!this.model) return
 
-    let { selectedOptions, regionOptions } = this
+    let { selectedRegions, regionOptions } = this
     let codes = new Set(value.split('-'))
 
-    for (let option of selectedOptions) {
-      if (codes.has(option.code)) {
-        codes.delete(option.code)
+    for (let region of selectedRegions) {
+      if (codes.has(region.code)) {
+        codes.delete(region.code)
       } else {
-        selectedOptions.removeObject(option)
+        selectedRegions.removeObject(region)
       }
     }
 
-    selectedOptions.pushObjects(
+    selectedRegions.pushObjects(
       [...codes].map((c) => regionOptions.findBy('code', c)).filter(Boolean)
     )
   }
@@ -289,73 +285,71 @@ export default class ApplicationController extends Controller {
   get selectedRegionCodes() {
     if (!this.model) return ''
 
-    return this.selectedOptions.map((o) => o.code).join('-')
+    return this.selectedRegions.map((r) => r.code).join('-')
   }
 
   @action
-  toggleRegion(option) {
-    let { selectedOptions, ySelection } = this
+  toggleRegion(region) {
+    let { selectedRegions, hasMultipleYSelection } = this
 
-    option.selected = !option.selected
+    region.selected = !region.selected
 
-    if (option.selected) {
-      selectedOptions.pushObject(option)
+    if (region.selected) {
+      if (hasMultipleYSelection) {
+        for (let other of selectedRegions) {
+          other.selected = false
+        }
+
+        selectedRegions.clear()
+      }
+
+      selectedRegions.pushObject(region)
     } else {
-      selectedOptions.removeObject(option)
-    }
-
-    if (selectedOptions.length > 1 && ySelection.indexOf('-') !== -1) {
-      // Select first ySelection
-      this.ySelection = ySelection.split('-')[0]
+      selectedRegions.removeObject(region)
     }
   }
 
   @action
-  toggleChildren(option) {
-    let { selectedOptions, ySelection } = this
-    let allSelected = option.children.every((c) => c.selected)
+  toggleChildren(region) {
+    let { selectedRegions } = this
+    let allSelected = region.children.every((c) => c.selected)
     let targetState = allSelected ? false : true
 
-    for (let child of option.children) {
+    for (let child of region.children) {
       if (child.selected !== targetState) {
         child.selected = targetState
 
         if (targetState) {
-          selectedOptions.pushObject(child)
+          selectedRegions.pushObject(child)
         } else {
-          selectedOptions.removeObject(child)
+          selectedRegions.removeObject(child)
         }
       }
-    }
-
-    if (selectedOptions.length > 1 && ySelection.indexOf('-') !== -1) {
-      // Select first ySelection
-      this.ySelection = ySelection.split('-')[0]
     }
   }
 
   selectFirstRegion() {
-    let { selectedOptions, regionSortBy, regionOptions } = this
+    let { selectedRegions, regionSortBy, regionOptions } = this
 
-    if (selectedOptions.length !== 1) {
-      let options = selectedOptions.length ? selectedOptions : regionOptions
+    if (selectedRegions.length !== 1) {
+      let regions = selectedRegions.length ? selectedRegions : regionOptions
 
       if (regionSortBy) {
         let reverse = regionSortBy.startsWith('-')
         let key = reverse ? regionSortBy.substr(1) : regionSortBy
-        let sorted = options.sortBy(key)
-        options = reverse ? sorted.reverse() : sorted
+        let sorted = regions.sortBy(key)
+        regions = reverse ? sorted.reverse() : sorted
       }
 
-      let firstOption = options.firstObject
+      let firstRegion = regions.firstObject
 
-      firstOption.selected = true
-      for (let option of selectedOptions) {
-        if (option !== firstOption) option.selected = false
+      firstRegion.selected = true
+      for (let option of selectedRegions) {
+        if (option !== firstRegion) option.selected = false
       }
 
-      selectedOptions.clear()
-      selectedOptions.pushObject(firstOption)
+      selectedRegions.clear()
+      selectedRegions.pushObject(firstRegion)
     }
   }
 
@@ -365,7 +359,7 @@ export default class ApplicationController extends Controller {
 
   @action
   ySelect(selection) {
-    if (this.hasSingleOption) {
+    if (this.selectedRegionCount === 1) {
       let { ySelection } = this
       let selected = new Set(ySelection.split('-'))
 
@@ -383,14 +377,18 @@ export default class ApplicationController extends Controller {
     }
   }
 
+  get hasMultipleYSelection() {
+    return this.ySelection.indexOf('-') !== -1
+  }
+
   get chartPlugins() {
     return []
   }
 
   get chartOptions() {
     return generateChartOptions(this, (dsIndex) => {
-      if (this.selectedOptions.length > 1) {
-        this.toggleRegion(this.selectedOptions.sortBy('value')[dsIndex])
+      if (this.selectedRegions.length > 1) {
+        this.toggleRegion(this.selectedRegions.sortBy('value')[dsIndex])
       }
     })
   }

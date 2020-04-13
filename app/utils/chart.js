@@ -195,7 +195,7 @@ function generateChartData({
   yMovingAverage,
   yRatio,
   yLog,
-  drawableOptions,
+  drawableRegions,
   stacked
 }) {
   let xField = xSelection
@@ -223,12 +223,12 @@ function generateChartData({
   let pointCount = null
 
   if (xSelection === 'start') {
-    pointCount = Math.max(...drawableOptions.map((o) => o.points.length))
+    pointCount = Math.max(...drawableRegions.map((r) => r.points.length))
 
     let startOffset = xOffsetOptions[xStartOffset]
     let xStartField = 'confirmed'
 
-    offsets = drawableOptions.map(({ points }) => {
+    offsets = drawableRegions.map(({ points }) => {
       return points.findIndex((p) => p[xStartField] >= startOffset)
     })
 
@@ -244,7 +244,7 @@ function generateChartData({
   let datasetSources
 
   if (ySelection.indexOf('-') !== -1) {
-    let [option] = drawableOptions
+    let [region] = drawableRegions
     datasetSources = ySelection.split('-').map((yField) => {
       let { label, hue, saturation, lightness } = yFieldOptions[yField]
 
@@ -258,9 +258,9 @@ function generateChartData({
 
       return {
         index: 0,
-        option,
+        region,
         yField,
-        label: `${label} in ${option.longLabel}`,
+        label: `${label} in ${region.longLabel}`,
         hue,
         saturation,
         lightness
@@ -275,23 +275,23 @@ function generateChartData({
       yField = `${yField}Change`
     }
 
-    datasetSources = drawableOptions.map((option, index) => {
+    datasetSources = drawableRegions.map((region, index) => {
       return {
         index,
-        option,
+        region,
         yField,
-        label: option.longLabel,
-        hue: option.hue,
-        saturation: option.saturation,
-        lightness: option.lightness
+        label: region.longLabel,
+        hue: region.hue,
+        saturation: region.saturation,
+        lightness: region.lightness
       }
     })
   }
 
   let data = {
     datasets: datasetSources.map(
-      ({ option, yField, label, hue, saturation, lightness, index }) => {
-        let { population, points } = option
+      ({ region, yField, label, hue, saturation, lightness, index }) => {
+        let { population, points } = region
 
         if (xSelection === 'start') {
           points = points.slice(offsets[index])

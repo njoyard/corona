@@ -100,8 +100,8 @@ class RegionOption {
 }
 
 class DataSet {
-  @tracked selectedOptions
-  @tracked rootOption
+  @tracked selectedRegions
+  @tracked rootRegion
   @tracked regionOptions
 }
 
@@ -135,13 +135,13 @@ export default class DataService extends Service {
     this.loadingState = 'building region options'
 
     let data = await delay(() => {
-      let rootOption = new RegionOption('__', root, root)
-      rootOption.saturation = 0
-      rootOption.lightness = 30
-      rootOption.setData(sourceData)
-      rootOption.selected = selected.has(rootOption.code)
+      let rootRegion = new RegionOption('__', root, root)
+      rootRegion.saturation = 0
+      rootRegion.lightness = 30
+      rootRegion.setData(sourceData)
+      rootRegion.selected = selected.has(rootRegion.code)
 
-      let options = [rootOption]
+      let options = [rootRegion]
 
       invalidate()
 
@@ -172,7 +172,7 @@ export default class DataService extends Service {
         countryOption.selected = selected.has(countryOption.code)
 
         options.push(countryOption)
-        rootOption.addChild(countryOption)
+        rootRegion.addChild(countryOption)
 
         let provinces = Object.keys(sourceData[country]).filter(
           (k) => !k.startsWith('_')
@@ -202,7 +202,7 @@ export default class DataService extends Service {
 
       if (!selected.size) {
         // No selection, select countries with top deaths
-        for (let country of rootOption.children
+        for (let country of rootRegion.children
           .sortBy('deceased')
           .reverse()
           .slice(0, DEFAULT_SELECTED_REGIONS)) {
@@ -212,9 +212,9 @@ export default class DataService extends Service {
 
       let dataset = new DataSet()
 
-      dataset.rootOption = rootOption
+      dataset.rootRegion = rootRegion
       dataset.regionOptions = A(options)
-      dataset.selectedOptions = A(options.filter((o) => o.selected))
+      dataset.selectedRegions = A(options.filter((o) => o.selected))
 
       return dataset
     })

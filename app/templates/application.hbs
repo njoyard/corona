@@ -93,7 +93,21 @@
       <PaperList>
         <PaperSubheader>Vertical axis</PaperSubheader>
 
-        {{#if this.hasSingleOption}}
+        <PaperItem class="tip">
+          <PaperIcon
+            @icon="info"
+            @size={{18}} />
+
+          <small>
+            {{#if this.hasMultipleYSelection}}
+              Select a single value on the vertical axis to compare multiple regions.
+            {{else}}
+              Select a single region to allow selecting multiple values on the vertical axis.
+            {{/if}}
+          </small>
+        </PaperItem>
+
+        {{#if (eq this.selectedRegionCount 1)}}
           <MenuCheckbox
             @onChange={{fn this.ySelect "confirmed"}}
             @value={{string-contains this.ySelection "confirmed"}}>
@@ -306,7 +320,8 @@
         </PaperItem>
 
         <RegionList
-          @options={{array this.rootOption}}
+          @regions={{array this.rootRegion}}
+          @radioMode={{this.hasMultipleYSelection}}
           @onToggle={{this.toggleRegion}}
           @onToggleChildren={{this.toggleChildren}}
           @sortBy={{this.regionSortBy}}
@@ -320,7 +335,7 @@
 
   <PaperCard class="flex layout-fill layout-column layout-stretch" as |card|>
     <card.content class="flex">
-      {{#if this.hasSelection}}
+      {{#if (gt this.selectedRegionCount 0)}}
         {{!-- Force recreation of the chart when switching xLog to workaround a bug in chartjs-plugin-crosshair --}}
         {{#if this.xLog}}
           <Chart

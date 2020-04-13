@@ -1,9 +1,9 @@
-{{#each this.options as |option|}}
-  {{#if (string-contains (get option @filterBy) @filter)}}
+{{#each this.regions as |region|}}
+  {{#if (string-contains (get region @filterBy) @filter)}}
     {{#let
-      (if (and @requiresPopulation (not option.population))
+      (if (and @requiresPopulation (not region.population))
        "No population data for this region"
-       (if (and @requiresRecovered (not option.recovered))
+       (if (and @requiresRecovered (not region.recovered))
         "No recovered data for this region"
         null
        )
@@ -16,34 +16,44 @@
           </PaperTooltip>
         {{/if}}
 
-        <small class="region-option-level-{{option.level}}">
-          <Swatch @color={{if disabled (hash hue=0 saturation=0 lightness=80) option}} />
-          {{option.label}}
+        <small class="region-option-level-{{region.level}}">
+          <Swatch @color={{if disabled (hash hue=0 saturation=0 lightness=80) region}} />
+          {{region.label}}
         </small>
 
         <div class="md-secondary-container">
-          {{#if option.hasChildren}}
-            <controls.button
+          {{#if @radioMode}}
+            <controls.radio
+              @groupValue={{if region.selected region.code null}}
+              @value={{region.code}}
+              @disabled={{not (is-empty disabled)}}
               @secondary={{true}}
-              @iconButton={{true}}
-              @onClick={{fn this.toggleChildren option}}>
-              <PaperIcon @icon="done_all" />
-            </controls.button>
-          {{/if}}
+              @onChange={{fn this.select region}} />
+          {{else}}
+            {{#if region.hasChildren}}
+              <controls.button
+                @secondary={{true}}
+                @iconButton={{true}}
+                @onClick={{fn this.toggleChildren region}}>
+                <PaperIcon @icon="done_all" />
+              </controls.button>
+            {{/if}}
 
-          <controls.checkbox
-            @value={{option.selected}}
-            @secondary={{true}}
-            @disabled={{not (is-empty disabled)}}
-            @onChange={{fn this.toggle option}} />
+            <controls.checkbox
+              @value={{region.selected}}
+              @secondary={{true}}
+              @disabled={{not (is-empty disabled)}}
+              @onChange={{fn this.toggle region}} />
+          {{/if}}
         </div>
       </PaperItem>
     {{/let}}
   {{/if}}
 
-  {{#if option.hasChildren}}
+  {{#if region.hasChildren}}
     <RegionList
-      @options={{option.children}}
+      @regions={{region.children}}
+      @radioMode={{@radioMode}}
       @onToggle={{this.toggle}}
       @onToggleChildren={{this.toggleChildren}}
       @sortBy={{@sortBy}}

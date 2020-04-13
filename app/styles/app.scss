@@ -100,6 +100,12 @@ md-list-item::before {
   min-height: 24px;
 }
 
+.tip small {
+  font-size: 0.7em;
+  font-style: italic;
+  opacity: 80%;
+}
+
 .region-option-level-1,
 .sub-option {
   padding-left: 1rem;
