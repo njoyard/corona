@@ -351,7 +351,7 @@ const yFieldOptions = {
   confirmed: {
     order: 0,
     label: 'Confirmed',
-    hue: 40,
+    hue: 50,
     saturation: 60,
     lightness: 65
   },
@@ -372,7 +372,7 @@ const yFieldOptions = {
   active: {
     order: 3,
     label: 'Active (estimated)',
-    hue: 0,
+    hue: 20,
     saturation: 60,
     lightness: 65
   }
