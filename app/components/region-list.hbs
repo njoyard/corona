@@ -22,29 +22,20 @@
         </small>
 
         <div class="md-secondary-container">
-          {{#if @radioMode}}
-            <controls.radio
-              @groupValue={{if region.selected region.code null}}
-              @value={{region.code}}
-              @disabled={{not (is-empty disabled)}}
+          {{#if (and (not @radioMode) region.hasChildren)}}
+            <controls.button
               @secondary={{true}}
-              @onChange={{fn this.select region}} />
-          {{else}}
-            {{#if region.hasChildren}}
-              <controls.button
-                @secondary={{true}}
-                @iconButton={{true}}
-                @onClick={{fn this.toggleChildren region}}>
-                <PaperIcon @icon="done_all" />
-              </controls.button>
-            {{/if}}
-
-            <controls.checkbox
-              @value={{region.selected}}
-              @secondary={{true}}
-              @disabled={{not (is-empty disabled)}}
-              @onChange={{fn this.toggle region}} />
+              @iconButton={{true}}
+              @onClick={{fn this.toggleChildren region}}>
+              <PaperIcon @icon="done_all" />
+            </controls.button>
           {{/if}}
+
+          <controls.checkbox
+            @value={{region.selected}}
+            @secondary={{true}}
+            @disabled={{not (is-empty disabled)}}
+            @onChange={{if @radioMode (fn this.select region) (fn this.toggle region)}} />  
         </div>
       </PaperItem>
     {{/let}}
