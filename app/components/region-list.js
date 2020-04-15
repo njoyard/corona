@@ -1,6 +1,45 @@
 import Component from '@glimmer/component'
 import { action } from '@ember/object'
 
+function visitRegions({ regions, sortBy, reverse, filterBy, filter }) {
+  let visited = []
+  let list = regions
+
+  if (sortBy) {
+    list = list.sortBy(sortBy)
+  }
+
+  if (reverse) {
+    list = list.reverse()
+  }
+
+  for (let region of list) {
+    let children = []
+
+    if (region.children && region.children.length) {
+      children = visitRegions({
+        regions: region.children,
+        sortBy,
+        reverse,
+        filterBy,
+        filter
+      })
+    }
+
+    if (
+      children.length ||
+      !filter ||
+      region[filterBy].toLowerCase().indexOf(filter) !== -1
+    ) {
+      visited.push(region)
+    }
+
+    visited.push(...children)
+  }
+
+  return visited
+}
+
 export default class RegionListComponent extends Component {
   @action
   toggle(region) {
@@ -21,16 +60,18 @@ export default class RegionListComponent extends Component {
 
   get regions() {
     let {
-      args: { regions, sortBy }
+      args: { regions, sortBy, filterBy, filter }
     } = this
-
-    if (!sortBy) return regions
 
     let reverse = sortBy.startsWith('-')
     let key = reverse ? sortBy.substr(1) : sortBy
 
-    let sorted = regions.sortBy(key)
-
-    return reverse ? sorted.reverse() : sorted
+    return visitRegions({
+      regions,
+      sortBy: key,
+      reverse,
+      filterBy,
+      filter: filter.toLowerCase()
+    })
   }
 }

@@ -1,56 +1,41 @@
 {{#each this.regions as |region|}}
-  {{#if (string-contains (get region @filterBy) @filter)}}
-    {{#let
-      (if (and @requiresPopulation (not region.population))
-       "No population data for this region"
-       (if (and @requiresRecovered (not region.recovered))
-        "No recovered data for this region"
-        null
-       )
-      )
-      as |disabled|}}
-      <PaperItem class={{if disabled "md-disabled"}} as |controls|>
-        {{#if disabled}}
-          <PaperTooltip @position="right">
-            {{disabled}}
-          </PaperTooltip>
+  {{#let
+    (if (and @requiresPopulation (not region.population))
+     "No population data for this region"
+     (if (and @requiresRecovered (not region.recovered))
+      "No recovered data for this region"
+      null
+     )
+    )
+    as |disabled|}}
+    <PaperItem class={{if disabled "md-disabled"}} as |controls|>
+      {{#if disabled}}
+        <PaperTooltip @position="right">
+          {{disabled}}
+        </PaperTooltip>
+      {{/if}}
+
+      <small class="region-option-level-{{region.level}}">
+        <Swatch @color={{if disabled (hash hue=0 saturation=0 lightness=80) region}} />
+        {{region.label}}
+      </small>
+
+      <div class="md-secondary-container">
+        {{#if (and (not @radioMode) region.hasChildren)}}
+          <controls.button
+            @secondary={{true}}
+            @iconButton={{true}}
+            @onClick={{fn this.toggleChildren region}}>
+            <PaperIcon @icon="done_all" />
+          </controls.button>
         {{/if}}
 
-        <small class="region-option-level-{{region.level}}">
-          <Swatch @color={{if disabled (hash hue=0 saturation=0 lightness=80) region}} />
-          {{region.label}}
-        </small>
-
-        <div class="md-secondary-container">
-          {{#if (and (not @radioMode) region.hasChildren)}}
-            <controls.button
-              @secondary={{true}}
-              @iconButton={{true}}
-              @onClick={{fn this.toggleChildren region}}>
-              <PaperIcon @icon="done_all" />
-            </controls.button>
-          {{/if}}
-
-          <controls.checkbox
-            @value={{region.selected}}
-            @secondary={{true}}
-            @disabled={{not (is-empty disabled)}}
-            @onChange={{if @radioMode (fn this.select region) (fn this.toggle region)}} />  
-        </div>
-      </PaperItem>
-    {{/let}}
-  {{/if}}
-
-  {{#if region.hasChildren}}
-    <RegionList
-      @regions={{region.children}}
-      @radioMode={{@radioMode}}
-      @onToggle={{this.toggle}}
-      @onToggleChildren={{this.toggleChildren}}
-      @sortBy={{@sortBy}}
-      @filterBy={{@filterBy}}
-      @filter={{@filter}}
-      @requiresRecovered={{@requiresRecovered}}
-      @requiresPopulation={{@requiresPopulation}} />
-  {{/if}}
+        <controls.checkbox
+          @value={{region.selected}}
+          @secondary={{true}}
+          @disabled={{not (is-empty disabled)}}
+          @onChange={{if @radioMode (fn this.select region) (fn this.toggle region)}} />
+      </div>
+    </PaperItem>
+  {{/let}}
 {{/each}}
