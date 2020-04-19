@@ -1,13 +1,3 @@
-let registry = {}
-let codes = null
-let countries = null
-
-function invalidate() {
-  registry = {}
-  codes = null
-  countries = null
-}
-
 function uniqueKeys(entries) {
   let upper = entries.map((e) => e.toUpperCase())
   let keys = []
@@ -39,48 +29,79 @@ function uniqueKeys(entries) {
   return keys
 }
 
-function generateCodes() {
-  let allCountries = Object.keys(registry).sort()
-  let countryCodes = uniqueKeys(allCountries)
+class CodeRegistry {
+  constructor() {
+    this.invalidate()
+  }
 
-  codes = {}
-  countries = {}
+  invalidate() {
+    this.subRegistries = {}
+    this.items = new Set()
 
-  allCountries.forEach((country, index) => {
-    let countryCode = countryCodes[index]
+    this.codes = null
+    this.entries = null
+  }
 
-    codes[country] = countryCode
-    countries[countryCode] = { country }
+  register(root, ...sub) {
+    let { subRegistries } = this
 
-    let provinces = [...registry[country]].sort()
-    let provinceCodes = uniqueKeys(provinces)
-    provinces.forEach((province, index) => {
-      let provinceCode = `${countryCode}${provinceCodes[index]}`
+    this.items.add(root)
 
-      codes[`${country}:${province}`] = provinceCode
-      countries[provinceCode] = { country, province }
+    if (sub.length) {
+      if (!(root in subRegistries)) {
+        subRegistries[root] = new CodeRegistry()
+      }
+
+      subRegistries[root].register(...sub)
+    }
+  }
+
+  generateCodes() {
+    let { subRegistries } = this
+
+    let items = [...this.items].sort()
+    let keys = uniqueKeys(items)
+
+    let codes = (this.codes = {})
+    let entries = (this.entries = {})
+
+    items.forEach((item, index) => {
+      codes[item] = keys[index]
+      entries[keys[index]] = { item, registry: subRegistries[item] }
     })
-  })
+  }
+
+  getCode(root, ...sub) {
+    if (!this.codes) {
+      this.generateCodes()
+    }
+
+    let { codes, subRegistries } = this
+    let code = codes[root]
+
+    if (sub.length) {
+      return `${code}${subRegistries[root].getCode(...sub)}`
+    } else {
+      return code
+    }
+  }
+
+  getEntry(code) {
+    let [, root, sub] = code.match(/^(..)(.*)$/)
+
+    if (!this.entries) {
+      this.generateCodes()
+    }
+
+    let { entries, subRegistries } = this
+    let { item, registry } = entries[root]
+
+    if (sub.length) {
+      return [item, ...registry.getEntry(sub)]
+    } else {
+      return [item]
+    }
+  }
 }
 
-function register(country, province) {
-  if (!(country in registry)) registry[country] = new Set()
-  if (province && !registry[country].has(province))
-    registry[country].add(province)
-}
-
-function codeFor(country, province) {
-  if (!codes) generateCodes()
-
-  let key = province ? `${country}:${province}` : country
-
-  return codes[key]
-}
-
-function entryFor(code) {
-  if (!countries) generateCodes()
-
-  return countries[code]
-}
-
-export { invalidate, register, codeFor, entryFor }
+export default new CodeRegistry()

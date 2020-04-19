@@ -1,22 +1,4 @@
-import { htmlSafe } from '@ember/template'
-
-class Preset {
-  title = null
-  _description = null
-  params = null
-  singleRegion = null
-
-  constructor({ title, description, singleRegion, params }) {
-    this.title = title
-    this._description = description
-    this.singleRegion = singleRegion
-    this.params = params
-  }
-
-  get description() {
-    return htmlSafe(this._description)
-  }
-}
+import Preset from 'corona/models/preset'
 
 const presets = {
   tendency: new Preset({
