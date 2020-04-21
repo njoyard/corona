@@ -155,9 +155,16 @@ export default class ApplicationController extends Controller {
   checkModel() {
     let { ySelection, visibleFields } = this
 
-    if (!visibleFields.find((f) => f.key === ySelection)) {
-      // Ensure Y selection is visible
-      this.ySelection = visibleFields[0].key
+    // Only keep Y fields that are visible, and fallback to the first visible field
+    this.ySelection = ySelection =
+      ySelection
+        .split('-')
+        .filter((y) => visibleFields.find((f) => f.key === y))
+        .join('-') || visibleFields[0].key
+
+    // Ensure a single region is selected when we have mutliple Y fields
+    if (this.ySelection.indexOf('-') !== -1) {
+      this.selectFirstRegion()
     }
   }
 
