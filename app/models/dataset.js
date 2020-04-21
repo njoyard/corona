@@ -46,8 +46,7 @@ export default class Dataset {
     sources,
     maxDepth,
     dataFilter,
-    postFilter,
-    fields
+    postFilter
   }) {
     this.title = title
     this.description = description

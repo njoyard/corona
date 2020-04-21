@@ -158,12 +158,7 @@ export default class ApplicationController extends Controller {
   }
 
   checkModel() {
-    let {
-      ySelection,
-      regionSortBy,
-      visibleFields,
-      rootRegion: { allFields }
-    } = this
+    let { ySelection, visibleFields } = this
 
     if (!visibleFields.find((f) => f.key === ySelection)) {
       // Ensure Y selection is visible
