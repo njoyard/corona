@@ -53,10 +53,12 @@ export default class RegionOption {
 
     this.deaths = lastPoint.deceased
 
-    let [casesField] = [...allFields].filter(
-      (f) =>
-        f in fieldDefinitions && fieldDefinitions[f].cases && f in lastPoint
-    )
+    let [casesField] = [...allFields]
+      .filter(
+        (f) =>
+          f in fieldDefinitions && fieldDefinitions[f].cases && f in lastPoint
+      )
+      .sort((a, b) => fieldDefinitions[a].order - fieldDefinitions[b].order)
 
     if (casesField) {
       this.cases = lastPoint[casesField]

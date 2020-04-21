@@ -227,7 +227,9 @@ export default class ApplicationController extends Controller {
       rootRegion: { allFields }
     } = this
 
-    let [startField] = allFields.filter((f) => f in fields && fields[f].cases)
+    let [startField] = allFields
+      .filter((f) => f in fields && fields[f].cases)
+      .sort((a, b) => fields[a].order - fields[b].order)
     return startField
   }
 
