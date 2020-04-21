@@ -14,7 +14,7 @@ const downloaded = new Set()
   Implement the `fetchData` method asynchronously (try to parallelize async calls if possible).
 
   To return data, this method must use its `dataCallback` argument which has the following signature:
-    `dataCallback(regionLevels, points[, population])`
+    `dataCallback(regionLevels, points, population, levelLabels)`
 
   All calls to `dataCallback` must be done BEFORE `fetchData` returns.
 
@@ -29,7 +29,8 @@ const downloaded = new Set()
       with the same date are merged together (replacing existing property values) and points with
       new dates are added. Note that all points in a single `dataCallback` call MUST have the same
       fields.
-    - `population` is optional and will replace any previous value set for that region.
+    - `population` will replace any previous value set for that region, can be set to null if unknown
+    - `levelLabels` is an array of type labels for the corresponding levels (eg ['country', 'region'...])
 
   Multiple calls for the same region can be made. 
 

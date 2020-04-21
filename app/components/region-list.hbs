@@ -18,7 +18,14 @@
             @secondary={{true}}
             @iconButton={{true}}
             @onClick={{fn this.toggleChildren region}}>
-            <PaperIcon @icon="done_all" />
+            <PaperIcon @icon="done_all">
+              <PaperTooltip @position="right">
+                Toggle all {{pluralize region.subTypeLabel}}
+                {{#if (not-eq region.label "World")}}
+                  in {{region.label}}
+                {{/if}}
+              </PaperTooltip>
+            </PaperIcon>
           </controls.button>
         {{/if}}
 

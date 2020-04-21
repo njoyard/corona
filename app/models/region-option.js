@@ -12,6 +12,8 @@ export default class RegionOption {
   @tracked points
   @tracked level = 0
   @tracked population
+  @tracked typeLabel
+  @tracked subTypeLabel
 
   @tracked hue
   @tracked saturation
@@ -37,16 +39,20 @@ export default class RegionOption {
 
   addChild(...children) {
     children.forEach((child) => this.children.pushObject(child))
+
+    let subTypes = new Set([...this.children].map((c) => c.typeLabel))
+    this.subTypeLabel = subTypes.size === 1 ? [...subTypes][0] : 'region'
   }
 
   get hasChildren() {
     return this.children.length > 0
   }
 
-  setData({ _points, _meta: { population, fields, allFields } }) {
+  setData({ _points, _meta: { population, fields, allFields, typeLabel } }) {
     let points = (this.points = _points)
     let lastPoint = points[points.length - 1]
 
+    this.typeLabel = typeLabel
     this.population = population
     this.fields = A([...fields])
     this.allFields = A([...allFields])

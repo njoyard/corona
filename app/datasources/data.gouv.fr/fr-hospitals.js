@@ -30,7 +30,8 @@ export default class FranceHospitalsDataSource extends DataGouvFrSource {
             deceased: Number(dc)
           }
         ],
-        population
+        population,
+        ['country', 'region', 'department']
       )
     }
   }

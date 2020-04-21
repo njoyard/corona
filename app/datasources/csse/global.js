@@ -7,15 +7,18 @@ export default class USCSSEDataSource extends CCSEDataSource {
     confirmed: {
       skip: 4,
       levels: [1, 0],
+      levelLabels: ['country', 'province'],
       populationLookup: [1, 0]
     },
     deceased: {
       skip: 4,
-      levels: [1, 0]
+      levels: [1, 0],
+      levelLabels: ['country', 'province']
     },
     recovered: {
       skip: 4,
-      levels: [1, 0]
+      levels: [1, 0],
+      levelLabels: ['country', 'province']
     }
   }
 }

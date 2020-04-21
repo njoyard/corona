@@ -63,7 +63,7 @@ export default class CCSEDataSource extends BaseDataSource {
   }
 
   async fetchScope(scope, dataCallback) {
-    let { skip, levels } = this.scopes[scope]
+    let { skip, levels, levelLabels } = this.scopes[scope]
     let csvLines = parseCSV(await this.fetchText(this.urlFor(scope)))
     let dates = csvLines.shift().slice(skip).map(parseDate)
 
@@ -105,7 +105,12 @@ export default class CCSEDataSource extends BaseDataSource {
         levelNames[0] = countryReplacements[levelNames[0]]
       }
 
-      dataCallback(levelNames, zipDateCounts(dates, counts, scope), pop)
+      dataCallback(
+        levelNames,
+        zipDateCounts(dates, counts, scope),
+        pop,
+        levelLabels
+      )
     }
   }
 

@@ -1,21 +1,24 @@
 import delay from 'corona/utils/delay'
 import { aggregate, filter } from 'corona/utils/aggregate'
 
-function initializeLevel() {
-  return { _points: [], _meta: { fields: new Set() } }
+function initializeLevel(typeLabel) {
+  return { _points: [], _meta: { fields: new Set(), typeLabel } }
 }
 
 function gather(world, dataFilter) {
-  return function (levels, points, population) {
+  return function (levels, points, population, levelLabels) {
     if (dataFilter && !dataFilter(levels)) return
 
     let cur = world
-    for (let level of levels) {
+
+    levels.forEach((level, index) => {
+      let label = levelLabels[index]
+
       if (!(level in cur)) {
-        cur[level] = initializeLevel()
+        cur[level] = initializeLevel(label)
       }
       cur = cur[level]
-    }
+    })
 
     let { _points, _meta } = cur
 
