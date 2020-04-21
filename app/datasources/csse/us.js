@@ -11,7 +11,7 @@ export default class USCSSEDataSource extends CCSEDataSource {
     deceased: {
       skip: 12,
       levels: ['US', 6, 5],
-      population: 11
+      populationField: 11
     }
   }
 }

@@ -6,7 +6,8 @@ export default class USCSSEDataSource extends CCSEDataSource {
   scopes = {
     confirmed: {
       skip: 4,
-      levels: [1, 0]
+      levels: [1, 0],
+      populationLookup: [1, 0]
     },
     deceased: {
       skip: 4,

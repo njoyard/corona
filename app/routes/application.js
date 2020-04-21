@@ -14,4 +14,9 @@ export default class ApplicationRoute extends Route {
     this.data.loadingState = 'initializing'
     return this.data.data(params.dataset, params.selectedRegionCodes)
   }
+
+  setupController(controller, model) {
+    super.setupController(controller, model)
+    controller.checkModel()
+  }
 }

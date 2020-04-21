@@ -1,5 +1,7 @@
-import { bignum } from 'corona/utils/format'
 import moment from 'moment'
+
+import { bignum } from 'corona/utils/format'
+import { fields } from 'corona/utils/fields'
 
 function generateChartOptions(
   {
@@ -28,16 +30,10 @@ function generateChartOptions(
 
   if (ySelection.indexOf('-') !== -1) {
     yLabel = yChange ? 'Daily increase' : 'Count'
-  } else if (ySelection === 'confirmed') {
-    yLabel = yChange
-      ? 'Daily increase in confirmed cases'
-      : 'Total confirmed cases'
-  } else if (ySelection === 'deceased') {
-    yLabel = yChange ? 'Daily increase in deaths' : 'Total deaths'
-  } else if (ySelection === 'recovered') {
-    yLabel = yChange ? 'Daily increase in recoveries' : 'Total recoveries'
-  } else if (ySelection === 'active') {
-    yLabel = yChange ? 'Daily increase in active cases' : 'Total active cases'
+  } else {
+    yLabel = `${yChange ? 'Daily increase in' : 'Total'} ${
+      fields[ySelection].yLabel || fields[ySelection].label.toLowerCase()
+    }`
   }
 
   let yLabelDetails = []
@@ -102,7 +98,7 @@ function generateChartOptions(
           if (xSelection === 'date') {
             return moment(point.t).format('ll')
           } else if (xSelection === 'start') {
-            return `Day ${item.index} since ${xStartOffsetOrdinal} confirmed case`
+            return `Day ${item.index} since ${xStartOffsetOrdinal} case`
           } else {
             return `${item.index} confirmed cases`
           }
@@ -190,6 +186,7 @@ function generateDataset(
 function generateChartData({
   xSelection,
   xStartOffset,
+  xStartField,
   ySelection,
   yChange,
   yMovingAverage,
@@ -226,7 +223,6 @@ function generateChartData({
     pointCount = Math.max(...drawableRegions.map((r) => r.points.length))
 
     let startOffset = xOffsetOptions[xStartOffset]
-    let xStartField = 'confirmed'
 
     offsets = drawableRegions.map(({ points }) => {
       return points.findIndex((p) => p[xStartField] >= startOffset)
@@ -339,8 +335,11 @@ function formatYTick(number) {
 }
 
 function formatXDate(date) {
-  let mom = moment(date)
-  return mom.isValid() ? mom.format('MMM D') : date
+  if (typeof date === 'string' && date.match(/^\w+ \d+$/)) {
+    return date
+  }
+
+  return moment(date).format('MMM D')
 }
 
 const plugins = {}

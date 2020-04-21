@@ -17,13 +17,25 @@ function registerRec(data, parents = []) {
   }
 }
 
-function getLongLabel(root, ...sub) {
-  return sub.length ? `${root} (${sub.reverse().join(', ')})` : root
+function getLongLabel(...levels) {
+  let label = levels.pop()
+
+  if (levels.length) {
+    label += ` (${levels.reverse().join(', ')})`
+  }
+
+  return label
 }
 
 function buildOptions(label, data, selected, level = 0, parents = []) {
   let option
   let line = label === 'World' ? [] : [...parents, label]
+
+  let children = getRegions(data)
+  if (children.length === 1) {
+    let [child] = children
+    return buildOptions(child, data[child], selected, level, parents)
+  }
 
   if (label === 'World') {
     option = new RegionOption('__', label, label, level)
@@ -41,14 +53,13 @@ function buildOptions(label, data, selected, level = 0, parents = []) {
   option.setData(data)
   option.selected = selected.has(option.code)
 
-  let children = getRegions(data)
-  let childOptions = children
-    .map((c) => buildOptions(c, data[c], selected, level + 1, line))
-    .reduce((a, b) => [...a, ...b], [])
+  let childOptions = children.map((c) =>
+    buildOptions(c, data[c], selected, level + 1, line)
+  )
 
   option.addChild(...childOptions)
 
-  return [option, ...childOptions]
+  return option
 }
 
 export default function buildRegionOptions(
@@ -63,18 +74,17 @@ export default function buildRegionOptions(
     ? new Set(selectedRegionCodes.split('-'))
     : new Set()
 
-  let options = buildOptions(rootLabel, data, selected)
-  let [rootOption] = options
+  let rootOption = buildOptions(rootLabel, data, selected)
 
   if (!selected.size) {
     // No selection, select regions with top deaths
     for (let region of rootOption.children
-      .sortBy('deceased')
+      .sortBy('deaths')
       .reverse()
       .slice(0, DEFAULT_SELECTED_REGIONS)) {
       region.selected = true
     }
   }
 
-  return { root: rootOption, options }
+  return rootOption
 }

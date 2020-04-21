@@ -80,26 +80,11 @@ class CodeRegistry {
     let code = codes[root]
 
     if (sub.length) {
-      return `${code}${subRegistries[root].getCode(...sub)}`
+      return `${this.items.size === 1 ? '' : code}${subRegistries[root].getCode(
+        ...sub
+      )}`
     } else {
       return code
-    }
-  }
-
-  getEntry(code) {
-    let [, root, sub] = code.match(/^(..)(.*)$/)
-
-    if (!this.entries) {
-      this.generateCodes()
-    }
-
-    let { entries, subRegistries } = this
-    let { item, registry } = entries[root]
-
-    if (sub.length) {
-      return [item, ...registry.getEntry(sub)]
-    } else {
-      return [item]
     }
   }
 }

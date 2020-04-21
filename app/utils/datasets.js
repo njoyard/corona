@@ -1,9 +1,11 @@
 import USCSSEDataSource from 'corona/datasources/csse/us'
 import GlobalCSSEDataSource from 'corona/datasources/csse/global'
+import FranceHospitalsDataSource from 'corona/datasources/data.gouv.fr/fr-hospitals'
 import Dataset from 'corona/models/dataset'
 
 const us = new USCSSEDataSource()
 const world = new GlobalCSSEDataSource()
+const france = new FranceHospitalsDataSource()
 
 const datasets = {
   flat: new Dataset({
@@ -15,11 +17,12 @@ const datasets = {
     postFilter: (mostRecentPoint) => mostRecentPoint.confirmed >= 100
   }),
 
-  us: new Dataset({
-    title: 'United States',
-    description: 'United States data with counts for each state.',
-    sources: [us],
-    maxDepth: 1
+  australia: new Dataset({
+    title: 'Australia',
+    description:
+      'Australia only with counts for each province (population ratio not available yet)',
+    sources: [world],
+    dataFilter: ([country]) => country === 'Australia'
   }),
 
   china: new Dataset({
@@ -30,26 +33,16 @@ const datasets = {
     dataFilter: ([country]) => country === 'China'
   }),
 
-  australia: new Dataset({
-    title: 'Australia',
-    description:
-      'Australia only with counts for each province (population ratio not available yet)',
-    sources: [world],
-    dataFilter: ([country]) => country === 'Australia'
+  france: new Dataset({
+    title: 'France',
+    description: 'Hospital data in France from Santé Publique France',
+    sources: [france]
   }),
 
-  global: new Dataset({
-    title: 'Global data with provinces',
-    description:
-      'Totals for each country, including counts for each province for selected countries.',
-    sources: [world]
-  }),
-
-  full: new Dataset({
-    title: 'Global data with provinces and US states',
-    description:
-      'Complete dataset, including country provinces and US states. Will need a bit more time to load than other datasets.',
-    sources: [us, world],
+  us: new Dataset({
+    title: 'United States',
+    description: 'United States data with counts for each state.',
+    sources: [us],
     maxDepth: 2
   })
 }

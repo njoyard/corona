@@ -1,22 +1,14 @@
 {{#each this.regions as |region|}}
-  {{#let
-    (if (and @requiresPopulation (not region.population))
-     "No population data for this region"
-     (if (and @requiresRecovered (not region.recovered))
-      "No recovered data for this region"
-      null
-     )
-    )
-    as |disabled|}}
-    <PaperItem class={{if disabled "md-disabled"}} as |controls|>
-      {{#if disabled}}
+  {{#let (region-state region @requiresField @requiresPopulation) as |state|}}
+    <PaperItem class={{if state.disabled "md-disabled"}} as |controls|>
+      {{#if state.disabled}}
         <PaperTooltip @position="right">
-          {{disabled}}
+          {{state.reason}}
         </PaperTooltip>
       {{/if}}
 
       <small class="region-option-level-{{region.level}}">
-        <Swatch @color={{if disabled (hash hue=0 saturation=0 lightness=80) region}} />
+        <Swatch @color={{if state.disabled (hash hue=0 saturation=0 lightness=80) region}} />
         {{region.label}}
       </small>
 
@@ -33,7 +25,7 @@
         <controls.checkbox
           @value={{region.selected}}
           @secondary={{true}}
-          @disabled={{not (is-empty disabled)}}
+          @disabled={{state.disabled}}
           @onChange={{if @radioMode (fn this.select region) (fn this.toggle region)}} />
       </div>
     </PaperItem>

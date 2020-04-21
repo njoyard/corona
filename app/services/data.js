@@ -1,21 +1,19 @@
 import Service from '@ember/service'
-import { inject as service } from '@ember/service'
 import { tracked } from '@glimmer/tracking'
 import { A } from '@ember/array'
 
 import AppDataSet from 'corona/models/app-dataset'
 import delay from 'corona/utils/delay'
 import { datasets, defaultDataset } from 'corona/utils/datasets'
-import compute from 'corona/utils/compute'
+import { computeFields } from 'corona/utils/fields'
 import buildRegionOptions from 'corona/utils/regions'
 
-function recCompute(data) {
-  for (let region in data) {
-    if (region.startsWith('_')) continue
-    recCompute(data[region])
+function visit(option) {
+  let all = [option]
+  for (let child of option.children) {
+    all.push(...visit(child))
   }
-
-  compute(data._points)
+  return all
 }
 
 export default class DataService extends Service {
@@ -31,21 +29,20 @@ export default class DataService extends Service {
 
     this.loadingState = 'fetching data'
 
-    let { label: rootLabel, data: sourceData } = await dataset.fetchData()
+    let { label: rootLabel, data: sourceData } = await dataset.fetchData(
+      (state) => (this.loadingState = state)
+    )
 
     this.loadingState = 'computing daily changes'
 
-    await delay(() => recCompute(sourceData))
+    await delay(() => computeFields(sourceData))
 
     this.loadingState = 'building region options'
 
     let data = await delay(() => {
-      let { root, options } = buildRegionOptions(
-        sourceData,
-        rootLabel,
-        selectedRegionCodes
-      )
+      let root = buildRegionOptions(sourceData, rootLabel, selectedRegionCodes)
 
+      let options = visit(root)
       let dataset = new AppDataSet()
 
       dataset.rootRegion = root
@@ -58,7 +55,6 @@ export default class DataService extends Service {
     this.loadingState = 'starting application'
 
     await delay(() => {})
-    console.log(data)
 
     return data
   }

@@ -1,4 +1,5 @@
 import BaseDataSource from 'corona/datasources/-base'
+import parseCSV from 'corona/utils/csv'
 
 const countryReplacements = {
   US: 'United States',
@@ -11,19 +12,9 @@ const scopeReplacements = {
 }
 
 const baseURL =
-  'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series'
+  'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master'
 
-function parseCSV(csv) {
-  return csv
-    .split(/\r\n|\r|\n/g)
-    .filter(Boolean)
-    .map((l) =>
-      l
-        .replace(/"([^"]+)"/g, (m, p1) => p1.replace(/,/g, 'COMMA'))
-        .split(',')
-        .map((c) => c.replace(/COMMA/g, ','))
-    )
-}
+// pop:  https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv
 
 function parseDate(date) {
   let [m, d, y] = date.split('/').map((x) => (Number(x) < 10 ? `0${x}` : x))
@@ -49,36 +40,49 @@ export default class CCSEDataSource extends BaseDataSource {
 
   urlFor(scope) {
     scope = scopeReplacements[scope] || scope
+    return `${baseURL}/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${scope}_${this.region}.csv`
+  }
 
-    return `${baseURL}/time_series_covid19_${scope}_${this.region}.csv`
+  async populationFor(country, province = '', admin = '') {
+    let { populationData } = this
+    if (!populationData) {
+      populationData = this.populationData = {}
+
+      let csvLines = parseCSV(
+        await this.fetchText(
+          `${baseURL}/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv`
+        )
+      )
+
+      for (let [, , , , , a, p, c, , , , pop] of csvLines) {
+        populationData[`${c}|${p}|${a}`] = pop ? Number(pop) : null
+      }
+    }
+
+    return populationData[`${country}|${province}|${admin}`] || null
   }
 
   async fetchScope(scope, dataCallback) {
-    let { skip, levels, population } = this.scopes[scope]
+    let { skip, levels } = this.scopes[scope]
     let csvLines = parseCSV(await this.fetchText(this.urlFor(scope)))
     let dates = csvLines.shift().slice(skip).map(parseDate)
 
     let entries = csvLines.map((line) => {
       let levelNames = levels.map((l) => (typeof l === 'string' ? l : line[l]))
 
-      if (levelNames[0] in countryReplacements) {
-        levelNames[0] = countryReplacements[levelNames[0]]
-      }
-
       let counts = line.slice(skip).map(Number)
-      let pop = population ? line[population] : null
 
       return {
         levelsJoined: levelNames.join('|'),
         levelNames,
         dates,
-        counts,
-        pop
+        counts
       }
     })
 
     for (let entry of entries) {
-      let { levelsJoined, levelNames, dates, counts, pop } = entry
+      let { levelsJoined, levelNames, dates, counts } = entry
+      let pop = await this.populationFor(...levelNames)
 
       while (levelsJoined.endsWith('|')) {
         // Do we have other entries with the same parent level names?
@@ -95,6 +99,10 @@ export default class CCSEDataSource extends BaseDataSource {
         }
 
         levelsJoined = levelNames.join('|')
+      }
+
+      if (levelNames[0] in countryReplacements) {
+        levelNames[0] = countryReplacements[levelNames[0]]
       }
 
       dataCallback(levelNames, zipDateCounts(dates, counts, scope), pop)

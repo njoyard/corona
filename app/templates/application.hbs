@@ -107,73 +107,36 @@
           </small>
         </PaperItem>
 
-        {{#if (eq this.selectedRegionCount 1)}}
-          <MenuCheckbox
-            @onChange={{fn this.ySelect "confirmed"}}
-            @value={{string-contains this.ySelection "confirmed"}}>
-            Confirmed cases
-          </MenuCheckbox>
-
-          <MenuCheckbox
-            @onChange={{fn this.ySelect "deceased"}}
-            @value={{string-contains this.ySelection "deceased"}}>
-            Deaths
-          </MenuCheckbox>
-
-          {{#if (not-eq this.dataset "us")}}
+        {{#each this.visibleFields as |field|}}
+          {{#if (eq this.selectedRegionCount 1)}}
             <MenuCheckbox
-              @onChange={{fn this.ySelect "recovered"}}
-              @value={{string-contains this.ySelection "recovered"}}>
-              Recovered
+              @onChange={{fn this.ySelect field.key}}
+              @value={{string-contains this.ySelection field.key}}>
+              {{field.label}}
+              {{#if field.detail}}
+                <PaperIcon @icon="help" @size={{18}}>
+                  <PaperTooltip @position="right">
+                    {{field.detail}}
+                  </PaperTooltip>
+                </PaperIcon>
+              {{/if}}
             </MenuCheckbox>
-
-            <MenuCheckbox
-              @onChange={{fn this.ySelect "active"}}
-              @value={{string-contains this.ySelection "active"}}>
-              Active (estimated)
-              <PaperIcon @icon="help" @size={{18}}>
-                <PaperTooltip @position="right">
-                  Computed by subtracting deaths and recovered cases from confirmed cases
-                </PaperTooltip>
-              </PaperIcon>
-            </MenuCheckbox>
-          {{/if}}
-        {{else}}
-          <MenuRadio
-            @onChange={{fn this.ySelect "confirmed"}}
-            @groupValue={{this.ySelection}}
-            @value="confirmed">
-            Confirmed cases
-          </MenuRadio>
-
-          <MenuRadio
-            @onChange={{fn this.ySelect "deceased"}}
-            @groupValue={{this.ySelection}}
-            @value="deceased">
-            Deaths
-          </MenuRadio>
-
-          {{#if (not-eq this.dataset "us")}}
+          {{else}}
             <MenuRadio
-              @onChange={{fn this.ySelect "recovered"}}
+              @onChange={{fn this.ySelect field.key}}
               @groupValue={{this.ySelection}}
-              @value="recovered">
-              Recovered
-            </MenuRadio>
-
-            <MenuRadio
-              @onChange={{fn this.ySelect "active"}}
-              @groupValue={{this.ySelection}}
-              @value="active">
-              Active (estimated)
-              <PaperIcon @icon="help" @size={{18}}>
-                <PaperTooltip @position="right">
-                  Computed by subtracting deaths and recovered cases from confirmed cases
-                </PaperTooltip>
-              </PaperIcon>
+              @value={{field.key}}>
+              {{field.label}}
+              {{#if field.detail}}
+                <PaperIcon @icon="help" @size={{18}}>
+                  <PaperTooltip @position="right">
+                    {{field.detail}}
+                  </PaperTooltip>
+                </PaperIcon>
+              {{/if}}
             </MenuRadio>
           {{/if}}
-        {{/if}}
+        {{/each}}
 
         <MenuSwitch
           @value={{this.yRatio}}
@@ -215,40 +178,44 @@
           Date
         </MenuRadio>
 
-        <MenuRadio
-          @onChange={{fn (mut this.xSelection)}}
-          @groupValue={{this.xSelection}}
-          @value="start"
-          @disabled={{this.xLog}}
-          @disabledTooltip="Unavailable when using logarithmic scale on the X axis">
-          Day since {{this.xStartOffsetOrdinal}} case
-        </MenuRadio>
+        {{#if this.xStartField}}
+          <MenuRadio
+            @onChange={{fn (mut this.xSelection)}}
+            @groupValue={{this.xSelection}}
+            @value="start"
+            @disabled={{this.xLog}}
+            @disabledTooltip="Unavailable when using logarithmic scale on the X axis">
+            Day since {{this.xStartOffsetOrdinal}} case
+          </MenuRadio>
 
-        {{#if (eq this.xSelection "start")}}
-          <MenuSlider
-            @onChange={{fn (mut this.xStartOffset)}}
-            @value={{this.xStartOffset}}
-            @min={{0}}
-            @max={{9}}
-            @subOption={{true}} />
+          {{#if (eq this.xSelection "start")}}
+            <MenuSlider
+              @onChange={{fn (mut this.xStartOffset)}}
+              @value={{this.xStartOffset}}
+              @min={{0}}
+              @max={{9}}
+              @subOption={{true}} />
+          {{/if}}
         {{/if}}
 
-        <MenuRadio
-          @onChange={{fn (mut this.xSelection)}}
-          @groupValue={{this.xSelection}}
-          @value="confirmed"
-          @disabled={{this.stacked}}
-          @disabledTooltip="Unavailable with a stacked chart">
-          Confirmed cases
-        </MenuRadio>
+        {{#if this.hasConfirmed}}
+          <MenuRadio
+            @onChange={{fn (mut this.xSelection)}}
+            @groupValue={{this.xSelection}}
+            @value="confirmed"
+            @disabled={{this.stacked}}
+            @disabledTooltip="Unavailable with a stacked chart">
+            Confirmed cases
+          </MenuRadio>
 
-        <MenuSwitch
-          @value={{this.xLog}}
-          @onChange={{fn (mut this.xLog)}}
-          @disabled={{not-eq this.xSelection "confirmed"}}
-          @disabledTooltip="Only available when showing confirmed cases on the X axis">
-          Logarithmic scale
-        </MenuSwitch>
+          <MenuSwitch
+            @value={{this.xLog}}
+            @onChange={{fn (mut this.xLog)}}
+            @disabled={{not-eq this.xSelection "confirmed"}}
+            @disabledTooltip="Only available when showing confirmed cases on the X axis">
+            Logarithmic scale
+          </MenuSwitch>
+        {{/if}}
 
         <PaperDivider />
 
@@ -306,10 +273,10 @@
               <tabs.tab @disabled={{true}}>
                 Sort by
               </tabs.tab>
-              <tabs.tab @value="-deceased">
+              <tabs.tab @value="-deaths">
                 Deaths
               </tabs.tab>
-              <tabs.tab @value="-confirmed">
+              <tabs.tab @value="-cases">
                 Cases
               </tabs.tab>
               <tabs.tab @value="label">
@@ -327,8 +294,8 @@
           @sortBy={{this.regionSortBy}}
           @filterBy="longLabel"
           @filter={{this.regionFilter}}
-          @requiresPopulation={{this.yRatio}}
-          @requiresRecovered={{or (eq this.ySelection "recovered") (eq this.ySelection "active")}} />
+          @requiresField={{this.ySelection}}
+          @requiresPopulation={{this.yRatio}} />
       </PaperList>
     </PaperContent>
   </PaperSidenav>

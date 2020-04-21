@@ -115,6 +115,14 @@ md-list-item::before {
   padding-left: 2rem;
 }
 
+.region-option-level-3 {
+  padding-left: 3rem;
+}
+
+.region-option-level-4 {
+  padding-left: 4rem;
+}
+
 .md-toast-text a {
   color: paper-color($primary, '100');
 }

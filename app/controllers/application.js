@@ -11,6 +11,7 @@ import {
 } from 'corona/utils/chart'
 import presets from 'corona/utils/presets'
 import { ordinal } from 'corona/utils/format'
+import { fields } from 'corona/utils/fields'
 
 function compareYSelections(a, b) {
   return yFieldOptions[a].order - yFieldOptions[b].order
@@ -144,7 +145,6 @@ export default class ApplicationController extends Controller {
   /* ---- END WORKAROUND ---- */
 
   @tracked dataset = 'flat'
-  @tracked xStartField = 'confirmed'
 
   @action
   selectDataset(ds) {
@@ -152,16 +152,23 @@ export default class ApplicationController extends Controller {
     this.showSourcesDialog = false
     this.selectedRegions.clear()
 
-    if (
-      ds === 'us' &&
-      (this.ySelection === 'recovered' || this.ySelection === 'active ')
-    ) {
-      this.ySelection = 'confirmed'
-    }
-
     setTimeout(() => {
       this.dataset = ds
     }, 0)
+  }
+
+  checkModel() {
+    let {
+      ySelection,
+      regionSortBy,
+      visibleFields,
+      rootRegion: { allFields }
+    } = this
+
+    if (!visibleFields.find((f) => f.key === ySelection)) {
+      // Ensure Y selection is visible
+      this.ySelection = visibleFields[0].key
+    }
   }
 
   @tracked _sideNavOpen = null
@@ -196,6 +203,34 @@ export default class ApplicationController extends Controller {
 
   presets = presets
 
+  get visibleFields() {
+    let {
+      rootRegion: { allFields }
+    } = this
+
+    return allFields
+      .filter((f) => f in fields && fields[f].label)
+      .sort((a, b) => fields[a].order - fields[b].order)
+      .map((f) => Object.assign({ key: f }, fields[f]))
+  }
+
+  get hasConfirmed() {
+    let {
+      rootRegion: { allFields }
+    } = this
+
+    return allFields.includes('confirmed')
+  }
+
+  get xStartField() {
+    let {
+      rootRegion: { allFields }
+    } = this
+
+    let [startField] = allFields.filter((f) => f in fields && fields[f].cases)
+    return startField
+  }
+
   @action selectPreset(preset) {
     if (preset.singleRegion) this.selectFirstRegion()
 
@@ -219,7 +254,7 @@ export default class ApplicationController extends Controller {
   }
 
   @tracked regionFilter = ''
-  @tracked regionSortBy = '-deceased'
+  @tracked regionSortBy = '-deaths'
 
   get rootRegion() {
     return this.model.rootRegion

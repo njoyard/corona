@@ -91,7 +91,7 @@ export default class BaseDataSource {
     })
   }
 
-  async fetchData(dataCallback) {
+  async fetchData(/* dataCallback */) {
     throw new Error('Not implemented')
   }
 }
