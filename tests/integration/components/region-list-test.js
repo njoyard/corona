@@ -7,7 +7,10 @@ module('Integration | Component | region-list', function (hooks) {
   setupRenderingTest(hooks)
 
   test('it renders', async function (assert) {
-    await render(hbs`<RegionList />`)
+    this.set('regions', [])
+    await render(
+      hbs`<RegionList @sortBy="" @filter="" @regions={{this.regions}}/>`
+    )
 
     assert.equal(this.element.textContent.trim(), '')
   })
