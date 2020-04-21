@@ -2,7 +2,7 @@ import { A } from '@ember/array'
 import { tracked } from '@glimmer/tracking'
 
 import colorFor from 'corona/utils/colors'
-import { fields as fieldDefinitions } from 'corona/utils/fields'
+import { fields as fieldDefinitions, sortFields } from 'corona/utils/fields'
 
 export default class RegionOption {
   @tracked selected = false
@@ -58,7 +58,7 @@ export default class RegionOption {
         (f) =>
           f in fieldDefinitions && fieldDefinitions[f].cases && f in lastPoint
       )
-      .sort((a, b) => fieldDefinitions[a].order - fieldDefinitions[b].order)
+      .sort(sortFields)
 
     if (casesField) {
       this.cases = lastPoint[casesField]

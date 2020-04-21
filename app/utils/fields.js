@@ -41,6 +41,7 @@ function movingAverage(field, over = 1) {
     - detail (optional) adds a question mark with a tooltip next to radio label
     - cases (optional) marks the field as usable for counting cases (for "days since Nth case" on X axis and sorting regions)
     - yLabel (optional) sets the label to use on the graph Y axis, defaults to lowercased label
+    - hue/saturation/lightness sets the color for single-country graphs
 
    For computed fields, additionally:
     - compute(point, context) must return the field value for a given point; will be called
@@ -55,31 +56,46 @@ const fields = {
   confirmed: {
     order: 1,
     label: 'Confirmed cases',
-    cases: true
+    cases: true,
+    hue: 50,
+    saturation: 60,
+    lightness: 65
   },
 
   hospital: {
     order: 2,
     label: 'In hospital',
     yLabel: 'hospitalized cases',
-    cases: true
+    cases: true,
+    hue: 50,
+    saturation: 60,
+    lightness: 65
   },
 
   intensive: {
     order: 3,
     label: 'In intensive care',
-    yLabel: 'cases in intensive care'
+    yLabel: 'cases in intensive care',
+    hue: 20,
+    saturation: 60,
+    lightness: 65
   },
 
   deceased: {
     order: 4,
-    label: 'Deaths'
+    label: 'Deaths',
+    hue: 0,
+    saturation: 0,
+    lightness: 40
   },
 
   recovered: {
     order: 5,
     label: 'Recoveries',
-    yLabel: 'recovered cases'
+    yLabel: 'recovered cases',
+    hue: 220,
+    saturation: 60,
+    lightness: 65
   },
 
   active: {
@@ -88,6 +104,9 @@ const fields = {
     yLabel: 'estimated active cases',
     detail:
       'Computed by subtracting deaths and recoveries from confirmed cases',
+    hue: 20,
+    saturation: 60,
+    lightness: 65,
     depends: ['confirmed', 'recovered', 'deceased'],
     compute(point) {
       return point.confirmed - (point.recovered + point.deceased)
@@ -139,4 +158,8 @@ function computeFields(data) {
   }
 }
 
-export { fields, computeFields }
+function sortFields(a, b) {
+  return fields[a].order - fields[b].order
+}
+
+export { fields, computeFields, sortFields }

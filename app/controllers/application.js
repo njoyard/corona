@@ -6,16 +6,11 @@ import { scheduleOnce } from '@ember/runloop'
 import {
   generateChartData,
   generateChartOptions,
-  xOffsetOptions,
-  yFieldOptions
+  xOffsetOptions
 } from 'corona/utils/chart'
 import presets from 'corona/utils/presets'
 import { ordinal } from 'corona/utils/format'
-import { fields } from 'corona/utils/fields'
-
-function compareYSelections(a, b) {
-  return yFieldOptions[a].order - yFieldOptions[b].order
-}
+import { fields, sortFields } from 'corona/utils/fields'
 
 export default class ApplicationController extends Controller {
   @service data
@@ -205,7 +200,7 @@ export default class ApplicationController extends Controller {
 
     return allFields
       .filter((f) => f in fields && fields[f].label)
-      .sort((a, b) => fields[a].order - fields[b].order)
+      .sort(sortFields)
       .map((f) => Object.assign({ key: f }, fields[f]))
   }
 
@@ -224,7 +219,7 @@ export default class ApplicationController extends Controller {
 
     let [startField] = allFields
       .filter((f) => f in fields && fields[f].cases)
-      .sort((a, b) => fields[a].order - fields[b].order)
+      .sort(sortFields)
     return startField
   }
 
@@ -411,7 +406,7 @@ export default class ApplicationController extends Controller {
         ? selected.delete(selection)
         : selected.add(selection)
 
-      this.ySelection = [...selected].sort(compareYSelections).join('-')
+      this.ySelection = [...selected].sort(sortFields).join('-')
     } else {
       this.ySelection = selection
     }
