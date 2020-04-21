@@ -276,6 +276,7 @@ export default class ApplicationController extends Controller {
 
   get drawableRegions() {
     let {
+      regionSortBy,
       selectedRegions,
       yRatio,
       ySelection,
@@ -295,6 +296,13 @@ export default class ApplicationController extends Controller {
       regions = regions.filter(
         ({ points }) => points[points.length - 1][xStartField] >= startOffset
       )
+    }
+
+    if (regionSortBy) {
+      let reverse = regionSortBy.startsWith('-')
+      let key = reverse ? regionSortBy.substr(1) : regionSortBy
+      let sorted = regions.sortBy(key)
+      regions = reverse ? sorted.reverse() : sorted
     }
 
     return regions
