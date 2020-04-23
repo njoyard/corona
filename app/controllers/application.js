@@ -285,7 +285,7 @@ export default class ApplicationController extends Controller {
     let regions = selectedRegions.filter(
       (r) =>
         (!yRatio || r.population) &&
-        ((ySelection !== 'recovered' && ySelection !== 'active') || r.recovered)
+        (ySelection.indexOf('-') !== -1 || r.fields.includes(ySelection))
     )
 
     if (xSelection === 'start') {
