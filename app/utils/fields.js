@@ -37,7 +37,7 @@ function movingAverage(field, over = 1) {
 
 /* Field definitions:
     - order defines field order in Y axis selection radio group
-    - label sets selection radio label
+    - label sets selection radio label (should be absent for derivative fields)
     - detail (optional) adds a question mark with a tooltip next to radio label
     - cases (optional) marks the field as usable for counting cases (for "days since Nth case" on X axis and sorting regions)
     - yLabel (optional) sets the label to use on the graph Y axis, defaults to lowercased label
@@ -139,8 +139,10 @@ function computeFields(data) {
     computeFields(data[region])
   }
 
-  let points = data._points
-  let fieldsPresent = data._meta.fields
+  let {
+    _points: points,
+    _meta: { fields: fieldsPresent, allFields: allFieldsPresent }
+  } = data
 
   let contexts = fieldOrder.reduce((ctxts, field) => {
     ctxts[field] = {}
@@ -154,6 +156,7 @@ function computeFields(data) {
 
       point[field] = compute(point, contexts[field])
       fieldsPresent.add(field)
+      allFieldsPresent.add(field)
     }
   }
 }

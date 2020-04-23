@@ -52,6 +52,10 @@ export default class DataService extends Service {
       return dataset
     })
 
+    if (datasetName === 'test') {
+      console.log(data.rootRegion)
+    }
+
     this.loadingState = 'starting application'
 
     await delay(() => {})

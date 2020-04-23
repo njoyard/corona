@@ -1,11 +1,17 @@
+import env from 'corona/config/environment'
+
 import USCSSEDataSource from 'corona/datasources/csse/us'
 import GlobalCSSEDataSource from 'corona/datasources/csse/global'
 import FranceHospitalsDataSource from 'corona/datasources/data.gouv.fr/fr-hospitals'
+import TestDataSource from 'corona/datasources/test'
 import Dataset from 'corona/models/dataset'
+
+const { environment } = env
 
 const us = new USCSSEDataSource()
 const world = new GlobalCSSEDataSource()
 const france = new FranceHospitalsDataSource()
+const test = new TestDataSource()
 
 const datasets = {
   flat: new Dataset({
@@ -44,6 +50,13 @@ const datasets = {
     description: 'United States data with counts for each state.',
     sources: [us],
     maxDepth: 2
+  })
+}
+
+if (environment === 'development') {
+  datasets.test = new Dataset({
+    title: 'test',
+    sources: [test]
   })
 }
 
