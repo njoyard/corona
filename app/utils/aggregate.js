@@ -64,16 +64,11 @@ function aggregate(data) {
 
           if (!totalPoint) {
             totalPoint = { date: point.date }
-
-            for (let field of totalizeFields) {
-              totalPoint[field] = 0
-            }
-
             _points.push(totalPoint)
           }
 
           for (let field of totalizeFields) {
-            totalPoint[field] += point[field]
+            totalPoint[field] = (totalPoint[field] || 0) + point[field]
           }
         }
       }
