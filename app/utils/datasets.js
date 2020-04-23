@@ -25,16 +25,21 @@ const datasets = {
 
   australia: new Dataset({
     title: 'Australia',
-    description:
-      'Australia only with counts for each province (population ratio not available yet)',
+    description: 'Australia only with counts for each province',
     sources: [world],
     dataFilter: ([country]) => country === 'Australia'
   }),
 
+  canada: new Dataset({
+    title: 'Canada',
+    description: 'Canada only with counts for each province',
+    sources: [world],
+    dataFilter: ([country]) => country === 'Canada'
+  }),
+
   china: new Dataset({
     title: 'China',
-    description:
-      'China only with counts for each province (population ratio not available yet)',
+    description: 'China only with counts for each province',
     sources: [world],
     dataFilter: ([country]) => country === 'China'
   }),
