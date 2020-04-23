@@ -54,6 +54,11 @@ export default class RegionListComponent extends Component {
   }
 
   @action
+  selectOnly(region) {
+    this.args.onSelectOnly(region)
+  }
+
+  @action
   toggleChildren(region) {
     this.args.onToggleChildren(region)
   }

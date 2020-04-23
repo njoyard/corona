@@ -331,6 +331,20 @@ export default class ApplicationController extends Controller {
   }
 
   @action
+  selectOnly(region) {
+    let { selectedRegions, hasMultipleYSelection } = this
+
+    for (let other of selectedRegions) {
+      other.selected = false
+    }
+
+    selectedRegions.clear()
+
+    region.selected = true
+    selectedRegions.pushObject(region)
+  }
+
+  @action
   toggleRegion(region) {
     let { selectedRegions, hasMultipleYSelection } = this
 
