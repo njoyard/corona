@@ -332,7 +332,7 @@ export default class ApplicationController extends Controller {
 
   @action
   selectOnly(region) {
-    let { selectedRegions, hasMultipleYSelection } = this
+    let { selectedRegions } = this
 
     for (let other of selectedRegions) {
       other.selected = false
