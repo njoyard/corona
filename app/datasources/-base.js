@@ -75,8 +75,15 @@ export default class BaseDataSource {
             settled = true
 
             response.text().then((text) => {
-              localStorage.setItem(lsKey, text)
-              downloaded.add(url)
+              try {
+                localStorage.setItem(lsKey, text)
+                downloaded.add(url)
+              } catch (e) {
+                console.warn(
+                  `Could not save ${url} response to local storage: ${e.message}`
+                )
+              }
+
               resolve(text)
             })
           }
