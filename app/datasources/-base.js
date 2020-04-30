@@ -1,10 +1,4 @@
-import fetch from 'fetch'
-
-import env from 'corona/config/environment'
-
-const { environment } = env
-const FETCH_TIMEOUT = 5000
-const downloaded = new Set()
+import fetchText from 'corona/utils/fetch-text'
 
 /*
   Data sources must extend this class.
@@ -39,64 +33,8 @@ const downloaded = new Set()
  */
 
 export default class BaseDataSource {
-  fetchText(url) {
-    let lsKey = `url-cache:${url}`
-    let ls = localStorage.getItem(lsKey)
-
-    return new Promise((resolve, reject) => {
-      // Avoid redownloading in the same session or in dev mode
-      if (ls && (environment === 'development' || downloaded.has(url))) {
-        if (environment === 'development') {
-          console.warn(
-            'Not downloading data in development, clear local storage to force a refresh'
-          )
-        }
-
-        return resolve(ls)
-      }
-
-      let settled = false
-      let lsTimeout = null
-
-      // Resolve with local storage content on timeout
-      if (ls) {
-        lsTimeout = setTimeout(() => {
-          if (!settled) {
-            settled = true
-            resolve(ls)
-          }
-        }, FETCH_TIMEOUT)
-      }
-
-      fetch(url).then(
-        (response) => {
-          if (!settled) {
-            clearTimeout(lsTimeout)
-            settled = true
-
-            response.text().then((text) => {
-              try {
-                localStorage.setItem(lsKey, text)
-                downloaded.add(url)
-              } catch (e) {
-                console.warn(
-                  `Could not save ${url} response to local storage: ${e.message}`
-                )
-              }
-
-              resolve(text)
-            })
-          }
-        },
-        (reason) => {
-          if (!settled) {
-            clearTimeout(lsTimeout)
-            settled = true
-            reject(reason)
-          }
-        }
-      )
-    })
+  fetchText(url, key) {
+    return fetchText(url, key)
   }
 
   async fetchData(/* dataCallback */) {

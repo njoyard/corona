@@ -5,8 +5,15 @@ import parseCSV from 'corona/utils/csv'
 export default class DataGouvFrSource extends BaseDataSource {
   async fetchResource(dataset, resource) {
     let url = `https://www.data.gouv.fr/api/1/datasets/${dataset}/resources/${resource}/`
-    let { url: staticUrl } = JSON.parse(await this.fetchText(url))
-    return await this.fetchText(staticUrl)
+
+    let { url: staticUrl } = JSON.parse(
+      await this.fetchText(url, `datagouv:${dataset}:${resource}`)
+    )
+
+    return await this.fetchText(
+      staticUrl,
+      `datagouv:${dataset}:${resource}:static`
+    )
   }
 
   async depInfo(depCode) {

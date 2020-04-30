@@ -50,7 +50,8 @@ export default class CCSEDataSource extends BaseDataSource {
 
       let csvLines = parseCSV(
         await this.fetchText(
-          `${baseURL}/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv`
+          `${baseURL}/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv`,
+          'csse:lut'
         )
       )
 
@@ -64,7 +65,9 @@ export default class CCSEDataSource extends BaseDataSource {
 
   async fetchScope(scope, dataCallback) {
     let { skip, levels, levelLabels } = this.scopes[scope]
-    let csvLines = parseCSV(await this.fetchText(this.urlFor(scope)))
+    let csvLines = parseCSV(
+      await this.fetchText(this.urlFor(scope), `csse:${this.region}:${scope}`)
+    )
     let dates = csvLines.shift().slice(skip).map(parseDate)
 
     let entries = csvLines.map((line) => {
