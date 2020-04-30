@@ -1,7 +1,6 @@
 import fetch from 'fetch'
 
 import env from 'corona/config/environment'
-import crc32 from 'corona/utils/crc32'
 
 const { environment } = env
 const FETCH_TIMEOUT = 5000
