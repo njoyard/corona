@@ -10,7 +10,7 @@
   </PaperItem>
 {{else}}
   {{#each this.regions as |region|}}
-    {{#let (region-state region @requiresField @requiresPopulation) as |state|}}
+    {{#let (region-state region @requiresFields @requiresPopulation) as |state|}}
       <PaperItem class={{if state.disabled "md-disabled"}} as |controls|>
         {{#if state.disabled}}
           <PaperTooltip @position="right">
@@ -36,14 +36,17 @@
               <controls.button
                 @secondary={{true}}
                 @iconButton={{true}}
+                @disabled={{state.disabled}}
                 @onClick={{fn this.toggleChildren region}}>
                 <PaperIcon @icon="library_add_check" @size={{18}}>
-                  <PaperTooltip @position="right">
-                    Toggle all {{pluralize region.subTypeLabel}}
-                    {{#if (not-eq region.label "World")}}
-                      in {{region.label}}
-                    {{/if}}
-                  </PaperTooltip>
+                  {{#unless state.disabled}}
+                    <PaperTooltip @position="right">
+                      Toggle all {{pluralize region.subTypeLabel}}
+                      {{#if (not-eq region.label "World")}}
+                        in {{region.label}}
+                      {{/if}}
+                    </PaperTooltip>
+                  {{/unless}}
                 </PaperIcon>
               </controls.button>
             {{/if}}
@@ -51,11 +54,14 @@
             <controls.button
               @secondary={{true}}
               @iconButton={{true}}
+              @disabled={{state.disabled}}
               @onClick={{fn this.selectOnly region}}>
               <PaperIcon @icon="place" @size={{18}}>
-                <PaperTooltip @position="right">
-                  Select only {{region.label}}
-                </PaperTooltip>
+                {{#unless state.disabled}}
+                  <PaperTooltip @position="right">
+                    Select only {{region.label}}
+                  </PaperTooltip>
+                {{/unless}}
               </PaperIcon>
             </controls.button>
 

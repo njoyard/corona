@@ -32,7 +32,12 @@ function gather(world, dataFilter) {
       if (existing) {
         Object.assign(existing, point)
       } else {
-        _points.push(point)
+        let insertAt = _points.findIndex((p) => p.date > point.date)
+        if (insertAt === -1) {
+          _points.push(point)
+        } else {
+          _points.splice(insertAt, 0, point)
+        }
       }
     }
 
