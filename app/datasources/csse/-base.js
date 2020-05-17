@@ -7,14 +7,14 @@ const countryReplacements = {
   'Korea, South': 'South Korea'
 }
 
+const ignoreRegions = ['Diamond Princess', 'Grand Princess', 'MS Zaandam']
+
 const scopeReplacements = {
   deceased: 'deaths'
 }
 
 const baseURL =
   'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master'
-
-// pop:  https://github.com/CSSEGISandData/COVID-19/blob/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv
 
 function parseDate(date) {
   let [m, d, y] = date.split('/').map((x) => (Number(x) < 10 ? `0${x}` : x))
@@ -86,6 +86,10 @@ export default class CCSEDataSource extends BaseDataSource {
     for (let entry of entries) {
       let { levelsJoined, levelNames, dates, counts } = entry
       let pop = await this.populationFor(...levelNames)
+
+      if (levelNames.some((l) => ignoreRegions.indexOf(l) !== -1)) {
+        continue
+      }
 
       while (levelsJoined.endsWith('|')) {
         // Do we have other entries with the same parent level names?
