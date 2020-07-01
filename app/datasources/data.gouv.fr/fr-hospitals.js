@@ -1,6 +1,17 @@
 import DataGouvFrSource from 'corona/datasources/data.gouv.fr/-base'
 import parseCSV from 'corona/utils/csv'
 
+function parseDate(dateString) {
+  let matchBadFormat = dateString.match(/^(\d{2})\/(\d{2})\/(\d{4})/)
+  if (matchBadFormat) {
+    return new Date(
+      `${matchBadFormat[3]}-${matchBadFormat[2]}-${matchBadFormat[1]}`
+    )
+  } else {
+    return new Date(dateString)
+  }
+}
+
 export default class FranceHospitalsDataSource extends DataGouvFrSource {
   async fetchData(dataCallback) {
     let lines = parseCSV(
@@ -23,7 +34,7 @@ export default class FranceHospitalsDataSource extends DataGouvFrSource {
         ['France', region, departement],
         [
           {
-            date: Number(new Date(date)),
+            date: Number(parseDate(date)),
             hospital: Number(hosp),
             intensive: Number(rea),
             recovered: Number(rad),
