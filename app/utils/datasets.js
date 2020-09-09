@@ -3,6 +3,7 @@ import env from 'corona/config/environment'
 import USCSSEDataSource from 'corona/datasources/csse/us'
 import GlobalCSSEDataSource from 'corona/datasources/csse/global'
 import FranceHospitalsDataSource from 'corona/datasources/data.gouv.fr/fr-hospitals'
+import FranceTestsDataSource from 'corona/datasources/data.gouv.fr/fr-tests'
 import TestDataSource from 'corona/datasources/test'
 import Dataset from 'corona/models/dataset'
 
@@ -11,6 +12,7 @@ const { environment } = env
 const us = new USCSSEDataSource()
 const world = new GlobalCSSEDataSource()
 const france = new FranceHospitalsDataSource()
+const frTests = new FranceTestsDataSource()
 const test = new TestDataSource()
 
 const datasets = {
@@ -46,8 +48,8 @@ const datasets = {
 
   france: new Dataset({
     title: 'France',
-    description: 'Hospital data in France from Santé Publique France',
-    sources: [france]
+    description: 'Hospital and test data in France from Santé Publique France',
+    sources: [france, frTests]
   }),
 
   us: new Dataset({

@@ -37,7 +37,7 @@ export default class DataGouvFrSource extends BaseDataSource {
           console.warn(`France: no population for ${departement}`)
         }
 
-        departements[code] = {
+        departements[code] = departements[`0${code}`] = {
           departement,
           region: region || 'Outre-Mer',
           population: pop

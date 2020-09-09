@@ -62,18 +62,51 @@ const fields = {
     lightness: 65
   },
 
-  hospital: {
+  positives: {
     order: 2,
-    label: 'In hospital',
-    yLabel: 'hospitalized cases',
+    label: 'Positive tests',
+    yLabel: 'positive tests',
     cases: true,
     hue: 50,
     saturation: 60,
     lightness: 65
   },
 
-  intensive: {
+  tests: {
     order: 3,
+    label: 'Total tests',
+    yLabel: 'total tests',
+    hue: 50,
+    saturation: 60,
+    lightness: 65
+  },
+
+  rate: {
+    order: 3.5,
+    label: 'Positivity rate',
+    yLabel: 'test positivity rate (%)',
+    hue: 50,
+    saturation: 60,
+    lightness: 65,
+    depends: ['tests', 'positives'],
+    compute(point) {
+      if (point.tests) {
+        return (100 * point.positives) / point.tests
+      }
+    }
+  },
+
+  hospital: {
+    order: 4,
+    label: 'In hospital',
+    yLabel: 'hospitalized cases',
+    hue: 50,
+    saturation: 60,
+    lightness: 65
+  },
+
+  intensive: {
+    order: 5,
     label: 'In intensive care',
     yLabel: 'cases in intensive care',
     hue: 20,
@@ -82,7 +115,7 @@ const fields = {
   },
 
   deceased: {
-    order: 4,
+    order: 6,
     label: 'Deaths',
     hue: 0,
     saturation: 0,
@@ -90,7 +123,7 @@ const fields = {
   },
 
   recovered: {
-    order: 5,
+    order: 7,
     label: 'Recoveries',
     yLabel: 'recovered cases',
     hue: 220,
@@ -99,7 +132,7 @@ const fields = {
   },
 
   active: {
-    order: 6,
+    order: 8,
     label: 'Active (estimated)',
     yLabel: 'estimated active cases',
     detail:
