@@ -207,11 +207,12 @@ function generateChartData({
     drawOptions.borderWidth = 0
   } else {
     drawOptions.fill = false
-    drawOptions.lineTension = 0
+    drawOptions.lineTension = 0.1
     drawOptions.borderWidth = 2
     drawOptions.hoverBorderWidth = 3
-    drawOptions.pointRadius = 1
-    drawOptions.pointHoverRadius = 1
+    drawOptions.pointRadius = 0
+    drawOptions.pointHoverRadius = 0
+    drawOptions.spanGaps = true
   }
 
   let offsets = []
