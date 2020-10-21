@@ -1,20 +1,27 @@
 function avg(array) {
-  return array.reduce((sum, item) => sum + item, 0) / array.length
+  let numbers = array.filter((n) => !isNaN(n))
+  return numbers.reduce((sum, item) => sum + item, 0) / numbers.length
 }
 
 function derive(field) {
   return {
     depends: [field],
     compute: (point, context) => {
-      if (!context.prev) {
+      if (!('prev' in context)) {
         context.prev = 0
       }
 
       let value = point[field]
-      let change = value - context.prev
-      context.prev = value
 
-      return change
+      if (isNaN(context.prev)) {
+        context.prev = value
+        return undefined
+      } else {
+        let change = value - context.prev
+        context.prev = value
+
+        return change
+      }
     }
   }
 }
