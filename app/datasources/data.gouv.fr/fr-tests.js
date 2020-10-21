@@ -28,20 +28,24 @@ export default class FranceTestsDataSource extends DataGouvFrSource {
       if (!dep) continue
       if (ageClass !== '0') continue // Ignore lines with specific age class data
 
-      let { departement, region, population } = await this.depInfo(dep)
+      let depInfo = await this.depInfo(dep)
 
-      dataCallback(
-        ['France', region, departement],
-        [
-          {
-            date: Number(parseDate(date)),
-            tests: Number(tests),
-            positives: Number(positives)
-          }
-        ],
-        population,
-        ['country', 'region', 'department']
-      )
+      if (depInfo) {
+        let { departement, region, population } = depInfo
+
+        dataCallback(
+          ['France', region, departement],
+          [
+            {
+              date: Number(parseDate(date)),
+              tests: Number(tests),
+              positives: Number(positives)
+            }
+          ],
+          population,
+          ['country', 'region', 'department']
+        )
+      }
     }
   }
 }

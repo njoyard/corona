@@ -33,8 +33,10 @@ export default class DataGouvFrSource extends BaseDataSource {
 
       for (let [code, , departement, , region] of csvLines) {
         let pop = population[departement]
+
         if (!pop) {
           console.warn(`France: no population for ${departement}`)
+          continue
         }
 
         departements[code] = departements[`0${code}`] = {

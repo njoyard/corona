@@ -28,22 +28,26 @@ export default class FranceHospitalsDataSource extends DataGouvFrSource {
       if (!dep) continue
       if (gender !== '0') continue // Ignore lines with specific male/female data
 
-      let { departement, region, population } = await this.depInfo(dep)
+      let depInfo = await this.depInfo(dep)
 
-      dataCallback(
-        ['France', region, departement],
-        [
-          {
-            date: Number(parseDate(date)),
-            hospital: Number(hosp),
-            intensive: Number(rea),
-            recovered: Number(rad),
-            deceased: Number(dc)
-          }
-        ],
-        population,
-        ['country', 'region', 'department']
-      )
+      if (depInfo) {
+        let { departement, region, population } = depInfo
+
+        dataCallback(
+          ['France', region, departement],
+          [
+            {
+              date: Number(parseDate(date)),
+              hospital: Number(hosp),
+              intensive: Number(rea),
+              recovered: Number(rad),
+              deceased: Number(dc)
+            }
+          ],
+          population,
+          ['country', 'region', 'department']
+        )
+      }
     }
   }
 }
