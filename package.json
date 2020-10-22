@@ -17,7 +17,8 @@
     "lint:js": "eslint .",
     "start": "ember serve",
     "test": "npm-run-all lint:* test:*",
-    "test:ember": "ember test"
+    "test:ember": "ember test",
+    "crunch": "node ./cruncher/index.js"
   },
   "devDependencies": {
     "@ember/optional-features": "^1.3.0",
@@ -67,5 +68,10 @@
   "ember": {
     "edition": "octane"
   },
-  "dependencies": {}
+  "dependencies": {
+    "esm": "^3.2.25",
+    "fs-extra": "^9.0.1",
+    "node-fetch": "^2.6.1",
+    "require-directory": "^2.1.1"
+  }
 }

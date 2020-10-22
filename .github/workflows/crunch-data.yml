@@ -1,0 +1,41 @@
+name: Crunch data
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 */12 * * *'
+
+jobs:
+  crunch:
+    name: Crunch data
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules-yarn-lock
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Install dependencies
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - name: Run cruncher
+        run: |
+          yarn crunch
+          rm -R data/cache
+      - name: Commit data changes to data branch
+        uses: s0/git-publish-subdir-action@develop
+        env:
+          REPO: self
+          BRANCH: data
+          FOLDER: data
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MESSAGE: Update data
