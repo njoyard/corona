@@ -1,55 +1,118 @@
-import Component from '@ember/component'
+/* global Chart */
 
-export default Component.extend({
-  tagName: 'canvas',
-  attributeBindings: ['width', 'height'],
-  onChart: null,
+import { action } from '@ember/object'
+import { inject as service } from '@ember/service'
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
 
-  init() {
-    this._super(...arguments)
+import config from 'corona/config/environment'
 
-    this.plugins = this.plugins || []
-  },
+const {
+  APP: { dataThreshold }
+} = config
 
-  didInsertElement() {
-    this._super(...arguments)
-    let { element: context, data, type, options, plugins } = this
+export default class ChartComponent extends Component {
+  @service intl
 
-    /* global Chart */
-    let chart = new Chart(context, {
-      type: type,
-      data: data,
-      options: options,
-      plugins: plugins
-    })
-    this.chart = chart
+  chartInstance = null
+  notifier = null
 
-    if (this.onChart) this.onChart(this.chart)
-  },
+  @tracked
+  loading = true
 
-  willDestroyElement() {
-    this._super(...arguments)
-    this.chart.destroy()
+  @tracked
+  dataError = null
 
-    if (this.onChart) this.onChart(null)
-  },
+  get error() {
+    let {
+      args: { chart, zone },
+      dataError
+    } = this
 
-  didUpdateAttrs() {
-    this._super(...arguments)
-    this.updateChart()
-  },
+    if (!chart) {
+      return 'app.errors.no-chart'
+    }
 
-  updateChart() {
-    let { chart, data, options, animate } = this
+    if (!zone) {
+      return 'app.errors.no-zone'
+    }
 
-    if (chart) {
-      chart.data = data
-      chart.options = options
-      if (animate) {
-        chart.update()
-      } else {
-        chart.update(0)
-      }
+    return dataError
+  }
+
+  getChartConfig() {
+    let {
+      args: { chart, zone, title },
+      intl
+    } = this
+
+    let data = chart.dataForZone(zone, intl)
+
+    if (data.datasets.every((ds) => ds.data.length < dataThreshold)) {
+      throw 'app.errors.no-data'
+    }
+
+    return {
+      options: Object.assign(
+        {
+          title: {
+            display: Boolean(title),
+            text: ' '
+          }
+        },
+        chart.getOptions(intl)
+      ),
+      data
     }
   }
-})
+
+  @action
+  createChart(element) {
+    let context = element.getContext('2d')
+
+    let config
+
+    try {
+      config = this.getChartConfig()
+    } catch (e) {
+      this.dataError = e
+      this.loading = false
+      return
+    }
+
+    this.chartInstance = new Chart(context, config)
+
+    this.loading = false
+  }
+
+  @action
+  updateChart() {
+    if (this.chartInstance) {
+      this.loading = true
+
+      let config
+
+      try {
+        config = this.getChartConfig()
+      } catch (e) {
+        this.dataError = e
+        this.loading = false
+        return
+      }
+
+      this.chartInstance.options = config.options
+      this.chartInstance.data = config.data
+      this.chartInstance.update('none')
+
+      this.loading = false
+    }
+  }
+
+  @action
+  destroyChart() {
+    if (this.chartInstance) {
+      this.chartInstance.destroy()
+      this.chartInstance = null
+    }
+  }
+}

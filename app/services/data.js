@@ -1,65 +1,60 @@
-import Service from '@ember/service'
-import { tracked } from '@glimmer/tracking'
-import { A } from '@ember/array'
+import Service, { inject as service } from '@ember/service'
 
-import AppDataSet from 'corona/models/app-dataset'
-import delay from 'corona/utils/delay'
-import { datasets, defaultDataset } from 'corona/utils/datasets'
-import { computeFields } from 'corona/utils/fields'
-import buildRegionOptions from 'corona/utils/regions'
+import fetch from 'fetch'
 
-function visit(option) {
-  let all = [option]
-  for (let child of option.children) {
-    all.push(...visit(child))
-  }
-  return all
-}
+import config from 'corona/config/environment'
+import Zone from 'corona/models/zone'
+import Chart from 'corona/models/chart'
+import ChartSeries from 'corona/models/chart-series'
+import chartDefinitions from 'corona/utils/chart-definitions'
+
+const {
+  environment,
+  APP: { dataURL }
+} = config
 
 export default class DataService extends Service {
-  @tracked reloading = false
-  @tracked loadingState = null
+  @service intl
 
-  datasets = datasets
-  defaultDataset = defaultDataset
+  _data = null
+  _charts = null
 
-  async data(datasetName, selectedRegionCodes) {
-    let { datasets, defaultDataset } = this
-    let dataset = datasets[datasetName] || datasets[defaultDataset]
-
-    this.loadingState = 'fetching data'
-
-    let { label: rootLabel, data: sourceData } = await dataset.fetchData(
-      (state) => (this.loadingState = state)
+  async getData() {
+    let response = await fetch(
+      environment === 'development' ? '/corona.json' : dataURL
     )
 
-    this.loadingState = 'computing daily changes'
+    // Not using .json() as this is most likely not served with the correct content-type
+    return JSON.parse(await response.text())
+  }
 
-    await delay(() => computeFields(sourceData))
-
-    this.loadingState = 'building region options'
-
-    let data = await delay(() => {
-      let root = buildRegionOptions(sourceData, rootLabel, selectedRegionCodes)
-
-      let options = visit(root)
-      let dataset = new AppDataSet()
-
-      dataset.rootRegion = root
-      dataset.regionOptions = A(options)
-      dataset.selectedRegions = A(options.filter((o) => o.selected))
-
-      return dataset
-    })
-
-    if (datasetName === 'test') {
-      console.log(data.rootRegion)
+  get dataPromise() {
+    if (!this._data) {
+      this._data = this.getData()
     }
 
-    this.loadingState = 'starting application'
+    return this._data
+  }
 
-    await delay(() => {})
+  get world() {
+    let { dataPromise, intl } = this
+    return dataPromise.then((data) => new Zone('World', data, intl))
+  }
 
-    return data
+  get charts() {
+    if (!this._charts) {
+      this._charts = chartDefinitions.map(
+        ({ id, series }) =>
+          new Chart(
+            id,
+            series.map(
+              ({ id, field, options }) =>
+                new ChartSeries(id, field, options || {})
+            )
+          )
+      )
+    }
+
+    return this._charts
   }
 }

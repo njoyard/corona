@@ -1,0 +1,3 @@
+{{#each this.charts as |chart|}}
+  <ChartListItem @chart={{chart}} @selected={{eq @selected chart}} @onClick={{fn @onChange chart}} />
+{{/each}}

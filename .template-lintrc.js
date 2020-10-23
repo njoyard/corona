@@ -1,5 +1,10 @@
-'use strict';
+'use strict'
 
 module.exports = {
-  extends: 'octane'
-};
+  extends: 'octane',
+  rules: {
+    'no-bare-strings': true,
+    'link-href-attributes': false,
+    'no-invalid-interactive': false
+  }
+}

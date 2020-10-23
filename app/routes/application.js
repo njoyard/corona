@@ -3,20 +3,14 @@ import { inject as service } from '@ember/service'
 
 export default class ApplicationRoute extends Route {
   @service data
+  @service intl
 
-  queryParams = {
-    dataset: {
-      refreshModel: true
-    }
+  beforeModel() {
+    this.intl.setLocale(navigator.languages)
+    document.title = this.intl.t('app.title')
   }
 
-  model(params) {
-    this.data.loadingState = 'initializing'
-    return this.data.data(params.dataset, params.selectedRegionCodes)
-  }
-
-  setupController(controller, model) {
-    super.setupController(controller, model)
-    controller.checkModel()
+  model() {
+    return this.data.world
   }
 }

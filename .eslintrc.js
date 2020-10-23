@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 module.exports = {
   root: true,
@@ -10,8 +10,13 @@ module.exports = {
       legacyDecorators: true
     }
   },
-  plugins: ['ember'],
-  extends: ['eslint:recommended', 'plugin:ember/recommended'],
+  plugins: [
+    'ember'
+  ],
+  extends: [
+    'eslint:recommended',
+    'plugin:ember/recommended'
+  ],
   env: {
     browser: true
   },
@@ -43,22 +48,6 @@ module.exports = {
         // https://github.com/mysticatea/eslint-plugin-node/issues/77
         'node/no-unpublished-require': 'off'
       }
-    },
-    // cruncher
-    {
-      files: ['cruncher/**/*.js'],
-      parser: 'babel-eslint',
-      plugins: ['node'],
-      extends: ['plugin:node/recommended'],
-      env: {
-        browser: false,
-        node: true
-      },
-      rules: {
-        // this can be removed once the following is fixed
-        // https://github.com/mysticatea/eslint-plugin-node/issues/77
-        'node/no-unpublished-require': 'off'
-      }
     }
   ]
-}
+};

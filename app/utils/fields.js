@@ -1,208 +1,301 @@
-function avg(array) {
-  let numbers = array.filter((n) => !isNaN(n))
-  return numbers.reduce((sum, item) => sum + item, 0) / numbers.length
-}
+const DAY = 86400000
 
-function derive(field) {
-  return {
-    depends: [field],
-    compute: (point, context) => {
-      if (!('prev' in context)) {
-        context.prev = 0
-      }
-
-      let value = point[field]
-
-      if (isNaN(context.prev)) {
-        context.prev = value
-        return undefined
-      } else {
-        let change = value - context.prev
-        context.prev = value
-
-        return change
-      }
-    }
-  }
-}
-
-function movingAverage(field, over = 1) {
-  return {
-    depends: [field],
-    compute: (point, context) => {
-      if (!context.values) {
-        context.values = [...Array(over)].map(() => 0)
-      }
-
-      context.values.push(point[field])
-      context.values.shift()
-
-      return avg(context.values)
-    }
-  }
-}
-
-/* Field definitions:
-    - order defines field order in Y axis selection radio group
-    - label sets selection radio label (should be absent for derivative fields)
-    - detail (optional) adds a question mark with a tooltip next to radio label
-    - cases (optional) marks the field as usable for counting cases (for "days since Nth case" on X axis and sorting regions)
-    - yLabel (optional) sets the label to use on the graph Y axis, defaults to lowercased label
-    - hue/saturation/lightness sets the color for single-country graphs
-
-   For computed fields, additionally:
-    - compute(point, context) must return the field value for a given point; will be called
-      once for each point in a dataset (ordered by date); context is an object that may be used
-      to save data between calls, it is reset for each region
-    - depends (optional) lists other field names this field requires
-
-   Note: daily changes and weekly moving average are automatically computed for each field.
+/**************************************
+ * Base field classes & helpers
  */
 
-const fields = {
-  confirmed: {
-    order: 1,
-    label: 'Confirmed cases',
-    cases: true,
-    hue: 50,
-    saturation: 60,
-    lightness: 65
-  },
+function zipApply(func, argArrays) {
+  return argArrays[0].map((_, index) =>
+    func(...argArrays.map((arr) => arr[index]))
+  )
+}
 
-  positives: {
-    order: 2,
-    label: 'Positive tests',
-    yLabel: 'positive tests',
-    cases: true,
-    hue: 50,
-    saturation: 60,
-    lightness: 65
-  },
+function zipDates(points, values) {
+  return points.map((point, index) => ({
+    date: point.date,
+    value: values[index]
+  }))
+}
 
-  tests: {
-    order: 3,
-    label: 'Total tests',
-    yLabel: 'total tests',
-    hue: 50,
-    saturation: 60,
-    lightness: 65
-  },
+class Field {
+  constructor(compute, name) {
+    this.compute = compute
+    this.name = name || '<unknown>'
+    this.applied = new WeakMap()
+  }
 
-  rate: {
-    order: 3.5,
-    label: 'Positivity rate',
-    yLabel: 'test positivity rate (%)',
-    hue: 50,
-    saturation: 60,
-    lightness: 65,
-    depends: ['tests', 'positives'],
-    compute(point) {
-      if (point.tests) {
-        return (100 * point.positives) / point.tests
+  canApply() {
+    throw new Error('Not implemented')
+  }
+
+  apply(zone) {
+    let { applied, compute } = this
+
+    if (!applied.has(zone)) {
+      applied.set(zone, zipDates(zone.points, compute(zone)))
+    }
+
+    return applied.get(zone)
+  }
+}
+
+class SinglePointField extends Field {
+  constructor(get, name) {
+    super(({ points }) => points.map(get), name)
+  }
+}
+
+class MultiField extends Field {
+  constructor(fun, fields, name) {
+    super(
+      (zone) =>
+        zipApply(
+          fun,
+          fields.map((f) => f.apply(zone).map((p) => p.value))
+        ),
+      name
+    )
+  }
+}
+
+/**************************************
+ * Concrete field implementations
+ */
+
+class Constant extends SinglePointField {
+  constructor(value) {
+    super(() => value, `${value}`)
+  }
+
+  canApply() {
+    return true
+  }
+}
+
+class Source extends SinglePointField {
+  constructor(name) {
+    super(
+      (point) => (typeof point[name] === 'number' ? point[name] : NaN),
+      `${name}`
+    )
+
+    this.fieldName = name
+  }
+
+  canApply(fields) {
+    return fields.has(this.fieldName)
+  }
+}
+
+class Scale extends MultiField {
+  constructor(field, scale) {
+    super(
+      (a, b) => a * b,
+      [field, scale],
+      `scale(${field.name} * ${scale.name})`
+    )
+
+    this.fields = [field, scale]
+  }
+
+  canApply(fields) {
+    return this.fields.every((f) => f.canApply(fields))
+  }
+}
+
+class Ratio extends MultiField {
+  constructor(num, denom) {
+    super(
+      (a, b) => (!isNaN(b) && b !== 0 ? a / b : NaN),
+      [num, denom],
+      `ratio(${num.name} / ${denom.name})`
+    )
+
+    this.fields = [num, denom]
+  }
+
+  canApply(fields) {
+    return this.fields.every((f) => f.canApply(fields))
+  }
+}
+
+class Coalesce extends MultiField {
+  constructor(...fields) {
+    super(
+      (...values) => {
+        let value = NaN
+        while (isNaN(value) && values.length) {
+          value = values.shift()
+        }
+        return value
+      },
+      fields,
+      `coalesce(${fields.map((f) => f.name).join(', ')})`
+    )
+
+    this.fields = fields
+  }
+
+  canApply(fields) {
+    return this.fields.some((f) => f.canApply(fields))
+  }
+}
+
+class Change extends Field {
+  constructor(field) {
+    super((zone) => {
+      let points = field.apply(zone)
+
+      return points.map((point, index) => {
+        let prev = points[index - 1]
+        if (prev && prev.date === point.date - DAY) {
+          return point.value - prev.value
+        }
+
+        return NaN
+      })
+    }, `change(${field.name})`)
+
+    this.field = field
+  }
+
+  canApply(fields) {
+    return this.field.canApply(fields)
+  }
+}
+
+class Accumulate extends Field {
+  constructor(field) {
+    super((zone) => {
+      let points = field.apply(zone)
+      let acc = NaN
+      let values = []
+
+      for (let point of points) {
+        if (!isNaN(point.value)) {
+          if (isNaN(acc)) {
+            acc = 0
+          }
+
+          acc += point.value
+        }
+
+        values.push(acc)
       }
+
+      return values
+    }, `accumulate(${field.name})`)
+
+    this.field = field
+  }
+
+  canApply(fields) {
+    return this.field.canApply(fields)
+  }
+}
+
+class Weekly extends Field {
+  constructor(field) {
+    super((zone) => {
+      let points = field.apply(zone)
+      let values = points.map(({ value }) => value)
+      let firstNumber = values.findIndex((v) => !isNaN(v))
+      let lastNumber =
+        values.length - values.reverse().findIndex((v) => !isNaN(v))
+
+      return points.map(({ date }, index) => {
+        if (firstNumber !== -1 && index >= firstNumber && index < lastNumber) {
+          let windowValues = [-3, -2, -1, 0, 1, 2, 3]
+            .map((offset) => {
+              let point = points[index + offset]
+
+              if (
+                point &&
+                !isNaN(point.value) &&
+                Math.abs(point.date - date) <= 3 * DAY
+              ) {
+                return point.value
+              }
+            })
+            .filter((v) => typeof v === 'number')
+
+          if (windowValues.length) {
+            return (
+              windowValues.reduce((sum, value) => sum + value, 0) /
+              windowValues.length
+            )
+          }
+        }
+
+        return NaN
+      })
+    }, `weekly(${field.name})`)
+
+    this.field = field
+  }
+
+  canApply(fields) {
+    return this.field.canApply(fields)
+  }
+}
+
+/**************************************
+ * Field creation helpers
+ */
+
+const sourceCache = {}
+const constCache = {}
+
+function fieldify(thing) {
+  if (Array.isArray(thing)) {
+    return thing.map((t) => fieldify(t))
+  }
+
+  if (typeof thing === 'number') {
+    if (!(thing in constCache)) {
+      constCache[thing] = new Constant(thing)
     }
-  },
 
-  hospital: {
-    order: 4,
-    label: 'In hospital',
-    yLabel: 'hospitalized cases',
-    hue: 50,
-    saturation: 60,
-    lightness: 65
-  },
+    return constCache[thing]
+  }
 
-  intensive: {
-    order: 5,
-    label: 'In intensive care',
-    yLabel: 'cases in intensive care',
-    hue: 20,
-    saturation: 60,
-    lightness: 65
-  },
-
-  deceased: {
-    order: 6,
-    label: 'Deaths',
-    hue: 0,
-    saturation: 0,
-    lightness: 40
-  },
-
-  recovered: {
-    order: 7,
-    label: 'Recoveries',
-    yLabel: 'recovered cases',
-    hue: 220,
-    saturation: 60,
-    lightness: 65
-  },
-
-  active: {
-    order: 8,
-    label: 'Active (estimated)',
-    yLabel: 'estimated active cases',
-    detail:
-      'Computed by subtracting deaths and recoveries from confirmed cases',
-    hue: 20,
-    saturation: 60,
-    lightness: 65,
-    depends: ['confirmed', 'recovered', 'deceased'],
-    compute(point) {
-      return point.confirmed - (point.recovered + point.deceased)
+  if (typeof thing === 'string') {
+    if (!(thing in sourceCache)) {
+      sourceCache[thing] = new Source(thing)
     }
-  }
-}
 
-for (let field in fields) {
-  fields[`${field}Change`] = derive(field)
-  fields[`${field}WeeklyChange`] = movingAverage(`${field}Change`, 7)
-}
-
-const fieldOrder = []
-for (let field in fields) {
-  let { depends, compute } = fields[field]
-  if (!compute) continue
-
-  for (let dependency of (depends || []).filter(
-    (f) => f in fields && fields[f].compute
-  )) {
-    if (fieldOrder.indexOf(dependency) === -1) fieldOrder.push(dependency)
+    return sourceCache[thing]
   }
 
-  if (fieldOrder.indexOf(field) === -1) fieldOrder.push(field)
-}
-
-function computeFields(data) {
-  for (let region in data) {
-    if (region.startsWith('_')) continue
-    computeFields(data[region])
+  if (thing instanceof Field) {
+    return thing
   }
 
-  let {
-    _points: points,
-    _meta: { fields: fieldsPresent, allFields: allFieldsPresent }
-  } = data
-
-  let contexts = fieldOrder.reduce((ctxts, field) => {
-    ctxts[field] = {}
-    return ctxts
-  }, {})
-
-  for (let point of points) {
-    for (let field of fieldOrder) {
-      let { depends, compute } = fields[field]
-      if (depends.find((f) => !fieldsPresent.has(f))) continue
-
-      point[field] = compute(point, contexts[field])
-      fieldsPresent.add(field)
-      allFieldsPresent.add(field)
-    }
-  }
+  throw new Error(`Cannot fieldify ${thing}`)
 }
 
-function sortFields(a, b) {
-  return fields[a].order - fields[b].order
+function fieldifyArgs(func) {
+  return (...args) => func(...fieldify(args))
 }
 
-export { fields, computeFields, sortFields }
+const scale = fieldifyArgs((f, s) => new Scale(f, s))
+const ratio = fieldifyArgs((n, d) => new Ratio(n, d))
+const change = fieldifyArgs((f) => new Change(f))
+const weekly = fieldifyArgs((f) => new Weekly(f))
+const accumulate = fieldifyArgs((f) => new Accumulate(f))
+const reverse = fieldifyArgs((f) => scale(f, -1))
+const inverse = fieldifyArgs((f) => ratio(1, f))
+const coalesce = fieldifyArgs((...fields) => new Coalesce(...fields))
+const field = (f) => fieldify(f)
+
+export {
+  accumulate,
+  change,
+  coalesce,
+  field,
+  inverse,
+  ratio,
+  reverse,
+  scale,
+  weekly
+}

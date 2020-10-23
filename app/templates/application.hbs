@@ -1,415 +1,109 @@
-<AboutDialog
-  @visible={{this.showAboutDialog}}
-  @onClose={{fn (mut this.showAboutDialog) false}} />
-
-<SourcesDialog
-  @visible={{this.showSourcesDialog}}
-  @onClose={{fn (mut this.showSourcesDialog) false}}
-  @datasets={{this.data.datasets}}
-  @currentDataset={{this.dataset}}
-  @onSelectDataset={{this.selectDataset}} />
-
-<PresetDialog
-  @visible={{this.showPresetDialog}}
-  @onClose={{fn (mut this.showPresetDialog) false}}
-  @presets={{this.presets}}
-  @onSelectPreset={{this.selectPreset}} />
-
-{{#if this.showShareDialog}}
-  <PaperDialog
-    class="flex-50"
-    @onClose={{fn (mut this.showShareDialog) false}}
-    @clickOutsideToClose={{true}} >
-    <PaperToolbar>
-      <PaperToolbarTools>
-      <h2>Share this chart</h2>
-        <span class="flex"></span>
-        <PaperButton
-          @iconButton={{true}}
-          @onClick={{fn (mut this.showShareDialog) false}}>
-          <PaperIcon @icon="close" />
-        </PaperButton>
-      </PaperToolbarTools>
-    </PaperToolbar>
-
-    <PaperDialogContent>
-      <p>
-        You may use the following link to share the current chart. When opened, the link will show the same graph configuration with the latest available data.
-      </p>
-      <div class="layout layout-row">
-        <PaperInput
-          class="flex share-input"
-          @readonly={{true}}
-          @onChange={{null}}
-          @value={{this.shareURL}} />
-      </div>
-    </PaperDialogContent>
-  </PaperDialog>
-{{/if}}
-
-{{#if this.downloadURL}}
-  <PaperToast
-    @duration={{false}}
-    @position="bottom left"
-    @swipeToClose={{true}}
-    @escapeToClose={{true}}
-    @onClose={{fn (mut this.downloadURL) null}}
-    as |toast|>
-    <toast.text>
-      Click
-      <a href="{{this.downloadURL}}" download="corona-chart.png">here</a>
-      to download the image.
-    </toast.text>
-    <PaperButton
-      @accent={{true}}
-      @onClick={{fn (mut this.downloadURL) null}}>
-      Close
-    </PaperButton>
-  </PaperToast>
-{{/if}}
-
-<PaperSidenavContainer class="layout-fill site-nav-container {{if this.media.isNarrow "narrow-container"}}">
+<PaperSidenavContainer class="layout-fill site-nav-container">
   <PaperSidenav
     @class="md-whiteframe-z2"
     @open={{this.sideNavOpen}}
-    @lockedOpen={{this.sideNavLockedOpen}}>
+    @onToggle={{fn (mut this.sideNavOpen)}}
+    @lockedOpen="gt-sm">
 
     <PaperToolbar as |toolbar|>
       <toolbar.tools>
         <svg class="toolbar-icon" viewBox="0 0 64 64">
           <use xlink:href="assets/corona.svg#corona"></use>
         </svg>
-        <h1>Covid-19 Charts</h1>
-        {{#if this.media.isNarrow}}
-          <span class="flex"></span>
-          <PaperButton @iconButton={{true}} @onClick={{fn (mut this.sideNavOpen) false}}>
-            <PaperIcon @icon="chevron_left" />
-          </PaperButton>
-        {{/if}}
+        <h1>{{t 'app.title'}}</h1>
       </toolbar.tools>
     </PaperToolbar>
 
     <PaperContent>
       <PaperList>
-        <PaperSubheader>Vertical axis</PaperSubheader>
+        <PaperSubheader>{{t 'app.chartTypes'}}</PaperSubheader>
+        <ChartList @selected={{this.chart}} @onChange={{fn (mut this.chart)}} />
 
-        <PaperItem class="tip">
-          <PaperIcon
-            @icon="info"
-            @size={{18}} />
-
-          <small>
-            {{#if this.hasMultipleYSelection}}
-              Select a single value on the vertical axis to compare multiple regions.
-            {{else}}
-              Select a single region to allow selecting multiple values on the vertical axis.
-            {{/if}}
-          </small>
-        </PaperItem>
-
-        {{#each this.visibleFields as |field|}}
-          {{#if (eq this.selectedRegionCount 1)}}
-            <MenuCheckbox
-              @onChange={{fn this.ySelect field.key}}
-              @value={{string-contains this.ySelection field.key}}>
-              {{field.label}}
-              {{#if field.detail}}
-                <PaperIcon @icon="help" @size={{18}}>
-                  <PaperTooltip @position="right">
-                    {{field.detail}}
-                  </PaperTooltip>
-                </PaperIcon>
+        <PaperDivider />
+        <PaperSubheader>{{t 'app.chartOptions'}}</PaperSubheader>
+        <PaperItem class="md-2-line" as |controls|>
+          <div class="md-list-item-text">
+            <h3>{{t 'app.multiChart.title'}}</h3>
+            <p>
+              {{#if this.multi}}
+                {{t 'app.multiChart.onHint'}}
+              {{else}}
+                {{t 'app.multiChart.offHint'}}
               {{/if}}
-            </MenuCheckbox>
-          {{else}}
-            <MenuRadio
-              @onChange={{fn this.ySelect field.key}}
-              @groupValue={{this.ySelection}}
-              @value={{field.key}}>
-              {{field.label}}
-              {{#if field.detail}}
-                <PaperIcon @icon="help" @size={{18}}>
-                  <PaperTooltip @position="right">
-                    {{field.detail}}
-                  </PaperTooltip>
-                </PaperIcon>
-              {{/if}}
-            </MenuRadio>
-          {{/if}}
-        {{/each}}
-
-        <MenuSwitch
-          @value={{this.yRatio}}
-          @onChange={{fn (mut this.yRatio)}}>
-          Per capita
-        </MenuSwitch>
-
-        <MenuSwitch
-          @value={{this.yChange}}
-          @onChange={{fn (mut this.yChange)}}>
-          Daily change
-        </MenuSwitch>
-
-        {{#if this.yChange}}
-          <MenuSwitch
-            @value={{this.yMovingAverage}}
-            @onChange={{fn (mut this.yMovingAverage)}}
-            @subOption={{true}}>
-            7-day moving average
-          </MenuSwitch>
-        {{/if}}
-
-        <MenuSwitch
-          @value={{this.yLog}}
-          @onChange={{fn (mut this.yLog)}}>
-          Logarithmic scale
-        </MenuSwitch>
-
-        <PaperDivider />
-
-        <PaperSubheader>Horizontal axis</PaperSubheader>
-
-        <MenuRadio
-          @onChange={{fn (mut this.xSelection)}}
-          @groupValue={{this.xSelection}}
-          @value="date"
-          @disabled={{this.xLog}}
-          @disabledTooltip="Unavailable when using logarithmic scale on the X axis">
-          Date
-        </MenuRadio>
-
-        {{#if this.xStartField}}
-          <MenuRadio
-            @onChange={{fn (mut this.xSelection)}}
-            @groupValue={{this.xSelection}}
-            @value="start"
-            @disabled={{this.xLog}}
-            @disabledTooltip="Unavailable when using logarithmic scale on the X axis">
-            Day since {{this.xStartOffsetOrdinal}} case
-          </MenuRadio>
-
-          {{#if (eq this.xSelection "start")}}
-            <MenuSlider
-              @onChange={{fn (mut this.xStartOffset)}}
-              @value={{this.xStartOffset}}
-              @min={{0}}
-              @max={{9}}
-              @subOption={{true}} />
-          {{/if}}
-        {{/if}}
-
-        {{#if this.hasConfirmed}}
-          <MenuRadio
-            @onChange={{fn (mut this.xSelection)}}
-            @groupValue={{this.xSelection}}
-            @value="confirmed"
-            @disabled={{this.stacked}}
-            @disabledTooltip="Unavailable with a stacked chart">
-            Confirmed cases
-          </MenuRadio>
-
-          <MenuSwitch
-            @value={{this.xLog}}
-            @onChange={{fn (mut this.xLog)}}
-            @disabled={{not-eq this.xSelection "confirmed"}}
-            @disabledTooltip="Only available when showing confirmed cases on the X axis">
-            Logarithmic scale
-          </MenuSwitch>
-        {{/if}}
-
-        <PaperDivider />
-
-        <PaperSubheader>Chart options</PaperSubheader>
-
-        <MenuSwitch
-          @value={{this.showLegend}}
-          @onChange={{fn (mut this.showLegend)}}>
-          Show legend
-        </MenuSwitch>
-
-        <MenuSwitch
-          @value={{this.stacked}}
-          @onChange={{fn (mut this.stacked)}}
-          @disabled={{eq this.xSelection "confirmed"}}
-          @disabledTooltip="Unavailable when showing confirmed cases on the X axis">
-          Stacked bars
-        </MenuSwitch>
-
-        <PaperDivider />
-
-        <PaperSubheader>Regions</PaperSubheader>
-
-        <PaperItem>
-          <PaperInput
-            class="flex-100"
-            @label="Find regions"
-            @value={{this.regionFilter}}
-            @onChange={{fn (mut this.regionFilter)}} />
-
-          {{#if this.regionFilter}}
-            <div class="md-secondary-container align-with-input">
-              <PaperButton
-                @iconButton={{true}}
-                @onClick={{fn (mut this.regionFilter) ""}} >
-                <PaperIcon @icon="clear">
-                  <PaperTooltip @position="top">
-                    Clear region filter
-                  </PaperTooltip>
-                </PaperIcon>
-              </PaperButton>
-            </div>
-          {{/if}}
+            </p>
+          </div>
+          <div class="md-secondary-container">
+            <controls.switch @secondary={{true}} @value={{this.multi}} @onChange={{fn (mut this.multi)}} />
+          </div>
         </PaperItem>
 
-        <PaperItem>
-          <p>
-            <PaperTabs
-              class="sorting-tabs"
-              @selected={{this.regionSortBy}}
-              @onChange={{fn (mut this.regionSortBy)}}
-              @stretch={{true}}
-              @primary={{false}}
-              as |tabs|>
-              <tabs.tab @disabled={{true}}>
-                Sort by
-              </tabs.tab>
-              <tabs.tab @value="-deaths">
-                Deaths
-              </tabs.tab>
-              <tabs.tab @value="-cases">
-                Cases
-              </tabs.tab>
-              <tabs.tab @value="label">
-                Name
-              </tabs.tab>
-            </PaperTabs>
-          </p>
+        <PaperDivider />
+        <PaperSubheader>{{t 'app.about'}}</PaperSubheader>
+        <PaperItem @onClick={{fn this.openLink 'github'}}>
+          <svg class="github-icon" viewBox="0 0 16 16" version="1.1">
+            <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+          </svg>
+          <p>{{t 'app.source'}}</p>
         </PaperItem>
-
-        <RegionList
-          @regions={{array this.rootRegion}}
-          @radioMode={{this.hasMultipleYSelection}}
-          @onSelectOnly={{this.selectOnly}}
-          @onToggle={{this.toggleRegion}}
-          @onToggleChildren={{this.toggleChildren}}
-          @sortBy={{this.regionSortBy}}
-          @filterBy="longLabel"
-          @filter={{this.regionFilter}}
-          @requiresFields={{this.ySelection}}
-          @requiresPopulation={{this.yRatio}} />
+        <PaperItem @onClick={{fn this.openLink 'data'}}>
+          <PaperIcon @icon="snippet_folder" />
+          <p>{{t 'app.data'}}</p>
+        </PaperItem>
       </PaperList>
     </PaperContent>
   </PaperSidenav>
 
-  <PaperCard class="flex layout-fill layout-column layout-stretch" as |card|>
-    <card.content class="flex">
-      {{#if (gt this.selectedRegionCount 0)}}
-        {{!-- Force recreation of the chart when switching xLog to workaround a bug in chartjs-plugin-crosshair --}}
-        {{#if this.xLog}}
-          <Chart
-            @type="line"
-            @data={{this.chartData}}
-            @options={{this.chartOptions}}
-            @plugins={{this.chartPlugins}}
-            @onChart={{fn this.chartChanged}} />
+  <div class="flex layout-column layout-fill site-content-container">
+    <PaperToolbar @class="md-whiteframe-1dp main-toolbar" as |toolbar|>
+      <toolbar.tools>
+        <PaperSidenavToggle as |toggleAction|>
+          <PaperButton @class="hide-gt-sm" @onClick={{fn toggleAction}} @iconButton={{true}}>
+            {{paper-icon "menu"}}
+          </PaperButton>
+        </PaperSidenavToggle>
+
+        {{#if this.searchActive}}
+          <div class="flex">
+            <PaperAutocomplete
+              @options={{this.allZones}}
+              @searchField="label"
+              @labelPath="label"
+              @noMatchesMessages={{t 'app.searchNoMatch'}}
+              @onBlur={{this.disableSearch}}
+              @onClose={{this.disableSearch}}
+              @onSelectionChange={{this.searchSelect}}
+               />
+          </div>
         {{else}}
-          <Chart
-            @type="line"
-            @data={{this.chartData}}
-            @options={{this.chartOptions}}
-            @plugins={{this.chartPlugins}}
-            @onChart={{fn this.chartChanged}} />
+          <ZoneBreadcrumbs @zone={{this.zone}} @onSelect={{fn (mut this.zone)}} />
+          <div class="flex" />
         {{/if}}
+
+        <PaperButton @iconButton={{true}} @onClick={{this.toggleSearch}}>
+          <PaperIcon @icon="search" />
+        </PaperButton>
+      </toolbar.tools>
+    </PaperToolbar>
+
+    <div class="flex flex-grow charts-container">
+      {{#if this.zoneColumns}}
+        <PaperGridList @cols={{this.zoneColumns}} @rowHeight="4:3" @gutter="8px" as |grid|>
+          {{#each this.zones as |zone|}}
+            <grid.tile>
+              <Chart @zone={{zone}} @chart={{this.chart}} @title={{zone.label}} @onSelect={{fn (mut this.zone)}} />
+            </grid.tile>
+          {{/each}}
+        </PaperGridList>
       {{else}}
-        Please select at least one region
+        <Chart @zone={{this.zones.firstObject}} @title={{if (eq this.zone this.zones.firstObject) false this.zones.firstObject.label}} @chart={{this.chart}} @onSelect={{fn (mut this.zone)}}/>
       {{/if}}
-    </card.content>
-  </PaperCard>
+    </div>
+
+    <Legend @chart={{this.chart}} />
+  </div>
+
 </PaperSidenavContainer>
 
-{{#if (and this.media.isNarrow (not this.sideNavOpen))}}
-  <PaperButton
-    class="open-sidenav"
-    @fab={{true}}
-    @primary={{true}}
-    @onClick={{fn (mut this.sideNavOpen) true}}>
-    <PaperIcon @icon="chevron_right" />
-  </PaperButton>
-{{/if}}
-
-<PaperSpeedDial
-  class="buttons"
-  @direction="up"
-  @animation="scale"
-  @open={{this.speedDialOpen}}
-  @onToggle={{fn (mut this.speedDialOpen)}}
-  as |dial|>
-
-  <dial.trigger>
-    <PaperButton @fab={{true}}>
-      <PaperIcon @icon="menu" />
-    </PaperButton>
-  </dial.trigger>
-
-  <dial.actions as |actions|>
-    <actions.action>
-      <PaperButton
-        @mini={{true}}
-        @onClick={{fn (mut this.showAboutDialog) true}} >
-        <PaperIcon @icon="help">
-          <PaperTooltip @position="left">
-            About
-          </PaperTooltip>
-        </PaperIcon>
-      </PaperButton>
-    </actions.action>
-
-    <actions.action>
-      <PaperButton
-        @mini={{true}}
-        @onClick={{fn (mut this.showSourcesDialog) true}}>
-        <PaperIcon @icon="list">
-          <PaperTooltip @position="left">
-            Switch data sources
-          </PaperTooltip>
-        </PaperIcon>
-      </PaperButton>
-    </actions.action>
-
-    <actions.action>
-      <PaperButton
-        @mini={{true}}
-        @onClick={{fn (mut this.showPresetDialog) true}}>
-        <PaperIcon @icon="insert_chart">
-          <PaperTooltip @position="left">
-            Chart configuration presets
-          </PaperTooltip>
-        </PaperIcon>
-      </PaperButton>
-    </actions.action>
-
-    <actions.action>
-      <PaperButton
-        @mini={{true}}
-        @onClick={{fn this.downloadChart}}>
-        <PaperIcon @icon="save_alt">
-          <PaperTooltip @position="left">
-            Download chart as an image
-          </PaperTooltip>
-        </PaperIcon>
-      </PaperButton>
-    </actions.action>
-
-    <actions.action>
-      <PaperButton
-        @mini={{true}}
-        @onClick={{fn this.share}}>
-        <PaperIcon @icon="share">
-          <PaperTooltip @position="left">
-            Share current chart
-          </PaperTooltip>
-        </PaperIcon>
-      </PaperButton>
-    </actions.action>
-  </dial.actions>
-</PaperSpeedDial>
+{{#each this.links as |link|}}
+  <a class="hidden-link" id="{{link.id}}" href="{{link.href}}" rel="noopener noreferrer" target="_blank" />
+{{/each}}

@@ -1,0 +1,55 @@
+app:
+  title: Graphiques Covid-19
+  starting: Chargement...
+  chartTypes: Type de graphique
+  chartOptions: Options
+  multiChart:
+    title: Graphiques multiples
+    onHint: Désactiver pour afficher un seul graphique pour la zone sélectionnée
+    offHint: Activer pour afficher un graphique par région dans la zone sélectionnée
+  about: À propos
+  source: Code source
+  data: Données
+  errors:
+    no-zone: Veuillez sélectionner une zone
+    no-chart: Veuillez sélectionner un graphique
+    no-data: Aucune donnée pour ce graphique
+
+subdivision:
+  continent: Continent
+  country: Pays
+  state: État
+  region: Région
+  department: Département
+
+charts:
+  cases:
+    title: 'Cas de Covid'
+    description: 'Cas confirmés, décès et taux de mortalité'
+  tests:
+    title: 'Tests de dépistage'
+    description: 'Évolution du nombre de tests effectués, du nombre de positifs et du taux de positivité'
+  hospital:
+    title: 'Hopitaux'
+    description: 'Nombre de patients hospitalisés, en réanimation, rentrés à domicile et décédés'
+
+fields:
+  confirmed: 'Cas confirmés'
+  tests: 'Tests effectués'
+  positives: 'Tests positifs'
+  positivity: 'Taux de positivité'
+  positivity-weekly: 'Taux de positivité (7 jours glissants)'
+  hospital: 'Patients hospitalisés'
+  intensive: 'Patients en réanimation'
+  dismissed: 'Rentrés à domicile'
+  deceased: 'Décès'
+  mortality-weekly: 'Taux de mortalité (7 jours glissants)'
+
+zones:
+  World: Monde
+  Africa: Afrique
+  Asia: Asie
+  Europa: Europe
+  North America: Amérique du Nord
+  Oceania: Océanie
+  South America: Amérique du Sud

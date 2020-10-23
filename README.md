@@ -1,20 +1,14 @@
 # corona
 
-This is a Covid-19 cases visualisation app using CSSE data built with EmberJS. It runs completely in the browser and does not require a backend server.
+This is a Covid-19 cases visualisation app using CSSE and French Government data built with EmberJS. It runs completely in the browser and does not require a backend server.
 
-![](public/assets/screenshot.png)
-
-Access the [live instance](https://corona.njoyard.fr) of this app.
+Access the [live instance](https://corona.njoyard.fr/develop) of this app.
 
 ## About this app
 
-This app was largely inspired by Benjamin Ooghe Tabanou's [Coronavirus Country Comparator](https://boogheta.github.io/coronavirus-countries/).
-
 ### Data sources
 
-Data comes from the [Center for Systems Science and Engineering (CSSE)](https://systems.jhu.edu/) at Johns Hopkins University. It is [released openly](https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series) and updated daily. They used it to build a [very nice dashboard](https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6), please also check it out. Please note that this data uses officially reported figures, and is only indicative of the actual situation. They come from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
-
-Population data comes from [The World Bank](https://data.worldbank.org/indicator/SP.POP.TOTL), except for US states population which is included in CESE data.
+TODO (in the meantime see `cruncher/sources/*.js`)
 
 ### License and developer info
 
@@ -37,7 +31,8 @@ Made with ♥ using [EmberJS](https://emberjs.com), [Ember Paper](https://miguel
 
 ### Running / Development
 
-- `ember s`
+- Run `DEV_OUTPUT=true yarn crunch` to generate the dataset
+- Run `ember s` to start the development server
 - Visit your app at [http://localhost:4200](http://localhost:4200).
 - Visit your tests at [http://localhost:4200/tests](http://localhost:4200/tests).
 

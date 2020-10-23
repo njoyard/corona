@@ -1,0 +1,22 @@
+<div class="chart-container">
+  {{#if @title}}
+    <h5>
+      <a {{on "click" (fn @onSelect @zone)}}>{{@title}}</a>
+    </h5>
+  {{/if}}
+
+  {{#if this.loading}}
+    <PaperProgressCircular />
+  {{/if}}
+
+  {{#if this.error}}
+    <div class="error">
+      {{t this.error}}
+    </div>
+  {{else}}
+    <canvas
+      {{did-insert this.createChart}}
+      {{did-update this.updateChart @chart @zone}}
+      {{will-destroy this.destroyChart}} />
+  {{/if}}
+</div>

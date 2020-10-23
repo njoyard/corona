@@ -1,9 +1,5 @@
-$font-size: 8px;
-$baseline-grid: 6px;
-$checkbox-width: 16px;
-$radio-width: 16px;
-$switch-width: 30px;
-$switch-thumb-size: 16px;
+$primary: 'blue-grey';
+$font-size: 9px;
 
 @import 'ember-paper';
 
@@ -23,127 +19,80 @@ $switch-thumb-size: 16px;
   bottom: 0;
 
   md-content {
+    background-color: paper-color('grey', '100');
     overflow-x: hidden;
     flex-grow: 1;
   }
 
-  &.narrow-container md-content {
-    overflow-y: hidden;
+  .md-subheader {
+    background-color: paper-color('grey', '100');
   }
 
-  md-input-container {
-    margin-bottom: 0;
+  .chart-list-item.selected {
+    background-color: paper-color('blue-grey', '100');
   }
 
-  md-list-item .align-with-input {
-    margin-top: 18px;
+  .github-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 32px;
+
+    fill: paper-color('grey', '600');
+    fill: var(--foreground-2);
   }
+}
 
-  .md-errors-spacer {
-    display: none;
-  }
+.site-content-container {
+  background-color: white;
 
-  md-radio-button {
-    margin: 5.25px 0;
-  }
+  height: 100vh;
 
-  md-checkbox {
-    margin: 6.75px 8px 6.75px 0 !important;
-  }
+  .charts-container {
+    padding: $baseline-grid;
+    overflow-y: auto;
 
-  md-slider {
-    height: 32px;
-    margin-right: 16px;
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
 
-    .md-track-container {
-      top: 15px;
+      md-progress-circular {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin-left: -25px;
+        margin-top: -25px;
+      }
+
+      .error {
+        position: absolute;
+        top: 32px;
+        left: 0;
+        right: 0;
+
+        text-align: center;
+        font-style: italic;
+        font-size: 80%;
+        opacity: 0.5;
+      }
+
+      h5 {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+
+        margin: 0;
+
+        text-align: center;
+
+        a:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
     }
-
-    .md-thumb {
-      top: 6px;
-    }
-
-    .md-focus-ring {
-      top: -1px;
-    }
   }
-
-  .region-controls button {
-    margin: 0 !important;
-
-    &:last-of-type {
-      margin-right: 8px !important;
-    }
-  }
-}
-
-.open-sidenav {
-  position: absolute;
-  left: 1rem;
-  top: 1rem;
-}
-
-.buttons {
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-
-  .md-mini md-icon {
-    font-size: 22px;
-  }
-}
-
-.md-disabled {
-  color: rgba(0, 0, 0, 0.38);
-}
-
-md-list-item.md-clickable:hover {
-  background-color: #eee;
-}
-
-md-list-item,
-md-list-item .md-list-item-inner,
-md-list-item .md-list-item-inner::before,
-md-list-item::before {
-  min-height: 24px;
-}
-
-.tip small {
-  font-size: 0.7em;
-  font-style: italic;
-  opacity: 80%;
-}
-
-.region-option-level-1,
-.sub-option {
-  padding-left: 1rem;
-}
-
-.region-option-level-2 {
-  padding-left: 2rem;
-}
-
-.region-option-level-3 {
-  padding-left: 3rem;
-}
-
-.region-option-level-4 {
-  padding-left: 4rem;
-}
-
-.md-toast-text a {
-  color: paper-color($primary, '100');
-}
-
-.md-dialog-content a {
-  color: paper-color($primary, '300');
-}
-
-.swatch {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  vertical-align: middle;
 }
 
 svg.toolbar-icon {
@@ -167,20 +116,72 @@ svg.loading-icon {
   }
 }
 
-.sorting-tabs {
-  margin: 6px 0;
+md-toolbar.md-default-theme.main-toolbar {
+  background-color: paper-color('grey', '100');
+  color: $dark-contrast-color;
 
-  md-tabs-canvas,
-  md-pagination-wrapper {
-    height: 24px;
+  @media (min-width: 600px) and (max-width: 959px) {
+    h2 {
+      font-size: 12pt;
+    }
+
+    md-icon {
+      font-size: 18pt;
+      line-height: 18pt;
+    }
   }
 
-  .md-tab {
-    padding: 0 4px;
+  @media (max-width: 599px) {
+    h2 {
+      font-size: 10pt;
+    }
+
+    md-icon {
+      font-size: 12pt;
+      line-height: 12pt;
+    }
+  }
+
+  .muted {
+    opacity: 0.5;
+  }
+
+  md-icon {
+    color: $dark-contrast-color;
+  }
+
+  .zone-breadcrumb a:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  md-input-container {
+    padding: initial;
+    vertical-align: initial;
+  }
+
+  md-select-value {
+    border: none !important;
   }
 }
 
-.preset-card {
-  max-width: 300px;
-  font-size: 0.9em;
+.legend {
+  padding: $baseline-grid;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  gap: 0 2rem;
+}
+
+.legend__swatch {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.legend__label {
+  font-size: 0.8rem;
+}
+
+.hidden-link {
+  display: none;
 }

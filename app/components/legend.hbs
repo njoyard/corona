@@ -1,0 +1,5 @@
+<div class="legend">
+  {{#each this.items as |item|}}
+    <LegendItem @type={{item.type}} @color={{item.color}} @label={{item.label}} />
+  {{/each}}
+</div>

@@ -1,0 +1,9 @@
+<PaperItem @class={{concat "md-2-line md-long-text chart-list-item" (if @selected " selected")}} @onClick={{@onClick}}>
+  <img src={{this.img}} alt={{this.title}} class="md-avatar">
+  <div class="md-list-item-text">
+    <h3>{{this.title}}</h3>
+    <p>
+      {{this.description}}
+    </p>
+  </div>
+</PaperItem>
