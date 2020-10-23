@@ -128,7 +128,6 @@ export default class CCSEDataSource {
       })
 
       if (iso && !isos.has(iso)) {
-        console.log(`   pushing iso ${iso} for ${levelNames[0]}`)
         isos.add(iso)
         data.push({
           zone: levelNames[0],
