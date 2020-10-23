@@ -15,9 +15,7 @@ module.exports = {
   env: {
     browser: true
   },
-  rules: {
-    'ember/no-jquery': 'error'
-  },
+  rules: {},
   overrides: [
     // node files
     {
@@ -39,23 +37,27 @@ module.exports = {
         node: true
       },
       plugins: ['node'],
-      rules: Object.assign(
-        {},
-        require('eslint-plugin-node').configs.recommended.rules,
-        {
-          'node/no-unpublished-require': 'off'
-        }
-      )
+      extends: ['plugin:node/recommended'],
+      rules: {
+        // this can be removed once the following is fixed
+        // https://github.com/mysticatea/eslint-plugin-node/issues/77
+        'node/no-unpublished-require': 'off'
+      }
     },
     // cruncher
     {
       files: ['cruncher/**/*.js'],
       parser: 'babel-eslint',
       plugins: ['node'],
-      extends: ['eslint:recommended'],
+      extends: ['plugin:node/recommended'],
       env: {
         browser: false,
         node: true
+      },
+      rules: {
+        // this can be removed once the following is fixed
+        // https://github.com/mysticatea/eslint-plugin-node/issues/77
+        'node/no-unpublished-require': 'off'
       }
     }
   ]

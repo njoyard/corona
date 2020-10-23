@@ -2,7 +2,7 @@ import Application from '@ember/application'
 import { registerDeprecationHandler } from '@ember/debug'
 import Resolver from 'ember-resolver'
 import loadInitializers from 'ember-load-initializers'
-import config from './config/environment'
+import config from 'corona/config/environment'
 
 registerDeprecationHandler((message, options, next) => {
   let { id } = options
