@@ -27,6 +27,8 @@ function zipDateCounts(dates, counts, countKey) {
   return dates.map((date, index) => ({ date, [countKey]: counts[index] }))
 }
 
+let metaData
+
 export default class CCSEDataSource {
   get region() {
     throw new Error('Not implemented')
@@ -41,10 +43,9 @@ export default class CCSEDataSource {
     return `${baseURL}/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_${scope}_${this.region}.csv`
   }
 
-  async populationFor(country, province = '', admin = '') {
-    let { populationData } = this
-    if (!populationData) {
-      populationData = this.populationData = {}
+  async metaFor(country, province = '', admin = '') {
+    if (!metaData) {
+      metaData = {}
 
       let csvLines = parseCSV(
         await fetchText(
@@ -52,12 +53,15 @@ export default class CCSEDataSource {
         )
       )
 
-      for (let [, , , , , a, p, c, , , , pop] of csvLines) {
-        populationData[`${c}|${p}|${a}`] = pop ? Number(pop) : null
+      for (let [, iso2, , , , a, p, c, , , , pop] of csvLines) {
+        metaData[`${c}|${p}|${a}`] = {
+          pop: pop !== '' ? Number(pop) : null,
+          iso: iso2.toLowerCase()
+        }
       }
     }
 
-    return populationData[`${country}|${province}|${admin}`] || null
+    return metaData[`${country}|${province}|${admin}`] || null
   }
 
   async fetchScope(scope) {
@@ -79,10 +83,18 @@ export default class CCSEDataSource {
     })
 
     let data = []
+    let isos = new Set()
 
     for (let entry of entries) {
       let { levelsJoined, levelNames, dates, counts } = entry
-      let pop = await this.populationFor(...levelNames)
+
+      let meta = await this.metaFor(...levelNames)
+      let population, iso
+
+      if (meta) {
+        population = meta.pop
+        iso = meta.iso
+      }
 
       if (levelNames.some((l) => ignoreRegions.indexOf(l) !== -1)) {
         continue
@@ -111,9 +123,18 @@ export default class CCSEDataSource {
 
       data.push({
         zone: levelNames.join('|'),
-        meta: { population: pop },
+        meta: { population },
         points: zipDateCounts(dates, counts, scope)
       })
+
+      if (iso && !isos.has(iso)) {
+        console.log(`   pushing iso ${iso} for ${levelNames[0]}`)
+        isos.add(iso)
+        data.push({
+          zone: levelNames[0],
+          meta: { iso }
+        })
+      }
     }
 
     for (let region of forceAggregate) {

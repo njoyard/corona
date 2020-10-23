@@ -16,7 +16,9 @@ export default async function fetch() {
       continue
     }
 
-    Object.values(data).forEach((z) => z.points.sort(sortBy('date')))
+    Object.values(data).forEach(
+      (z) => z.points && z.points.sort(sortBy('date'))
+    )
 
     all.push(...data)
 

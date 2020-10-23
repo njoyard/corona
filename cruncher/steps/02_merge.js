@@ -17,32 +17,39 @@ export default async function merge(data) {
     }
 
     let points = output.points
-    let pointSets = entries.map((e) => e.points)
-    let nextPoint
-    let lastPoint = nextByDate(pointSets)
+    let pointSets = entries
+      .map((e) => e.points)
+      .filter((p) => p && p.length > 0)
 
-    points.push(lastPoint)
+    if (pointSets.length) {
+      let nextPoint
+      let lastPoint = nextByDate(pointSets)
 
-    while ((nextPoint = nextByDate(pointSets))) {
-      if (nextPoint.date === lastPoint.date) {
-        Object.assign(lastPoint, nextPoint)
-      } else {
-        points.push(nextPoint)
-        lastPoint = nextPoint
-      }
-    }
+      points.push(lastPoint)
 
-    output.meta.fields = [
-      ...output.points.reduce((fields, point) => {
-        for (let key of Object.keys(point)) {
-          if (key !== 'date') {
-            fields.add(key)
-          }
+      while ((nextPoint = nextByDate(pointSets))) {
+        if (nextPoint.date === lastPoint.date) {
+          Object.assign(lastPoint, nextPoint)
+        } else {
+          points.push(nextPoint)
+          lastPoint = nextPoint
         }
+      }
 
-        return fields
-      }, new Set())
-    ]
+      output.meta.fields = [
+        ...output.points.reduce((fields, point) => {
+          for (let key of Object.keys(point)) {
+            if (key !== 'date') {
+              fields.add(key)
+            }
+          }
+
+          return fields
+        }, new Set())
+      ]
+    } else {
+      output.meta.fields = []
+    }
 
     return output
   })
