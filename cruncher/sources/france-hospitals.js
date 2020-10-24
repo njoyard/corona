@@ -43,7 +43,7 @@ export default class FranceHospitalsDataSource extends DataGouvFrSource {
         Object.assign(point, {
           hospital: Number(hosp),
           intensive: Number(rea),
-          recovered: Number(rad),
+          dismissed: Number(rad),
           deceased: Number(dc)
         })
       }
