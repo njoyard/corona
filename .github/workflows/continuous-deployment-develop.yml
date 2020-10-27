@@ -18,9 +18,9 @@ jobs:
           cache-name: cache-node-modules-yarn-lock
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-build-v2-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Install dependencies
         uses: borales/actions-yarn@v2.0.0
         with:
@@ -39,9 +39,9 @@ jobs:
           cache-name: cache-node-modules-yarn-lock
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-build-v2-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Lint JS
         uses: borales/actions-yarn@v2.0.0
         with:
@@ -60,9 +60,9 @@ jobs:
           cache-name: cache-node-modules-yarn-lock
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-build-v2-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Lint HBS
         uses: borales/actions-yarn@v2.0.0
         with:
@@ -81,9 +81,9 @@ jobs:
           cache-name: cache-node-modules-yarn-lock
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-build-v2-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Test
         uses: alexlafroscia/actions-ember-testing@master
 
@@ -103,9 +103,9 @@ jobs:
           cache-name: cache-node-modules-yarn-lock
         with:
           path: node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-build-v2-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Build
         uses: borales/actions-yarn@v2.0.0
         env:
