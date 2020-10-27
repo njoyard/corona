@@ -26,73 +26,9 @@ jobs:
         with:
           cmd: install
 
-  lintjs:
-    name: Lint JS
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache node_modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules-yarn-lock
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-build-v2-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-v2-${{ env.cache-name }}-
-      - name: Lint JS
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: lint:js
-
-  linthbs:
-    name: Lint HBS
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache node_modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules-yarn-lock
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-build-v2-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-v2-${{ env.cache-name }}-
-      - name: Lint HBS
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: lint:hbs
-
-  test:
-    name: Run test suite
-    needs: install
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Cache node_modules
-        uses: actions/cache@v1
-        env:
-          cache-name: cache-node-modules-yarn-lock
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-build-v2-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-v2-${{ env.cache-name }}-
-      - name: Test
-        uses: alexlafroscia/actions-ember-testing@master
-
   deploy:
+    needs: install
     name: Deploy app to GitHub Pages
-    needs:
-      - test
-      - lintjs
-      - linthbs
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -113,24 +49,31 @@ jobs:
         with:
           cmd: build
       - name: Deploy
+        env:
+          GITHUB_PAT: ${{ secrets.GH_CORONA_PAT }}
         run: |
-          echo "* Moving dist away"
-          mv dist dist-develop
+          echo "* Cloning repo"
+          git clone https://$GITHUB_PAT@github.com/$GITHUB_REPOSITORY develop-clone
+          cd develop-clone
 
-          echo "* Resetting current branch"
-          git reset --hard
-
-          echo "* Switching to gh-pages"
+          echo "* Checking out gh-pages"
           git checkout gh-pages
+
+          ls -alF
 
           echo "* Cleaning existing develop dir"
           [ -d develop ] && rm -R develop
 
           echo "* Populating develop dir"
-          mv dist-develop develop
+          cp -Rv ../dist develop
 
           echo "* Adding to index"
           git add develop
 
           echo "* Commit"
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git commit -m "Deploy develop branch to GitHub pages"
+
+          echo "* Push"
+          git push
