@@ -1,4 +1,5 @@
-import { debugOutput, intersect, union } from '../utils'
+import { debugOutput, union } from '../utils'
+import continents from '../sources/continents'
 
 function createIntermediateZones(data) {
   let zones = new Set()
@@ -12,12 +13,20 @@ function createIntermediateZones(data) {
 
   let all = [
     { zone: 'World' },
+    ...Object.keys(continents).map((c) => ({ zone: c, parent: 'World' })),
     ...[...zones].map((z) => {
       let levels = z.split('|')
       let parent =
         levels.length === 1
-          ? 'World'
+          ? Object.keys(continents).find((c) =>
+              continents[c].includes(levels[0])
+            )
           : levels.slice(0, levels.length - 1).join('|')
+
+      if (!parent) {
+        console.warn(`No parent for ${levels.join('|')}`)
+        parent = 'World'
+      }
 
       return { zone: z, parent }
     })
@@ -48,20 +57,27 @@ function aggregateZone(zone, data) {
 
   let { points, meta } = data.find((z) => z.zone === zone)
 
-  // Aggregate only fields that all children have
-  let aggregateFields = [...intersect(...children.map((c) => c.meta.fields))]
-  meta.fields = [...union(meta.fields, aggregateFields)]
+  // Extract available fields from children
+  let aggregateFields = union(...children.map((c) => c.meta.fields))
 
-  if (!aggregateFields.length) {
-    console.warn(`Nothing to aggregate into ${zone}`)
-    for (let c of children) {
-      console.warn(`  in ${c.zone}: ${c.meta.fields.join(', ')}`)
-    }
+  // Remove fields that we already have
+  for (let field of meta.fields) {
+    aggregateFields.delete(field)
   }
 
-  console.log(
-    `  ${zone}: aggregating fields ${aggregateFields.sort().join(', ')}`
-  )
+  aggregateFields = [...aggregateFields]
+  meta.fields = [...new Set([...meta.fields, ...aggregateFields])]
+
+  if (!aggregateFields.length) {
+    console.warn(`  ${zone}: nothing to aggregate`)
+    console.warn(`    already have: ${meta.fields.join(', ')}`)
+
+    for (let c of children) {
+      console.warn(`    in ${c.zone}: ${c.meta.fields.join(', ')}`)
+    }
+
+    return
+  }
 
   let childPoints = children.reduce(
     (all, { points }) => [...all, ...points],
@@ -74,10 +90,7 @@ function aggregateZone(zone, data) {
     let point = points.find((p) => p.date === date)
 
     if (!point) {
-      point = aggregateFields.reduce(
-        (p, field) => Object.assign(p, { [field]: 0 }),
-        { date }
-      )
+      point = { date }
 
       let insertAt = points.findIndex((p) => p.date > date)
       if (insertAt === -1) {
@@ -88,8 +101,15 @@ function aggregateZone(zone, data) {
     }
 
     let matchingPoints = childPoints.filter((p) => p.date === date)
-    for (let field of aggregateFields) {
-      point[field] += matchingPoints.reduce((sum, p) => sum + p[field], 0)
+
+    if (matchingPoints.length) {
+      for (let field of aggregateFields) {
+        let usablePoints = matchingPoints.filter((p) => field in p)
+
+        if (usablePoints.length) {
+          point[field] = usablePoints.reduce((sum, p) => sum + p[field], 0)
+        }
+      }
     }
   }
 }

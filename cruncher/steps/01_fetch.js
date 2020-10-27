@@ -16,9 +16,23 @@ export default async function fetch() {
       continue
     }
 
-    Object.values(data).forEach(
-      (z) => z.points && z.points.sort(sortBy('date'))
-    )
+    console.log(`Filtering nulls, removing empty points and sorting by date`)
+
+    for (let zone of data) {
+      if (zone.points) {
+        for (let point of zone.points) {
+          for (let [key, value] of Object.entries(point)) {
+            if (key !== 'date' && typeof value !== 'number') {
+              delete point[key]
+            }
+          }
+        }
+
+        zone.points = zone.points
+          .filter((p) => Object.keys(p).length > 1)
+          .sort(sortBy('date'))
+      }
+    }
 
     all.push(...data)
 

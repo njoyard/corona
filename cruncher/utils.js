@@ -68,7 +68,7 @@ function sortBy(key) {
 
     if (av < bv) {
       return -1
-    } else if (av < bv) {
+    } else if (av > bv) {
       return 1
     } else {
       return 0
