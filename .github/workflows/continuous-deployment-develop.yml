@@ -108,6 +108,8 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
       - name: Build
         uses: borales/actions-yarn@v2.0.0
+        env:
+          CORONA_ROOT_URL: /develop/
         with:
           cmd: build
       - name: Deploy
