@@ -1,3 +1,5 @@
+import { DateTime } from 'luxon'
+
 import { bignum, percent } from 'corona/utils/formats'
 
 export default class Chart {
@@ -63,6 +65,12 @@ export default class Chart {
       },
       tooltips: {
         callbacks: {
+          title: ([context]) => {
+            return DateTime.fromMillis(context.dataPoint.x).toLocaleString(
+              DateTime.DATE_FULL
+            )
+          },
+
           label: (context) => {
             let label = context.dataset.label || ''
             let serie = series.find((s) => s.id === context.dataset.id)
