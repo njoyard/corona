@@ -1,0 +1,134 @@
+name: Deployment (develop)
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  install:
+    name: Install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules-yarn-lock
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Install dependencies
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+
+  lintjs:
+    name: Lint JS
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules-yarn-lock
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Lint JS
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: lint:js
+
+  linthbs:
+    name: Lint HBS
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules-yarn-lock
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Lint HBS
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: lint:hbs
+
+  test:
+    name: Run test suite
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules-yarn-lock
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Test
+        uses: alexlafroscia/actions-ember-testing@master
+
+  deploy:
+    name: Deploy app to GitHub Pages
+    needs:
+      - test
+      - lintjs
+      - linthbs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache node_modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules-yarn-lock
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Build
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build
+      - name: Deploy
+        run: |
+          echo "* Moving dist away"
+          mv dist /tmp/corona-develop-dist
+
+          echo "* Resetting current branch"
+          git reset --hard
+
+          echo "* Switching to gh-pages"
+          git checkout gh-pages
+
+          echo "* Cleaning existing develop dir"
+          [ -d develop ] && rm -R develop
+
+          echo "* Populating develop dir"
+          mv /tmp/corona-develop-dist develop
+
+          echo "* Adding to index"
+          git add develop
+
+          echo "* Commit"
+          git commit -m "Deploy develop branch to GitHub pages"
