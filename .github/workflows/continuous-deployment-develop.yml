@@ -115,7 +115,7 @@ jobs:
       - name: Deploy
         run: |
           echo "* Moving dist away"
-          mv dist /tmp/corona-develop-dist
+          mv dist dist-develop
 
           echo "* Resetting current branch"
           git reset --hard
@@ -127,7 +127,7 @@ jobs:
           [ -d develop ] && rm -R develop
 
           echo "* Populating develop dir"
-          mv /tmp/corona-develop-dist develop
+          mv dist-develop develop
 
           echo "* Adding to index"
           git add develop
