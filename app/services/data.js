@@ -21,6 +21,15 @@ export default class DataService extends Service {
     { id: 'data', href: '//github.com/njoyard/corona/tree/data' }
   ]
 
+  sources = {
+    csse:
+      '//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series',
+    spf:
+      '//www.data.gouv.fr/fr/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/',
+    lizurey:
+      '//www.data.gouv.fr/fr/datasets/liste-des-departements-francais-metropolitains-doutre-mer-et-les-com-ainsi-que-leurs-prefectures/'
+  }
+
   get charts() {
     return chartDefinitions.map(
       ({ id, series }) =>
@@ -53,7 +62,7 @@ export default class DataService extends Service {
   }
 
   get dataset() {
-    let { dataPromise, charts, links, intl } = this
-    return dataPromise.then((data) => new Dataset(data, charts, links, intl))
+    let { dataPromise, charts, intl } = this
+    return dataPromise.then((data) => new Dataset(data, charts, intl))
   }
 }

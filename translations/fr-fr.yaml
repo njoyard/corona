@@ -12,7 +12,27 @@ app:
     menuEntry: Informations
     title: À propos
     close: Fermer
-    text: WIP
+    text: |
+      Cette application utilise les données en provenance du CSSE à l'université John Hopkins, ainsi que celles de Santé Publique France.
+
+      Notez que les données CSSE sont fournies uniquement à titre indicatif. Elles sont agrégées à partir des informations fournies par plusieurs organismes distincts, qui utilisent des méthodes de relevé et de comptage diverses. Les chiffres réels sont probablement plus élevés.
+
+      Les données sont récupérées par l'application deux fois par jour, indépendemment de la mise à jour des données sources.
+    built: Cette version a été générée le {buildDate, date, medium} à {buildDate, time, full}
+    sources: Sources de données
+    sourceNames:
+      csse: Center for Systems Science and Engineering (CSSE) de l'université Johns Hopkins
+      spf: Santé Publique France sur la plateforme data.gouv.fr
+      lizurey: Hiérarchie des départements et régions françaises par César Lizurey sur la plateforme data.gouv.fr
+    devInfo:
+      title: Développement
+      repo: |
+        Le code source de l'application est disponible sous license MIT
+        <a href="//github.com/njoyard/corona" target="_blank" rel="noopener noreferer">sur GitHub</a>.
+      logo: |
+        Logo fourni par <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferer">Becris</a>,
+        sous license <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0</a>.
+
   switchZones: "Pas de données disponibles en {from} pour ce graphique, affichage des données en {to}."
   source: Code source
   data: Données

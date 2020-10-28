@@ -4,6 +4,7 @@ import { inject as service } from '@ember/service'
 import { tracked } from '@glimmer/tracking'
 
 export default class ApplicationController extends Controller {
+  @service data
   @service intl
   @service('modalsManager') modals
 
@@ -29,7 +30,7 @@ export default class ApplicationController extends Controller {
   }
 
   get links() {
-    return this.model.dataset.links
+    return this.data.links
   }
 
   /*********************************

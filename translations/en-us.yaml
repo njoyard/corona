@@ -12,7 +12,27 @@ app:
     menuEntry: Information
     title: About
     close: Close
-    text: WIP
+    text: |
+      This app uses data from the CSSE at John Hopkins University, and Santé Publique France.
+
+      Please note that CSSE data comes from officially reported figures, and is only indicative of the actual situation. It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
+
+      Data is refreshed twice a day, independently of source updates.
+    built: This version was built on {buildDate, date, medium} at {buildDate, time, full}
+    sources: Data sources
+    sourceNames:
+      csse: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University
+      spf: Santé Publique France on the data.gouv.fr platform
+      lizurey: French department/region hierarchy by César Lizurey on the data.gouv.fr platform
+    devInfo:
+      title: Developer info
+      repo: |
+        The source code for this app is available under the terms of the MIT license
+        <a href="//github.com/njoyard/corona" target="_blank" rel="noopener noreferer">on GitHub</a>.
+      logo: |
+        Coronavirus icon courtesy of <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferer">Becris</a>,
+        shared under the <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0 license</a>.
+
   switchZones: "No data available in {from} for this chart, switching to {to}."
   source: Source code
   data: Open data
