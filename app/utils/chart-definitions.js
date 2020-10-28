@@ -1,4 +1,4 @@
-import { accumulate, coalesce, ratio, reverse, weekly } from './fields'
+import { ratio, reverse, weekly } from './fields'
 import { blue, orange, red, gray, alpha } from './colors'
 import { abs, percent } from './formats'
 

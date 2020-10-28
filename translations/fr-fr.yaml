@@ -12,6 +12,7 @@ app:
     menuEntry: Informations
     title: À propos
     close: Fermer
+    text: WIP
   switchZones: "Pas de données disponibles en {from} pour ce graphique, affichage des données en {to}."
   source: Code source
   data: Données

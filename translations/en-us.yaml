@@ -12,6 +12,7 @@ app:
     menuEntry: Information
     title: About
     close: Close
+    text: WIP
   switchZones: "No data available in {from} for this chart, switching to {to}."
   source: Source code
   data: Open data

@@ -1,5 +1,3 @@
-import cached from 'corona/utils/cache-decorator'
-
 export default class DatasetZone {
   constructor(chart, zone, parent = null) {
     this.zone = zone

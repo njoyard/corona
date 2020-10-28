@@ -11,6 +11,8 @@ export default class RoutingService extends Service {
     if (chartRoute) {
       return chartRoute.params.chart_id
     }
+
+    return null
   }
 
   selectChart(chart) {
