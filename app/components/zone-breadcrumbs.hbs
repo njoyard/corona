@@ -1,7 +1,6 @@
 <h2 class="zone-breadcrumb layout-row layout-nowrap">
   {{#if @zone.parent}}
-    <ZoneParent @zone={{@zone.parent}} @onSelect={{@onSelect}} />
-
+    <ZoneParent @zone={{@zone.parent}} @onSelect={{this.select}} />
     <PaperIcon @icon="chevron_right" />
   {{/if}}
 
@@ -16,7 +15,7 @@
 
       <menu.content @dense={{true}} as |content|>
         {{#each @zone.siblings as |sibling|}}
-          <content.menu-item @onClick={{fn @onSelect sibling}}>
+          <content.menu-item @onClick={{fn this.select sibling}}>
             {{sibling.label}}
           </content.menu-item>
         {{/each}}
@@ -28,7 +27,6 @@
 
   {{#if @zone.children.length}}
     <PaperIcon @icon="chevron_right" @class="muted" />
-
     <PaperMenu as |menu|>
       <menu.trigger>
         <a class="muted">
@@ -39,7 +37,7 @@
 
       <menu.content @dense={{true}} as |content|>
         {{#each @zone.children as |child|}}
-          <content.menu-item @onClick={{fn @onSelect child}}>
+          <content.menu-item @onClick={{fn this.select child}}>
             {{child.label}}
           </content.menu-item>
         {{/each}}

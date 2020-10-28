@@ -3,7 +3,6 @@ import { blue, orange, red, gray, alpha } from './colors'
 import { abs, percent } from './formats'
 
 const positivity = ratio('positives', 'tests')
-const confirmed = coalesce('confirmed', accumulate('positives'))
 
 const chartDefinitions = [
   {
@@ -11,7 +10,7 @@ const chartDefinitions = [
     series: [
       {
         id: 'confirmed',
-        field: confirmed,
+        field: 'confirmed',
         options: { color: alpha(orange, 0.75) }
       },
       {
@@ -21,7 +20,7 @@ const chartDefinitions = [
       },
       {
         id: 'mortality-weekly',
-        field: weekly(ratio('deceased', confirmed)),
+        field: weekly(ratio('deceased', 'confirmed')),
         options: { color: alpha(gray, 0.75), scale: 'percent', format: percent }
       }
     ]

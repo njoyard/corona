@@ -5,12 +5,28 @@ export default class ApplicationRoute extends Route {
   @service data
   @service intl
 
+  queryParams = {
+    multi: {
+      replace: true,
+      refreshModel: true
+    }
+  }
+
   beforeModel() {
     this.intl.setLocale(navigator.languages)
     document.title = this.intl.t('app.title')
   }
 
-  model() {
-    return this.data.world
+  async model({ multi }) {
+    return {
+      dataset: await this.data.dataset,
+      multi
+    }
+  }
+
+  redirect(model, transition) {
+    if (transition.to.name === 'index' && model.charts.length > 0) {
+      this.transitionTo('chart', model.charts.firstObject.id)
+    }
   }
 }

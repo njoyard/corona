@@ -3,9 +3,9 @@ import Service, { inject as service } from '@ember/service'
 import fetch from 'fetch'
 
 import config from 'corona/config/environment'
-import Zone from 'corona/models/zone'
 import Chart from 'corona/models/chart'
 import ChartSeries from 'corona/models/chart-series'
+import Dataset from 'corona/models/dataset'
 import chartDefinitions from 'corona/utils/chart-definitions'
 
 const {
@@ -16,8 +16,23 @@ const {
 export default class DataService extends Service {
   @service intl
 
-  _data = null
-  _charts = null
+  links = [
+    { id: 'github', href: '//github.com/njoyard/corona' },
+    { id: 'data', href: '//github.com/njoyard/corona/tree/data' }
+  ]
+
+  get charts() {
+    return chartDefinitions.map(
+      ({ id, series }) =>
+        new Chart(
+          id,
+          series.map(
+            ({ id, field, options }) =>
+              new ChartSeries(id, field, options || {})
+          )
+        )
+    )
+  }
 
   async getData() {
     let response = await fetch(
@@ -28,33 +43,17 @@ export default class DataService extends Service {
     return JSON.parse(await response.text())
   }
 
+  _dataPromise = null
   get dataPromise() {
-    if (!this._data) {
-      this._data = this.getData()
+    if (!this._dataPromise) {
+      this._dataPromise = this.getData()
     }
 
-    return this._data
+    return this._dataPromise
   }
 
-  get world() {
-    let { dataPromise, intl } = this
-    return dataPromise.then((data) => new Zone('World', data, intl))
-  }
-
-  get charts() {
-    if (!this._charts) {
-      this._charts = chartDefinitions.map(
-        ({ id, series }) =>
-          new Chart(
-            id,
-            series.map(
-              ({ id, field, options }) =>
-                new ChartSeries(id, field, options || {})
-            )
-          )
-      )
-    }
-
-    return this._charts
+  get dataset() {
+    let { dataPromise, charts, links, intl } = this
+    return dataPromise.then((data) => new Dataset(data, charts, links, intl))
   }
 }

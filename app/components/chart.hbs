@@ -1,7 +1,7 @@
 <div class="chart-container">
   {{#if @title}}
     <h5>
-      <a {{on "click" (fn @onSelect @zone)}}>{{@title}}</a>
+      <a {{on "click" (fn @onTitleClicked @zone)}}>{{@title}}</a>
     </h5>
   {{/if}}
 

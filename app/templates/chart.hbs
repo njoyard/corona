@@ -1,0 +1,34 @@
+<PaperToolbar @class="md-whiteframe-1dp main-toolbar" as |toolbar|>
+  <toolbar.tools>
+    <PaperSidenavToggle as |toggleAction|>
+      <PaperButton @class="hide-gt-sm" @onClick={{fn toggleAction}} @iconButton={{true}}>
+        {{paper-icon "menu"}}
+      </PaperButton>
+    </PaperSidenavToggle>
+
+    {{#if this.searchActive}}
+      <div class="flex">
+        <PaperAutocomplete
+          @options={{this.zones}}
+          @searchField="label"
+          @labelPath="label"
+          @noMatchesMessages={{t 'app.searchNoMatch'}}
+          @onBlur={{this.disableSearch}}
+          @onClose={{this.disableSearch}}
+          @onSelectionChange={{this.searchSelect}}
+           />
+      </div>
+    {{else}}
+      {{outlet 'breadcrumbs'}}
+      <div class="flex" />
+    {{/if}}
+
+    <PaperButton @iconButton={{true}} @onClick={{this.toggleSearch}}>
+      <PaperIcon @icon="search" />
+    </PaperButton>
+  </toolbar.tools>
+</PaperToolbar>
+
+{{outlet 'charts'}}
+
+<Legend @chart={{this.chart}} />

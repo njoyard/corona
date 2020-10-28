@@ -7,7 +7,12 @@ app:
     title: Graphiques multiples
     onHint: Désactiver pour afficher un seul graphique pour la zone sélectionnée
     offHint: Activer pour afficher un graphique par région dans la zone sélectionnée
-  about: À propos
+  about:
+    menuHeader: À propos
+    menuEntry: Informations
+    title: À propos
+    close: Fermer
+  switchZones: "Pas de données disponibles en {from} pour ce graphique, affichage des données en {to}."
   source: Code source
   data: Données
   errors:

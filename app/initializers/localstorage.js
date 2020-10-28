@@ -1,3 +1,7 @@
+import config from 'corona/config/environment'
+
+const { environment } = config
+
 export function initialize(app) {
   let versionKey = 'corona:ls-version'
   let version = localStorage.getItem(versionKey)
@@ -30,9 +34,11 @@ export function initialize(app) {
     app.deferReadiness()
   }
 
-  setInterval(() => {
-    localStorage.setItem(key, location.search)
-  }, 1000)
+  if (environment !== 'development') {
+    setInterval(() => {
+      localStorage.setItem(key, location.search)
+    }, 1000)
+  }
 }
 
 export default {

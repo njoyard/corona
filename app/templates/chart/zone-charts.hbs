@@ -1,0 +1,21 @@
+<div class="flex flex-grow charts-container">
+  {{#if this.zoneColumns}}
+    <PaperGridList @cols={{this.zoneColumns}} @rowHeight="4:3" @gutter="8px" as |grid|>
+      {{#each this.zones as |zone|}}
+        <grid.tile>
+          <Chart
+            @zone={{zone}}
+            @chart={{this.chart}}
+            @title={{zone.label}}
+            @onTitleClicked={{this.selectZone}} />
+        </grid.tile>
+      {{/each}}
+    </PaperGridList>
+  {{else}}
+    <Chart
+      @zone={{this.zones.firstObject}}
+      @chart={{this.chart}}
+      @title={{if (eq this.zone this.zones.firstObject) false this.zones.firstObject.label}}
+      @onTitleClicked={{this.selectZone}}/>
+  {{/if}}
+</div>

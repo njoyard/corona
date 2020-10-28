@@ -15,7 +15,7 @@ export default class Zone {
   constructor(id, data, intl, parent = null) {
     this.id = id
 
-    let zoneData = data.find((z) => z.zone === id)
+    let zoneData = data.find((z) => z.id === id)
     if (!zoneData) {
       throw new Error(`Cannot build zone: ${id}`)
     }
@@ -26,11 +26,11 @@ export default class Zone {
     }
 
     this._setMeta(zoneData.meta)
-    this._setLabel(intl)
+    this._setLabel(zoneData.label, intl)
 
     this.children = data
       .filter((z) => z.parent === id)
-      .map((z) => new Zone(z.zone, data, intl, this))
+      .map((z) => new Zone(z.id, data, intl, this))
       .sort(({ label: a }, { label: b }) => {
         if (a < b) return -1
         if (a > b) return 1
@@ -54,11 +54,11 @@ export default class Zone {
     }
   }
 
-  _setLabel(intl) {
-    let { id, iso } = this
+  _setLabel(label, intl) {
+    let { iso } = this
 
-    if (intl.exists(`zones.${id}`)) {
-      this.label = intl.t(`zones.${id}`)
+    if (intl.exists(`zones.${label}`)) {
+      this.label = intl.t(`zones.${label}`)
     } else if (iso) {
       let locale = intl.locale
       if (!Array.isArray(locale)) {
@@ -73,16 +73,8 @@ export default class Zone {
     }
 
     if (!this.label) {
-      this.label = id.split('|').pop()
+      this.label = label
     }
-  }
-
-  get siblings() {
-    return (this.parent && this.parent.children) || []
-  }
-
-  get subdivKey() {
-    return `subdivision.${this.subdivision}`
   }
 
   find(id) {

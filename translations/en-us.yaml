@@ -7,7 +7,12 @@ app:
     title: Multiple charts
     onHint: Disable to only display one chart for the selected zone
     offHint: Enable to display one chart per region in the selected zone
-  about: About
+  about:
+    menuHeader: About
+    menuEntry: Information
+    title: About
+    close: Close
+  switchZones: "No data available in {from} for this chart, switching to {to}."
   source: Source code
   data: Open data
   errors:

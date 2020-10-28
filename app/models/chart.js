@@ -92,8 +92,9 @@ export default class Chart {
 
   validForZone(zone) {
     let { series } = this
+    let threshold = series.length > 2 ? 2 : 1
 
-    return series.some((s) => s.validForZone(zone))
+    return series.filter((s) => s.validForZone(zone)).length >= threshold
   }
 
   dataForZone(zone, intl) {

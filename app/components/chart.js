@@ -23,23 +23,6 @@ export default class ChartComponent extends Component {
   @tracked
   dataError = null
 
-  get error() {
-    let {
-      args: { chart, zone },
-      dataError
-    } = this
-
-    if (!chart) {
-      return 'app.errors.no-chart'
-    }
-
-    if (!zone) {
-      return 'app.errors.no-zone'
-    }
-
-    return dataError
-  }
-
   getChartConfig() {
     let {
       args: { chart, zone, title },
