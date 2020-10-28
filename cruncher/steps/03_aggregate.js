@@ -24,7 +24,7 @@ function createIntermediateZones(data) {
           : levels.slice(0, levels.length - 1).join('|')
 
       if (!parent) {
-        console.warn(`No parent for ${levels.join('|')}`)
+        console.warn(`  ! no parent for ${levels.join('|')}`)
         parent = 'World'
       }
 
@@ -58,22 +58,35 @@ function aggregateZone(zone, data) {
   let { points, meta } = data.find((z) => z.zone === zone)
 
   // Extract available fields from children
-  let aggregateFields = union(...children.map((c) => c.meta.fields))
+  let allChildFields = union(...children.map((c) => c.meta.fields))
 
-  // Remove fields that we already have
+  // Aggregate fields that are in 90% of children
+  let aggregateFields = new Set(
+    [...allChildFields].filter(
+      (field) =>
+        children.filter((c) => c.meta.fields.includes(field)).length /
+          children.length >
+        0.9
+    )
+  )
+
+  // Do not aggregate fields that parent already has
   for (let field of meta.fields) {
     aggregateFields.delete(field)
   }
 
   aggregateFields = [...aggregateFields]
-  meta.fields = [...new Set([...meta.fields, ...aggregateFields])]
+  meta.fields = [...union(meta.fields, aggregateFields)]
 
   if (!aggregateFields.length) {
-    console.warn(`  ${zone}: nothing to aggregate`)
-    console.warn(`    already have: ${meta.fields.join(', ')}`)
+    console.warn(`  ! nothing to aggregate in ${zone}`)
 
-    for (let c of children) {
-      console.warn(`    in ${c.zone}: ${c.meta.fields.join(', ')}`)
+    if (process.env.DEBUG_OUTPUT) {
+      console.warn(`    already have: ${meta.fields.join(', ')}`)
+
+      for (let c of children) {
+        console.warn(`    in ${c.zone}: ${c.meta.fields.join(', ')}`)
+      }
     }
 
     return

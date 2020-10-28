@@ -140,6 +140,15 @@ function union(...sets) {
   return output
 }
 
+function slugify(s) {
+  return s
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\W/g, '-')
+    .replace(/-+/g, '-')
+    .toLowerCase()
+}
+
 export {
   DATA_DIR,
   parseCSV,
@@ -149,5 +158,6 @@ export {
   nextByDate,
   debugOutput,
   intersect,
-  union
+  union,
+  slugify
 }

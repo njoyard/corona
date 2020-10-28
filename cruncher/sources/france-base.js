@@ -24,7 +24,7 @@ export default class DataGouvFrSource {
 
       csvLines.shift()
 
-      for (let [code, , departement, , region] of csvLines) {
+      for (let [code, type, departement, , region] of csvLines) {
         let pop = population[departement]
 
         if (!(departement in population)) {
@@ -34,7 +34,7 @@ export default class DataGouvFrSource {
 
         departements[code] = departements[`0${code}`] = {
           departement,
-          region: region || 'Outre-Mer',
+          region: type === 'DPT' ? region : 'Outre-Mer',
           population: pop
         }
       }
