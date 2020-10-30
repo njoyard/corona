@@ -1,12 +1,14 @@
 app:
   title: Graphiques Covid-19
   starting: Chargement...
+
   chartTypes: Type de graphique
   chartOptions: Options
   multiChart:
     title: Graphiques multiples
     onHint: Désactiver pour afficher un seul graphique pour la zone sélectionnée
     offHint: Activer pour afficher un graphique par région dans la zone sélectionnée
+
   about:
     menuHeader: À propos
     menuEntry: Informations
@@ -22,6 +24,7 @@ app:
     sources: Sources de données
     sourceNames:
       csse: Center for Systems Science and Engineering (CSSE) de l'université Johns Hopkins
+      ecdc: Centre Européen pour la Prévention et le Contrôle des Maladies (ECDC)
       spf: Santé Publique France sur la plateforme data.gouv.fr
       lizurey: Hiérarchie des départements et régions françaises par César Lizurey sur la plateforme data.gouv.fr
     devInfo:
@@ -35,10 +38,64 @@ app:
 
   source: Code source
   data: Données
+
   errors:
     no-zone: Veuillez sélectionner une zone
     no-chart: Veuillez sélectionner un graphique
     no-data: Aucune donnée pour ce graphique
+
+custom:
+  add: Graphique personnalisé
+  edit: 'Graphique personnalisé "{chart}"'
+  new: Nouveau graphique
+  save: Enregistrer
+  invalid: Veuillez corriger les erreurs pour pouvoir enregistrer
+  delete: Supprimer
+  properties: Propriétés du graphique
+  title: Titre
+  description: Description
+  stacked: Empiler les barres
+  preview: Prévisualisation
+  series: Séries de données
+  expression: Expression
+  label: Libellé
+  type: Type
+  scale: Échelle
+  color: Couleur
+  add-series: Ajouter une série
+  new-series: Nouvelle série
+  types:
+    line: Ligne
+    points: Points
+    bar: Barres
+  scales:
+    count: Nombre
+    percent: Pourcentage
+    log: Logarithmique
+  help:
+    headline: Écrire les expressions de séries
+    intro: |
+      Une expression de série peut être un nombre comme <code>-3.14</code>, le nom d'un champ comme <code>confirmed</code>,
+      ou un appel de fonction comme <code>change(deceased)</code>. Les arguments des fonctions sont aussi des expressions,
+      de sorte que les appels peuvent être imbriqués, comme dans <code>ratio(confirmed, scale(deceased, 20))</code>.
+      Tout espace est ignoré.
+    fields: 'Les noms de champs suivants sont disponibles, certains uniquement dans certaines zones:'
+    funcs: 'Les fonctions suivantes sont disponibles:'
+    scale: multiplie deux expressions
+    ratio: divise <code><i>num</i></code> par <code><i>denom</i></code>, ou aucune valeur quand <code><i>denom</i></code> est zéro
+    coalesce: renvoie la première expression ayant une valeur
+    change: renvoie l'évolution de l'expression par rapport au jour précédent, ou aucune valeur quand l'expression n'en a pas
+    weekly: renvoie la moyenne glissante sur 7 jours de l'expression, centrée sur le jour actuel, en excluant les valeurs vides
+    accumulate: accumule (additionne) les valeurs dans le temps
+    nonzero: exclut les points pour lesquels l'expression vaut zéro
+    inverse: inverse multiplicatif (identique à <code>ratio(1, expr)</code>)
+    reverse: inverse additif (identique à <code>scale(-1, expr)</code>)
+  not-previewable: Impossible de dessiner le graphique, aucune série n'est valide
+  errors:
+    syntax: Expression invalide
+    unknown-function: Fonction "{func}" inconnue
+    invalid-arg-count: La fonction "{func}" attend {expected} arguments, {actual} reçus
+    invalid-field: Champ "{field}" inconnu
 
 subdivision:
   continent: Continent

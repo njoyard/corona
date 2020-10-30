@@ -50,7 +50,6 @@ custom:
   new: New custom chart
   save: Save
   invalid: Fix errors to be able to save
-  cancel: Cancel
   delete: Delete
   properties: Chart properties
   title: Title
@@ -97,7 +96,6 @@ custom:
     unknown-function: Unknown function "{func}"
     invalid-arg-count: Function "{func}" expects {expected} arguments, got {actual}
     invalid-field: Unknown field "{field}"
-    series: 'On series "{series}": {error}'
 
 subdivision:
   continent: Continent
