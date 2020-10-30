@@ -1,10 +1,33 @@
 import { DateTime } from 'luxon'
 
+import ChartSeries from 'corona/models/chart-series'
 import { bignum, percent } from 'corona/utils/formats'
 
 export default class Chart {
   id = null
   series = []
+  title = null
+  description = null
+  custom = null
+
+  static fromCustomRepr(repr) {
+    let { id, t: title, d: description, s: seriesReprs, k: stacked } = repr
+
+    let chart = new Chart(
+      id,
+      seriesReprs.map((r, index) =>
+        ChartSeries.fromCustomRepr(`${id}-series-${index}`, r, stacked)
+      )
+    )
+
+    Object.assign(chart, {
+      custom: repr,
+      title,
+      description
+    })
+
+    return chart
+  }
 
   constructor(id, series) {
     this.id = id
@@ -27,7 +50,7 @@ export default class Chart {
             ticks: {
               callback: scale === 'percent' ? percent(intl) : bignum(intl)
             },
-            type: 'linear'
+            type: scale === 'log' ? 'logarithmic' : 'linear'
           }
         }
 

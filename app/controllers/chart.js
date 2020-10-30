@@ -19,7 +19,7 @@ export default class ChartController extends Controller {
   @service routing
 
   /*********************************
-   * Proxies
+   * Aliases
    */
 
   get chart() {

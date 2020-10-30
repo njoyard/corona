@@ -1,8 +1,4 @@
-import config from 'corona/config/environment'
-
-const { environment } = config
-
-export function initialize(app) {
+export function initialize() {
   let versionKey = 'corona:ls-version'
   let version = localStorage.getItem(versionKey)
 
@@ -21,24 +17,11 @@ export function initialize(app) {
         localStorage.removeItem(key)
       }
     }
+  } else if (version === '1') {
+    localStorage.removeItem('corona:query-params')
   }
 
-  localStorage.setItem(versionKey, '1')
-
-  let key = 'corona:query-params'
-
-  let saved = localStorage.getItem(key)
-  if (saved && !location.search) {
-    location.search = saved
-    // Prevent the app from actually booting, browser will refresh anyways
-    app.deferReadiness()
-  }
-
-  if (environment !== 'development') {
-    setInterval(() => {
-      localStorage.setItem(key, location.search)
-    }, 1000)
-  }
+  localStorage.setItem(versionKey, '2')
 }
 
 export default {

@@ -1,12 +1,32 @@
-import { gray } from 'corona/utils/colors'
+import { gray, alpha, allColors } from 'corona/utils/colors'
 import { field } from 'corona/utils/fields'
-import { number } from 'corona/utils/formats'
+import parse from 'corona/utils/field-parser'
+import { number, percent } from 'corona/utils/formats'
 
 export default class ChartSeries {
   id = null
   field = null
   color = null
-  secondaryAxis = false
+  custom = null
+
+  static fromCustomRepr(id, repr, stacked) {
+    let { l: label, e: expr, c: colorName, t: type, s: scale } = repr
+
+    let series = new ChartSeries(id, parse(expr), {
+      label,
+      type,
+      scale,
+      stack: stacked && type === 'bar' ? 'stack' : null,
+      format: scale === 'percent' ? percent : number,
+      color: alpha(allColors[colorName], 0.75)
+    })
+
+    Object.assign(series, {
+      custom: repr
+    })
+
+    return series
+  }
 
   constructor(id, field, options = {}) {
     this.id = id
@@ -25,11 +45,11 @@ export default class ChartSeries {
   }
 
   dataForZone(zone, intl) {
-    let { id, field: f, type, color, scale, stack } = this
+    let { id, label, field: f, type, color, scale, stack } = this
 
     let dataset = {
       id,
-      label: intl.t(`fields.${id}`),
+      label: label || intl.t(`fields.${id}`),
       fill: false,
       yAxisID: scale,
       backgroundColor: color.bright,

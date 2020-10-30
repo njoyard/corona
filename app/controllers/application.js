@@ -6,7 +6,8 @@ import { tracked } from '@glimmer/tracking'
 export default class ApplicationController extends Controller {
   @service data
   @service intl
-  @service('modalsManager') modals
+  @service router
+  @service('customCharts') custom
 
   queryParams = ['multi']
 
@@ -22,11 +23,15 @@ export default class ApplicationController extends Controller {
   }
 
   /*********************************
-   * Proxies
+   * Aliases
    */
 
   get charts() {
     return this.model.dataset.charts
+  }
+
+  get customCharts() {
+    return this.custom.charts
   }
 
   get links() {
@@ -34,30 +39,33 @@ export default class ApplicationController extends Controller {
   }
 
   /*********************************
-   * Charting optons
+   * Charting options
    */
 
   @tracked multi = false
 
   /*********************************
-   * Links
+   * Custom charts
    */
+
+  @action
+  createChart() {
+    this.router.transitionTo('custom', 'new')
+  }
+
+  @action
+  editChart(chart) {
+    this.router.transitionTo('custom', chart.id)
+  }
+
+  /*********************************
+   * About & Links
+   */
+
+  @tracked showAbout = false
 
   @action
   openLink(id) {
     document.querySelector(`a.hidden-link#${id}`).click()
-  }
-
-  @action
-  showAbout() {
-    let { modals, intl } = this
-
-    modals.alert({
-      title: intl.t('app.about.title'),
-      confirm: intl.t('app.about.close'),
-      bodyComponent: 'about',
-      clickOutsideToClose: true,
-      escapeToClose: true
-    })
   }
 }

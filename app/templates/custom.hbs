@@ -1,0 +1,227 @@
+<PaperToolbar @class="md-whiteframe-1dp main-toolbar" as |toolbar|>
+  <toolbar.tools>
+    <PaperSidenavToggle as |toggleAction|>
+      <PaperButton @class="hide-gt-sm" @onClick={{fn toggleAction}} @iconButton={{true}}>
+        {{paper-icon "menu"}}
+      </PaperButton>
+    </PaperSidenavToggle>
+
+    <h2>
+      {{#if this.chart.id}}
+        {{t 'custom.edit' chart=this.chart.title}}
+      {{else}}
+        {{t 'custom.add'}}
+      {{/if}}
+    </h2>
+    <div class="flex" />
+
+    {{#if this.chart.id}}
+      <PaperButton @raised={{true}} @warn={{true}} @onClick={{this.delete}}>
+        {{t 'custom.delete'}}
+      </PaperButton>
+    {{/if}}
+
+    <PaperButton @raised={{true}} @primary={{true}} @disabled={{not this.isValid}} @onClick={{this.save}}>
+      {{#unless this.isValid}}
+        <PaperTooltip @position="left">
+          {{t 'custom.invalid'}}
+        </PaperTooltip>
+      {{/unless}}
+
+      {{t 'custom.save'}}
+    </PaperButton>
+  </toolbar.tools>
+</PaperToolbar>
+
+<div class="flex flex-grow custom-chart-container">
+  <div class="layout-row layout-xs-column">
+    <div class="layout-column flex-xs flex-gt-xs-50">
+      <PaperCard as |card|>
+        <card.title as |title|>
+          <title.text as |text|>
+            <text.headline>
+              {{t 'custom.properties'}}
+            </text.headline>
+          </title.text>
+        </card.title>
+
+        <card.content>
+          <div class="layout">
+            <PaperInput @label={{t 'custom.title'}} @value={{this.chart.title}} @onChange={{fn (mut this.chart.title)}} />
+            <PaperInput @label={{t 'custom.description'}} @value={{this.chart.description}} @onChange={{fn (mut this.chart.description)}} />
+          </div>
+
+          {{#if this.hasBars}}
+            <div class="layout">
+              <PaperCheckbox @value={{this.chart.stacked}} @onChange={{fn (mut this.chart.stacked)}}>
+                {{t 'custom.stacked'}}
+              </PaperCheckbox>
+            </div>
+          {{/if}}
+        </card.content>
+      </PaperCard>
+
+      <PaperCard as |card|>
+        <card.title as |title|>
+          <title.text as |text|>
+            <text.headline>
+              {{t 'custom.preview'}}
+            </text.headline>
+
+            {{#if this.isPreviewable}}
+              <text.subhead>
+                <ZoneBreadcrumbs @inline={{true}} @zone={{this.previewZone}} @onSelect={{fn (mut this.previewZone)}} />
+              </text.subhead>
+            {{/if}}
+          </title.text>
+        </card.title>
+
+        <card.content>
+          {{#if this.isPreviewable}}
+             <Chart
+                @isPreview={{true}}
+                @zone={{this.previewZone.zone}}
+                @chart={{this.preview.chart}} />
+          {{else}}
+            {{t 'custom.not-previewable'}}
+          {{/if}}
+        </card.content>
+      </PaperCard>
+    </div>
+
+    <div class="layout-column flex-xs flex-gt-xs-50">
+      <PaperCard as |card|>
+        <card.title as |title|>
+          <title.text as |text|>
+            <text.headline>
+              {{t 'custom.series'}}
+            </text.headline>
+          </title.text>
+        </card.title>
+
+        <card.content @class="custom-series-form">
+          {{#each this.series as |series|}}
+            <PaperCard as |card|>
+              <card.content @class="series">
+                <div class="layout series-expression">
+                  <PaperInput
+                    @class="flex"
+                    @placeholder={{t 'custom.expression'}}
+                    @value={{series.expr}}
+                    @onChange={{fn (mut series.expr)}}
+                    @isTouched={{true}}
+                    @errors={{series.errors}} />
+                </div>
+
+                <div class="layout series-options">
+                  <PaperInput @label={{t 'custom.label'}} @value={{series.label}} @onChange={{fn (mut series.label)}} />
+
+                  <PaperSelect @label={{t 'custom.type'}} @selected={{series.type}} @options={{this.types}} @onChange={{fn (mut series.type)}} as |option|>
+                    {{t (concat 'custom.types.' option)}}
+                  </PaperSelect>
+
+                  <PaperSelect @label={{t 'custom.scale'}} @selected={{series.scale}} @options={{this.scales}} @onChange={{fn (mut series.scale)}} as |option|>
+                    {{t (concat 'custom.scales.' option)}}
+                  </PaperSelect>
+
+                  <PaperSelect @label={{t 'custom.color'}} @selected={{series.color}} @options={{this.colors}} @onChange={{fn (mut series.color)}} as |option|>
+                    <div class="color-option" style={{concat "border-color: " option.bright}}></div>
+                  </PaperSelect>
+
+                  <div class="flex" />
+
+                  {{#if (gt this.series.length 1)}}
+                    <PaperButton @iconButton={{true}} @onClick={{fn this.delSeries series}}>
+                      <PaperIcon @icon="delete" />
+                    </PaperButton>
+                  {{/if}}
+                </div>
+
+              </card.content>
+            </PaperCard>
+          {{/each}}
+        </card.content>
+
+        <card.actions>
+          <PaperButton @onClick={{this.addSeries}}>
+            {{t 'custom.add-series'}}
+          </PaperButton>
+        </card.actions>
+      </PaperCard>
+
+      <PaperCard as |card|>
+        <card.title as |title|>
+          <title.text as |text|>
+            <text.headline>
+              {{t 'custom.help.headline'}}
+            </text.headline>
+          </title.text>
+        </card.title>
+
+        <card.content @class="custom-charts-help">
+          <div class="layout-column">
+            <p>
+              {{!-- template-lint-disable no-triple-curlies --}}
+              {{{t 'custom.help.intro' htmlSafe=true}}}
+            </p>
+
+            <p>
+              {{t 'custom.help.fields'}}
+              <div class="indent">
+                {{#each this.fieldNames as |name|}}
+                  <code>{{name}}</code>
+                {{/each}}
+              </div>
+            </p>
+
+            <p>
+              {{t 'custom.help.funcs'}}
+              <table>
+                <tbody>
+                  {{!-- template-lint-disable no-bare-strings --}}
+                  {{!-- template-lint-disable no-triple-curlies --}}
+                  <tr>
+                    <td><code>scale(<i>expr</i>, <i>expr</i>)</code></td>
+                    <td>{{{t 'custom.help.scale' htmlSafe=true}}}</td>
+                  </tr>
+                  <tr>
+                    <td><code>ratio(<i>num</i>, <i>denom</i>)</code></td>
+                    <td>{{{t 'custom.help.ratio' htmlSafe=true}}}</td>
+                  </tr>
+                  <tr>
+                    <td><code>coalesce(<i>expr</i>, <i>expr</i>)</code></td>
+                    <td>{{{t 'custom.help.coalesce' htmlSafe=true}}}</td>
+                  </tr>
+                  <tr>
+                    <td><code>change(<i>expr</i>)</code></td>
+                    <td>{{{t 'custom.help.change' htmlSafe=true}}}</td>
+                  </tr>
+                  <tr>
+                    <td><code>weekly(<i>expr</i>)</code></td>
+                    <td>{{{t 'custom.help.weekly' htmlSafe=true}}}</td>
+                  </tr>
+                  <tr>
+                    <td><code>accumulate(<i>expr</i>)</code></td>
+                    <td>{{{t 'custom.help.accumulate' htmlSafe=true}}}</td>
+                  </tr>
+                  <tr>
+                    <td><code>nonzero(<i>expr</i>)</code></td>
+                    <td>{{{t 'custom.help.nonzero' htmlSafe=true}}}</td>
+                  </tr>
+                  <tr>
+                    <td><code>inverse(<i>expr</i>)</code></td>
+                    <td>{{{t 'custom.help.inverse' htmlSafe=true}}}</td>
+                  </tr>
+                  <tr>
+                    <td><code>reverse(<i>expr</i>)</code></td>
+                    <td>{{{t 'custom.help.reverse' htmlSafe=true}}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </p>
+          </div>
+        </card.content>
+      </PaperCard>
+    </div>
+  </div>
+</div>

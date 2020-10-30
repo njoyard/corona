@@ -25,8 +25,8 @@ export default class ApplicationRoute extends Route {
   }
 
   redirect(model, transition) {
-    if (transition.to.name === 'index' && model.charts.length > 0) {
-      this.transitionTo('chart', model.charts.firstObject.id)
+    if (transition.to.name === 'index' && model.dataset.charts.length > 0) {
+      this.transitionTo('chart', model.dataset.charts.firstObject.id)
     }
   }
 }

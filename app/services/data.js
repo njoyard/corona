@@ -24,6 +24,8 @@ export default class DataService extends Service {
   sources = {
     csse:
       '//github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series',
+    ecdc:
+      '//www.ecdc.europa.eu/en/publications-data/download-data-hospital-and-icu-admission-rates-and-current-occupancy-covid-19',
     spf:
       '//www.data.gouv.fr/fr/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/',
     lizurey:
@@ -61,8 +63,15 @@ export default class DataService extends Service {
     return this._dataPromise
   }
 
+  _dataset = null
   get dataset() {
     let { dataPromise, charts, intl } = this
-    return dataPromise.then((data) => new Dataset(data, charts, intl))
+    return dataPromise.then(
+      (data) => (this._dataset = new Dataset(data, charts, intl))
+    )
+  }
+
+  addChart(chart) {
+    this._dataset.charts.pushObject(chart)
   }
 }

@@ -25,7 +25,7 @@ export default class ChartComponent extends Component {
 
   getChartConfig() {
     let {
-      args: { chart, zone, title },
+      args: { chart, zone, title, isPreview },
       intl
     } = this
 
@@ -43,7 +43,8 @@ export default class ChartComponent extends Component {
             text: ' '
           }
         },
-        chart.getOptions(intl)
+        chart.getOptions(intl),
+        isPreview ? { maintainAspectRatio: true, aspectRatio: 16 / 9 } : {}
       ),
       data
     }

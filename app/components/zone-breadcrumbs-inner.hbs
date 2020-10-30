@@ -1,0 +1,45 @@
+{{#if @zone.parent}}
+  <ZoneParent @zone={{@zone.parent}} @onSelect={{this.select}} />
+  <PaperIcon @icon="chevron_right" />
+{{/if}}
+
+{{#if @zone.siblings.length}}
+  <PaperMenu as |menu|>
+    <menu.trigger>
+      <a>
+        {{@zone.label}}
+        <PaperIcon @icon="arrow_drop_down" />
+      </a>
+    </menu.trigger>
+
+    <menu.content @dense={{true}} as |content|>
+      {{#each @zone.siblings as |sibling|}}
+        <content.menu-item @onClick={{fn this.select sibling}}>
+          {{sibling.label}}
+        </content.menu-item>
+      {{/each}}
+    </menu.content>
+  </PaperMenu>
+{{else}}
+  {{@zone.label}}
+{{/if}}
+
+{{#if @zone.children.length}}
+  <PaperIcon @icon="chevron_right" @class="muted" />
+  <PaperMenu as |menu|>
+    <menu.trigger>
+      <a class="muted">
+        {{t @zone.subdivKey}}
+        <PaperIcon @icon="arrow_drop_down" />
+      </a>
+    </menu.trigger>
+
+    <menu.content @dense={{true}} as |content|>
+      {{#each @zone.children as |child|}}
+        <content.menu-item @onClick={{fn this.select child}}>
+          {{child.label}}
+        </content.menu-item>
+      {{/each}}
+    </menu.content>
+  </PaperMenu>
+{{/if}}

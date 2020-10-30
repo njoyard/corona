@@ -1,14 +1,44 @@
-<p class="preformatted">{{t 'app.about.text'}}</p>
+{{#if @show}}
+  <PaperDialog @onClose={{@onClose}} @clickOutsideToClose={{true}} @escapeToClose={{true}}>
+    <PaperToolbar>
+      <PaperToolbarTools>
+        <h2>{{t 'app.about.title'}}</h2>
+        <span class="flex"></span>
+        <PaperButton @iconButton={{true}} @onClick={{@onClose}}>
+          <PaperIcon @icon="close" />
+        </PaperButton>
+      </PaperToolbarTools>
+    </PaperToolbar>
 
-<h3>{{t 'app.about.sources'}}</h3>
+    <PaperDialogContent>
+      <p class="preformatted">{{t 'app.about.text'}}</p>
 
-<ul>
-  {{#each-in this.sources as |key link|}}
-    <li><a href="{{link}}" target="_blank" rel="noopener noreferer">{{t (concat 'app.about.sourceNames.' key)}}</a></li>
-  {{/each-in}}
-</ul>
+      <h3>{{t 'app.about.sources'}}</h3>
 
-<h3>{{t 'app.about.devInfo.title'}}</h3>
-<p>{{{t 'app.about.devInfo.repo' htmlSafe=true}}}</p>
-<p>{{{t 'app.about.devInfo.logo' htmlSafe=true}}}</p>
-<p><i>{{t 'app.about.built' buildDate=this.buildDate}}</i></p>
+      <ul>
+        {{#each-in this.sources as |key link|}}
+          <li><a href="{{link}}" target="_blank" rel="noopener noreferrer">{{t (concat 'app.about.sourceNames.' key)}}</a></li>
+        {{/each-in}}
+      </ul>
+
+      <h3>{{t 'app.about.devInfo.title'}}</h3>
+      <p>
+        {{!-- template-lint-disable no-triple-curlies --}}
+        {{{t 'app.about.devInfo.repo' htmlSafe=true}}}
+      </p>
+      <p>
+        {{!-- template-lint-disable no-triple-curlies --}}
+        {{{t 'app.about.devInfo.logo' htmlSafe=true}}}
+      </p>
+      <p><i>{{t 'app.about.built' buildDate=this.buildDate}}</i></p>
+    </PaperDialogContent>
+
+
+    <PaperDialogActions @class="layout-row">
+      <span class="flex"></span>
+      <PaperButton @onClick={{@onClose}}>
+        {{t 'app.about.close'}}
+      </PaperButton>
+    </PaperDialogActions>
+  </PaperDialog>
+{{/if}}

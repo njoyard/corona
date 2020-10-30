@@ -14,4 +14,9 @@ export default class ChartListComponent extends Component {
   select(chart) {
     this.routing.selectChart(chart)
   }
+
+  @action
+  edit(chart) {
+    this.routing.editChart(chart)
+  }
 }

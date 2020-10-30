@@ -18,6 +18,11 @@
       <PaperList>
         <PaperSubheader>{{t 'app.chartTypes'}}</PaperSubheader>
         <ChartList @charts={{this.charts}} />
+        <ChartList @charts={{this.customCharts}} />
+        <PaperItem @onClick={{this.createChart}}>
+          <PaperIcon @icon="add" />
+          <p>{{t 'custom.add'}}</p>
+        </PaperItem>
 
         <PaperDivider />
         <PaperSubheader>{{t 'app.chartOptions'}}</PaperSubheader>
@@ -39,7 +44,7 @@
 
         <PaperDivider />
         <PaperSubheader>{{t 'app.about.menuHeader'}}</PaperSubheader>
-        <PaperItem @onClick={{this.showAbout}}>
+        <PaperItem @onClick={{fn (mut this.showAbout) true}}>
           <PaperIcon @icon="help" />
           <p>{{t 'app.about.menuEntry'}}</p>
         </PaperItem>
@@ -67,5 +72,4 @@
   <a class="hidden-link" id="{{link.id}}" href="{{link.href}}" rel="noopener noreferrer" target="_blank" />
 {{/each}}
 
-<PaperToaster />
-<ModalsContainer />
+<About @show={{this.showAbout}} @onClose={{fn (mut this.showAbout) false}} />

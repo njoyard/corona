@@ -11,8 +11,12 @@ export default class LegendComponent extends Component {
 
     let series = this.args.chart.series
 
-    return series.map(({ id, color, type }) => {
-      return { label: this.intl.t(`fields.${id}`), color: color.bright, type }
+    return series.map(({ label, id, color, type }) => {
+      return {
+        label: label || this.intl.t(`fields.${id}`),
+        color: color.bright,
+        type
+      }
     })
   }
 }

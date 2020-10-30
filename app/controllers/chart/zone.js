@@ -4,8 +4,9 @@ import { inject as service } from '@ember/service'
 
 export default class ChartZoneController extends Controller {
   @service routing
+
   /*********************************
-   * Proxies
+   * Aliases
    */
 
   get chart() {

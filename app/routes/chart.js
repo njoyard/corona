@@ -2,12 +2,18 @@ import Route from '@ember/routing/route'
 import { inject as service } from '@ember/service'
 
 export default class ChartRoute extends Route {
-  @service intl
-  @service('paperToaster') toast
+  @service router
+  @service customCharts
 
   model({ chart_id }) {
     let { dataset, multi } = this.modelFor('application')
-    let chart = dataset.charts.find(({ id }) => id === chart_id)
+    let chart =
+      dataset.charts.find(({ id }) => id === chart_id) ||
+      this.customCharts.get(chart_id)
+
+    if (!chart) {
+      return null
+    }
 
     return {
       world: dataset.world,
@@ -18,8 +24,11 @@ export default class ChartRoute extends Route {
   }
 
   redirect(model, transition) {
-    let { intl, toast } = this
-    let { root, world } = model
+    if (!model) {
+      this.router.transitionTo('application')
+    }
+
+    let { root } = model
 
     if (transition.to.name === 'chart.index') {
       // Stay in the current zone if any and if available in this dataset, otherwise switch to dataset root zone
@@ -31,13 +40,6 @@ export default class ChartRoute extends Route {
         if (zoneRoute) {
           if (root.has(zoneRoute.params.zone_id)) {
             zone = zoneRoute.params.zone_id
-          } else {
-            toast.show(
-              intl.t('app.switchZones', {
-                from: world.find(zoneRoute.params.zone_id).label,
-                to: root.label
-              })
-            )
           }
         }
       }

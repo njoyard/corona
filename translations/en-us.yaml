@@ -1,12 +1,14 @@
 app:
   title: Covid-19 Charts
   starting: Starting...
+
   chartTypes: Chart type
   chartOptions: Chart options
   multiChart:
     title: Multiple charts
     onHint: Disable to only display one chart for the selected zone
     offHint: Enable to display one chart per region in the selected zone
+
   about:
     menuHeader: About
     menuEntry: Information
@@ -22,6 +24,7 @@ app:
     sources: Data sources
     sourceNames:
       csse: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University
+      ecdc: European Centre for Disease Prevention and Control (ECDC)
       spf: Santé Publique France on the data.gouv.fr platform
       lizurey: French department/region hierarchy by César Lizurey on the data.gouv.fr platform
     devInfo:
@@ -33,13 +36,68 @@ app:
         Coronavirus icon courtesy of <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferer">Becris</a>,
         shared under the <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0 license</a>.
 
-  switchZones: "No data available in {from} for this chart, switching to {to}."
   source: Source code
   data: Open data
+
   errors:
     no-zone: Please select a zone
     no-chart: Please select a chart
     no-data: No data for this chart
+
+custom:
+  add: Add custom chart
+  edit: 'Edit custom chart "{chart}"'
+  new: New custom chart
+  save: Save
+  invalid: Fix errors to be able to save
+  cancel: Cancel
+  delete: Delete
+  properties: Chart properties
+  title: Title
+  description: Description
+  stacked: Stack bars
+  preview: Preview
+  series: Data series
+  expression: Expression
+  label: Label
+  type: Type
+  scale: Scale
+  color: Color
+  add-series: Add series
+  new-series: New series
+  types:
+    line: Line
+    points: Points
+    bar: Bars
+  scales:
+    count: Number
+    percent: Percent
+    log: Logarithmic
+  help:
+    headline: Writing series expressions
+    intro: |
+      A series expression can be a number like <code>-3.14</code>, a field name like <code>confirmed</code>,
+      or a function call like <code>change(deceased)</code>. Function arguments are also expressions, as such
+      function calls may be nested, as in <code>ratio(confirmed, scale(deceased, 20))</code>. Any whitespace
+      is ignored.
+    fields: 'The following field names are available, some of them not in all zones:'
+    funcs: 'The following functions are available:'
+    scale: multiplies two expressions
+    ratio: divides <code><i>num</i></code> by <code><i>denom</i></code>, has no value when <code><i>denom</i></code> is zero
+    coalesce: returns the first expression that has a value
+    change: returns the change of the expression compared to the previous day, has no value when the current or previous days don't
+    weekly: returns the 7-day moving average of the expression, centered around the current day, and excluding missing values
+    accumulate: accumulates values over time
+    nonzero: excludes points where expression is zero
+    inverse: multiplicative inverse (same as <code>ratio(1, expr)</code>)
+    reverse: additive inverse (same as <code>scale(-1, expr)</code>)
+  not-previewable: 'Cannot render preview graph, no valid series defined.'
+  errors:
+    syntax: Invalid expression
+    unknown-function: Unknown function "{func}"
+    invalid-arg-count: Function "{func}" expects {expected} arguments, got {actual}
+    invalid-field: Unknown field "{field}"
+    series: 'On series "{series}": {error}'
 
 subdivision:
   continent: Continent

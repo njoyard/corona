@@ -62,4 +62,17 @@ function alpha(color, opacity) {
   return alpha
 }
 
-export { yellow, orange, brown, green, blue, purple, red, gray, alpha }
+const allColors = { yellow, orange, brown, green, blue, purple, red, gray }
+
+export {
+  yellow,
+  orange,
+  brown,
+  green,
+  blue,
+  purple,
+  red,
+  gray,
+  alpha,
+  allColors
+}

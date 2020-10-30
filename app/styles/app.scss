@@ -1,7 +1,11 @@
 $primary: 'blue-grey';
+$accent: 'light-green';
+$warn: 'red';
+
 $font-size: 9px;
 
 @import 'ember-paper';
+@import 'ember-paper-expansion-panel';
 
 .loading-container {
   text-align: center;
@@ -142,17 +146,8 @@ md-toolbar.md-default-theme.main-toolbar {
     }
   }
 
-  .muted {
-    opacity: 0.5;
-  }
-
   md-icon {
     color: $dark-contrast-color;
-  }
-
-  .zone-breadcrumb a:hover {
-    cursor: pointer;
-    text-decoration: underline;
   }
 
   md-input-container {
@@ -163,6 +158,11 @@ md-toolbar.md-default-theme.main-toolbar {
   md-select-value {
     border: none !important;
   }
+}
+
+.zone-breadcrumb a:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .legend {
@@ -188,4 +188,53 @@ md-toolbar.md-default-theme.main-toolbar {
 
 .preformatted {
   white-space: pre-wrap;
+}
+
+.muted {
+  opacity: 0.5;
+}
+
+.custom-chart-container {
+  padding: $baseline-grid;
+  overflow-y: auto;
+}
+
+.custom-series-form {
+  md-input-container {
+    margin: 0 0 $baseline-grid 0;
+  }
+
+  .series-expression input {
+    color: paper-color($primary, '500');
+
+    font-family: monospace;
+  }
+
+  .series-options {
+    .md-errors-spacer {
+      display: none;
+    }
+  }
+}
+
+.color-option {
+  border: 2px solid;
+  height: 0;
+  width: 32px;
+}
+
+.custom-charts-help {
+  code {
+    background-color: paper-color($primary, '50');
+    border: 1px solid paper-color($primary, '200');
+    border-radius: 3px;
+
+    color: paper-color($primary, '500');
+
+    white-space: nowrap;
+  }
+
+  .indent {
+    margin-left: 16px;
+  }
 }

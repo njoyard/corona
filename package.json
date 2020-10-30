@@ -47,7 +47,7 @@
     "ember-load-initializers": "^2.1.1",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-paper": "^1.0.0-beta.35",
-    "ember-paper-modals-manager": "^1.9.1",
+    "ember-paper-expansion-panel": "^0.0.4",
     "ember-qunit": "^4.6.0",
     "ember-resolver": "^8.0.2",
     "ember-source": "~3.22.0",
@@ -68,6 +68,7 @@
     "fs-extra": "^9.0.1",
     "luxon": "^1.25.0",
     "node-fetch": "^2.6.1",
+    "pegjs": "^0.10.0",
     "require-directory": "^2.1.1"
   },
   "engines": {
