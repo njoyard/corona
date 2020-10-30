@@ -51,6 +51,10 @@ custom:
   save: Enregistrer
   invalid: Veuillez corriger les erreurs pour pouvoir enregistrer
   delete: Supprimer
+  delete-confirm:
+    message: Supprimer le graphique "{chart}" ?
+    confirm: Supprimer
+    decline: Annuler
   properties: Propriétés du graphique
   title: Titre
   description: Description

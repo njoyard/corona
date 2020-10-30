@@ -71,24 +71,25 @@ export default class CustomChartsService extends Service {
 
   remove(id) {
     let { charts } = this
-    let chart = this.get(repr.id)
+    let chart = this.get(id)
 
     if (!chart) {
-      throw new Error(`Unknown chart: ${repr.id}`)
+      throw new Error(`Unknown chart: ${id}`)
     }
 
     charts.removeObject(chart)
     this._persist()
   }
 
-  update(repr) {
+  update(id, repr) {
     let { charts } = this
-    let chart = this.get(repr.id)
+    let chart = this.get(id)
 
     if (!chart) {
-      throw new Error(`Unknown chart: ${repr.id}`)
+      throw new Error(`Unknown chart: ${id}`)
     }
 
+    repr.id = id
     charts.replace(charts.indexOf(chart), 1, [this._toChart(repr)])
     this._persist()
 

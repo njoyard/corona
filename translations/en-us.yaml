@@ -51,6 +51,10 @@ custom:
   save: Save
   invalid: Fix errors to be able to save
   delete: Delete
+  delete-confirm:
+    message: Delete chart "{chart}"?
+    confirm: Delete
+    decline: Cancel
   properties: Chart properties
   title: Title
   description: Description

@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "chartjs-adapter-luxon": "^0.2.2",
+    "ember-paper-modals-manager": "^1.9.1",
     "esm": "^3.2.25",
     "fs-extra": "^9.0.1",
     "luxon": "^1.25.0",

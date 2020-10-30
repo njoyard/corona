@@ -11,6 +11,7 @@ import slugify from 'corona/utils/slugify'
 export default class CustomController extends Controller {
   @service customCharts
   @service intl
+  @service('modalsManager') modals
   @service router
 
   /*********************************
@@ -143,21 +144,38 @@ export default class CustomController extends Controller {
     let { isValid, chart, customCharts, router } = this
 
     if (isValid) {
-      let id = chart.id
-        ? customCharts.update(chart.repr)
+      let newId = chart.id
+        ? customCharts.update(chart.id, chart.repr)
         : customCharts.save(chart.repr)
 
-      router.transitionTo('chart', id)
+      router.transitionTo('chart', newId)
     }
   }
 
   @action
-  delete() {
+  async delete() {
     let {
-      chart: { id },
+      chart: { id, title },
       router,
-      customCharts
+      customCharts,
+      modals,
+      intl
     } = this
+
+    try {
+      await modals.confirm({
+        title: '',
+        clickOutsideToClose: true,
+        escapeToClose: true,
+        body: intl.t('custom.delete-confirm.message', { chart: title }),
+        confirm: intl.t('custom.delete-confirm.confirm'),
+        decline: intl.t('custom.delete-confirm.decline'),
+        declineButtonPrimary: true,
+        declineButtonRaised: true
+      })
+    } catch (e) {
+      return
+    }
 
     customCharts.remove(id)
     router.transitionTo('application')
