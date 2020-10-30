@@ -17,7 +17,7 @@ app:
     text: |
       This app uses data from the CSSE at John Hopkins University, and Santé Publique France.
 
-      Please note that CSSE data comes from officially reported figures, and is only indicative of the actual situation. It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
+      Please note that CSSE and ECDC data comes from officially reported figures, and is only indicative of the actual situation. It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
 
       Data is refreshed twice a day, independently of source updates.
     built: This version was built on {buildDate, date, medium} at {buildDate, time, full}
