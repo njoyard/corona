@@ -41,9 +41,6 @@ export default class CustomController extends Controller {
   }
 
   get hasBars() {
-    // force autotracking
-    this.series.get('length')
-
     return this.series.some((s) => s.type === 'bar')
   }
 
@@ -52,9 +49,6 @@ export default class CustomController extends Controller {
    */
 
   get isValid() {
-    // force autotracking
-    this.series.get('length')
-
     return this.series.every((s) => s.errors.length === 0)
   }
 
@@ -63,16 +57,10 @@ export default class CustomController extends Controller {
    */
 
   get isPreviewable() {
-    // force autotracking
-    this.series.get('length')
-
     return this.series.some((s) => s.errors.length === 0)
   }
 
   get preview() {
-    // force autotracking
-    this.series.get('length')
-
     let { isPreviewable, chart, dataset } = this
 
     if (isPreviewable) {
@@ -143,8 +131,13 @@ export default class CustomController extends Controller {
     let { isValid, chart, customCharts, router } = this
 
     if (isValid) {
-      let id = customCharts.save(chart.repr)
-      router.transitionTo('chart', id)
+      if (chart.id) {
+        customCharts.update(chart.id, chart.repr)
+        router.transitionTo('chart', chart.id)
+      } else {
+        let id = customCharts.save(chart.repr)
+        router.transitionTo('chart', id)
+      }
     }
   }
 

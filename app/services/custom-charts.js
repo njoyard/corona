@@ -1,5 +1,6 @@
 import { A } from '@ember/array'
 import Service from '@ember/service'
+import { tracked } from '@glimmer/tracking'
 
 import Chart from 'corona/models/chart'
 import chartDefinitions from 'corona/utils/chart-definitions'
@@ -8,7 +9,7 @@ import slugify from 'corona/utils/slugify'
 const LS_KEY = 'corona:custom-charts'
 
 export default class CustomChartsService extends Service {
-  charts = A([])
+  @tracked charts = A([])
 
   constructor() {
     super()
@@ -57,6 +58,8 @@ export default class CustomChartsService extends Service {
 
     charts.pushObject(this._toChart(repr))
     this._persist()
+
+    return slug
   }
 
   remove(id) {
@@ -69,7 +72,7 @@ export default class CustomChartsService extends Service {
   update(id, repr) {
     let { charts } = this
     let chart = this.get(repr)
-    charts.replace(charts.indexOf(chart), this._toChart(repr))
+    charts.replace(charts.indexOf(chart), 1, [this._toChart(repr)])
     this._persist()
   }
 }

@@ -8,13 +8,13 @@ export default class CustomChart {
   @tracked title
   @tracked description
   @tracked stacked = false
-
-  series = A([])
+  @tracked series = A([])
 
   get repr() {
-    let { title, description, series, stacked } = this
+    let { id, title, description, series, stacked } = this
 
     return {
+      id,
       t: title,
       d: description,
       s: series.filter((s) => s.errors.length === 0).map((s) => s.repr),
