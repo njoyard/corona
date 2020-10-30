@@ -47,7 +47,7 @@
 
         <card.content>
           <div class="layout">
-            <PaperInput @label={{t 'custom.title'}} @value={{this.chart.title}} @onChange={{fn (mut this.chart.title)}} />
+            <PaperInput @label={{t 'custom.title'}} @value={{this.chart.title}} @onChange={{fn (mut this.chart.title)}} @errors={{this.titleErrors}} />
             <PaperInput @label={{t 'custom.description'}} @value={{this.chart.description}} @onChange={{fn (mut this.chart.description)}} />
           </div>
 

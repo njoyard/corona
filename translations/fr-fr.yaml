@@ -92,6 +92,7 @@ custom:
     reverse: inverse additif (identique à <code>scale(-1, expr)</code>)
   not-previewable: Impossible de dessiner le graphique, aucune série n'est valide
   errors:
+    missing-title: Un titre est nécessaire
     syntax: Expression invalide
     unknown-function: Fonction "{func}" inconnue
     invalid-arg-count: La fonction "{func}" attend {expected} arguments, {actual} reçus

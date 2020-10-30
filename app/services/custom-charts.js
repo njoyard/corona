@@ -19,10 +19,17 @@ export default class CustomChartsService extends Service {
     try {
       reprs = JSON.parse(localStorage.getItem(LS_KEY)) || []
     } catch (e) {
+      console.warn('Error reloading charts from localStorage')
       reprs = []
     }
 
-    this.charts.pushObjects(reprs.map((r) => this._toChart(r)))
+    for (let repr of reprs) {
+      try {
+        this.charts.pushObject(this._toChart(repr))
+      } catch (e) {
+        console.warn('Skipping unimportable chart:', repr)
+      }
+    }
   }
 
   _toChart(repr) {
@@ -64,15 +71,27 @@ export default class CustomChartsService extends Service {
 
   remove(id) {
     let { charts } = this
+    let chart = this.get(repr.id)
 
-    charts.removeObject(this.get(id))
+    if (!chart) {
+      throw new Error(`Unknown chart: ${repr.id}`)
+    }
+
+    charts.removeObject(chart)
     this._persist()
   }
 
-  update(id, repr) {
+  update(repr) {
     let { charts } = this
-    let chart = this.get(repr)
+    let chart = this.get(repr.id)
+
+    if (!chart) {
+      throw new Error(`Unknown chart: ${repr.id}`)
+    }
+
     charts.replace(charts.indexOf(chart), 1, [this._toChart(repr)])
     this._persist()
+
+    return repr.id
   }
 }

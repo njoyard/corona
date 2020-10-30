@@ -6,6 +6,7 @@ import { tracked } from '@glimmer/tracking'
 import Chart from 'corona/models/chart'
 import CustomSeries from 'corona/models/custom-series'
 import { allColors } from 'corona/utils/colors'
+import slugify from 'corona/utils/slugify'
 
 export default class CustomController extends Controller {
   @service customCharts
@@ -49,7 +50,18 @@ export default class CustomController extends Controller {
    */
 
   get isValid() {
-    return this.series.every((s) => s.errors.length === 0)
+    return (
+      this.titleErrors.length === 0 &&
+      this.series.every((s) => s.errors.length === 0)
+    )
+  }
+
+  get titleErrors() {
+    if (slugify(this.chart.title) === '') {
+      return [this.intl.t('custom.errors.missing-title')]
+    }
+
+    return []
   }
 
   /*********************************
@@ -131,13 +143,11 @@ export default class CustomController extends Controller {
     let { isValid, chart, customCharts, router } = this
 
     if (isValid) {
-      if (chart.id) {
-        customCharts.update(chart.id, chart.repr)
-        router.transitionTo('chart', chart.id)
-      } else {
-        let id = customCharts.save(chart.repr)
-        router.transitionTo('chart', id)
-      }
+      let id = chart.id
+        ? customCharts.update(chart.repr)
+        : customCharts.save(chart.repr)
+
+      router.transitionTo('chart', id)
     }
   }
 

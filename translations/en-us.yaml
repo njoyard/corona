@@ -92,6 +92,7 @@ custom:
     reverse: additive inverse (same as <code>scale(-1, expr)</code>)
   not-previewable: 'Cannot render preview graph, no valid series defined.'
   errors:
+    missing-title: Title is required
     syntax: Invalid expression
     unknown-function: Unknown function "{func}"
     invalid-arg-count: Function "{func}" expects {expected} arguments, got {actual}
