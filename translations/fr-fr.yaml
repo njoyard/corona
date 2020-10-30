@@ -82,7 +82,7 @@ custom:
       Les expressions de séries sont des expression arithmétiques pouvant contenir des nombres comme <code>-3.14</code>,
       le nom de champs comme <code>confirmed</code> ou des appels de fonction comme <code>change(deceased)</code>.
       Les arguments des fonctions sont aussi des expressions, de sorte que les appels peuvent être imbriqués, comme dans
-      <code>weekly(-confirmed, 1 + (change(tests - deceased) * 20) / 3)</code>. Les espaces sont ignorés, et les règles de priorité
+      <code>coalesce(-confirmed, 1 + (change(tests - deceased) * 20) / 3)</code>. Les espaces sont ignorés, et les règles de priorité
       usuelles s'appliquent (utiliser des parenthèses si nécessaire).
     fields: 'Les noms de champs suivants sont disponibles, certains uniquement dans certaines zones:'
     funcs: 'Les fonctions suivantes sont disponibles:'

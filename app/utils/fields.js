@@ -286,6 +286,23 @@ class Weekly extends Field {
   }
 }
 
+class NonZero extends Field {
+  constructor(field) {
+    super((zone) => {
+      let points = field.apply(zone)
+      return points.map(({ value }) =>
+        typeof value === 'number' && value !== 0 ? value : NaN
+      )
+    })
+
+    this.field = field
+  }
+
+  canApply(fields) {
+    return this.field.canApply(fields)
+  }
+}
+
 /**************************************
  * Field creation helpers
  */
@@ -335,6 +352,7 @@ const lag = fieldifyArgs((f, o) => new Lag(f, o))
 const reverse = fieldifyArgs((f) => scale(f, -1))
 const inverse = fieldifyArgs((f) => ratio(1, f))
 const coalesce = fieldifyArgs((...fields) => new Coalesce(...fields))
+const nonzero = fieldifyArgs((f) => new NonZero(f))
 const field = (f) => fieldify(f)
 
 export {
@@ -344,6 +362,7 @@ export {
   field,
   inverse,
   lag,
+  nonzero,
   offset,
   ratio,
   reverse,
