@@ -77,23 +77,20 @@ custom:
     percent: Pourcentage
     log: Logarithmique
   help:
-    headline: Écrire les expressions de séries
+    headline: Syntaxe des expressions de séries
     intro: |
-      Une expression de série peut être un nombre comme <code>-3.14</code>, le nom d'un champ comme <code>confirmed</code>,
-      ou un appel de fonction comme <code>change(deceased)</code>. Les arguments des fonctions sont aussi des expressions,
-      de sorte que les appels peuvent être imbriqués, comme dans <code>ratio(confirmed, scale(deceased, 20))</code>.
-      Tout espace est ignoré.
+      Les expressions de séries sont des expression arithmétiques pouvant contenir des nombres comme <code>-3.14</code>,
+      le nom de champs comme <code>confirmed</code> ou des appels de fonction comme <code>change(deceased)</code>.
+      Les arguments des fonctions sont aussi des expressions, de sorte que les appels peuvent être imbriqués, comme dans
+      <code>weekly(-confirmed, 1 + (lag(tests - deceased) * 20) / 3)</code>. Les espaces sont ignorés, et les règles de priorité
+      usuelles s'appliquent (utiliser des parenthèses si nécessaire).
     fields: 'Les noms de champs suivants sont disponibles, certains uniquement dans certaines zones:'
     funcs: 'Les fonctions suivantes sont disponibles:'
-    scale: multiplie deux expressions
-    ratio: divise <code><i>num</i></code> par <code><i>denom</i></code>, ou aucune valeur quand <code><i>denom</i></code> est zéro
     coalesce: renvoie la première expression ayant une valeur
     change: renvoie l'évolution de l'expression par rapport au jour précédent, ou aucune valeur quand l'expression n'en a pas
     weekly: renvoie la moyenne glissante sur 7 jours de l'expression, centrée sur le jour actuel, en excluant les valeurs vides
     accumulate: accumule (additionne) les valeurs dans le temps
     nonzero: exclut les points pour lesquels l'expression vaut zéro
-    inverse: inverse multiplicatif (identique à <code>ratio(1, expr)</code>)
-    reverse: inverse additif (identique à <code>scale(-1, expr)</code>)
     lag: renvoie la valeur que <code><i>expr</i></code> avait <code><i>days</i></code> jours avant
   not-previewable: Impossible de dessiner le graphique, aucune série n'est valide
   errors:

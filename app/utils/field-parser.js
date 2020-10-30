@@ -7,6 +7,7 @@ import {
   field,
   inverse,
   lag,
+  offset,
   ratio,
   reverse,
   scale,
@@ -22,6 +23,7 @@ const functions = {
   ratio: { f: ratio, args: 2 },
   reverse: { f: reverse, args: 1 },
   scale: { f: scale, args: 2 },
+  offset: { f: offset, args: 2 },
   weekly: { f: weekly, args: 1 }
 }
 
@@ -46,9 +48,28 @@ const grammar = `
 { const { field, call, fields } = options }
 
 Expression
-  = FunctionCall
+  = head:Term tail:(("+" / "-") Term)* {
+      return tail.reduce(function(result, [op, term]) {
+        if (op === "+") { return call('offset', result, term) }
+        if (op === "-") { return call('offset', result, call('reverse', term)) }
+      }, head);
+    }
+
+Term
+  = head:Factor tail:( ("*" / "/") Factor)* {
+      return tail.reduce(function(result, [op, factor]) {
+        if (op === "*") { return call('scale', result, factor) }
+        if (op === "/") { return call('ratio', result, factor) }
+      }, head);
+    }
+
+Factor
+  = "(" expr:Expression ")" { return expr }
+  / "-" expr:Expression { return call('reverse', expr) }
+  / FunctionCall
   / FieldName
   / Number
+
 
 FunctionCall
   = func:Identifier "(" head:Expression tail:("," Expression)* ")"

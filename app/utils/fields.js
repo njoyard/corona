@@ -119,6 +119,22 @@ class Ratio extends MultiField {
   }
 }
 
+class Offset extends MultiField {
+  constructor(field, offset) {
+    super(
+      (a, b) => a + b,
+      [field, offset],
+      `offset(${field.name} / ${offset.name})`
+    )
+
+    this.fields = [field, offset]
+  }
+
+  canApply(fields) {
+    return this.fields.every((f) => f.canApply(fields))
+  }
+}
+
 class Coalesce extends MultiField {
   constructor(...fields) {
     super(
@@ -311,6 +327,7 @@ function fieldifyArgs(func) {
 
 const scale = fieldifyArgs((f, s) => new Scale(f, s))
 const ratio = fieldifyArgs((n, d) => new Ratio(n, d))
+const offset = fieldifyArgs((f, o) => new Offset(f, o))
 const change = fieldifyArgs((f) => new Change(f))
 const weekly = fieldifyArgs((f) => new Weekly(f))
 const accumulate = fieldifyArgs((f) => new Accumulate(f))
@@ -327,6 +344,7 @@ export {
   field,
   inverse,
   lag,
+  offset,
   ratio,
   reverse,
   scale,
