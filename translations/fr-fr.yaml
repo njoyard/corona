@@ -27,6 +27,8 @@ app:
       ecdc: Centre Européen pour la Prévention et le Contrôle des Maladies (ECDC)
       spf: Santé Publique France sur la plateforme data.gouv.fr
       lizurey: Hiérarchie des départements et régions françaises par César Lizurey sur la plateforme data.gouv.fr
+    opendata: |
+      Les données agrégées utilisées par cette application sont <a href="//github.com/njoyard/corona/tree/data" target="_blank" rel="noopener noreferrer">disponibles en Open Data</a>.
     devInfo:
       title: Développement
       repo: |
@@ -37,7 +39,7 @@ app:
         sous license <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0</a>.
 
   source: Code source
-  data: Données
+  data: Open Data
 
   errors:
     no-zone: Veuillez sélectionner une zone
