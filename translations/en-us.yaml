@@ -94,6 +94,7 @@ custom:
     nonzero: excludes points where expression is zero
     inverse: multiplicative inverse (same as <code>ratio(1, expr)</code>)
     reverse: additive inverse (same as <code>scale(-1, expr)</code>)
+    lag: returns the value <code><i>expr</i></code> had <code><i>days</i></code> days before
   not-previewable: 'Cannot render preview graph, no valid series defined.'
   errors:
     missing-title: Title is required

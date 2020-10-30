@@ -94,6 +94,7 @@ custom:
     nonzero: exclut les points pour lesquels l'expression vaut zéro
     inverse: inverse multiplicatif (identique à <code>ratio(1, expr)</code>)
     reverse: inverse additif (identique à <code>scale(-1, expr)</code>)
+    lag: renvoie la valeur que <code><i>expr</i></code> avait <code><i>days</i></code> jours avant
   not-previewable: Impossible de dessiner le graphique, aucune série n'est valide
   errors:
     missing-title: Un titre est nécessaire

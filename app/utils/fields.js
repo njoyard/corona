@@ -141,6 +141,37 @@ class Coalesce extends MultiField {
   }
 }
 
+class Lag extends Field {
+  constructor(field, days) {
+    super((zone) => {
+      let points = field.apply(zone)
+      let offsets = days.apply(zone)
+
+      return points.map((point, index) => {
+        let offset = Math.round(offsets[index].value)
+
+        if (isNaN(offset)) {
+          return NaN
+        }
+
+        let sourceIndex = index - offset
+
+        if (sourceIndex < 0 || sourceIndex >= points.length) {
+          return NaN
+        }
+
+        return points[sourceIndex].value
+      })
+    }, `lag(${field.name},${days.name})`)
+
+    this.fields = [field, days]
+  }
+
+  canApply(fields) {
+    return this.fields.every((f) => f.canApply(fields))
+  }
+}
+
 class Change extends Field {
   constructor(field) {
     super((zone) => {
@@ -283,6 +314,7 @@ const ratio = fieldifyArgs((n, d) => new Ratio(n, d))
 const change = fieldifyArgs((f) => new Change(f))
 const weekly = fieldifyArgs((f) => new Weekly(f))
 const accumulate = fieldifyArgs((f) => new Accumulate(f))
+const lag = fieldifyArgs((f, o) => new Lag(f, o))
 const reverse = fieldifyArgs((f) => scale(f, -1))
 const inverse = fieldifyArgs((f) => ratio(1, f))
 const coalesce = fieldifyArgs((...fields) => new Coalesce(...fields))
@@ -294,6 +326,7 @@ export {
   coalesce,
   field,
   inverse,
+  lag,
   ratio,
   reverse,
   scale,

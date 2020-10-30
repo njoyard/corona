@@ -6,6 +6,7 @@ import {
   coalesce,
   field,
   inverse,
+  lag,
   ratio,
   reverse,
   scale,
@@ -17,6 +18,7 @@ const functions = {
   change: { f: change, args: 1 },
   coalesce: { f: coalesce, args: 2 },
   inverse: { f: inverse, args: 1 },
+  lag: { f: lag, args: 2 },
   ratio: { f: ratio, args: 2 },
   reverse: { f: reverse, args: 1 },
   scale: { f: scale, args: 2 },
@@ -52,7 +54,7 @@ FunctionCall
   = func:Identifier "(" head:Expression tail:("," Expression)* ")"
     {
       try {
-        return call(func, ...tail.reduce((args, arg) => [...args, arg], [head]))
+        return call(func, ...tail.reduce((args, [, arg]) => [...args, arg], [head]))
       } catch(e) {
         error(e)
       }
