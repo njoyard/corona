@@ -44,7 +44,11 @@ export default class ChartRoute extends Route {
         }
       }
 
-      this.transitionTo('chart.zone', zone)
+      if (zone === root.id && !root.hasSelfData) {
+        this.transitionTo('chart.zone', zone, { queryParams: { multi: true } })
+      } else {
+        this.transitionTo('chart.zone', zone)
+      }
     }
   }
 }

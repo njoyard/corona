@@ -10,11 +10,11 @@ export default class DatasetZone {
     let allChildren = children.map((c) => new DatasetZone(chart, c, this))
     this.children = allChildren.filter((dz) => dz.hasData)
 
-    let hasSelfData = chart.validForZone(zone)
-    this.hasData = hasSelfData || this.children.length
+    this.hasSelfData = chart.validForZone(zone)
+    this.hasData = this.hasSelfData || this.children.length
 
     if (this.hasData) {
-      if (hasSelfData || this.children.length > 1) {
+      if (this.hasSelfData || this.children.length > 1) {
         this.root = this
       } else if (this.children.length === 1) {
         this.root = this.children[0].root
