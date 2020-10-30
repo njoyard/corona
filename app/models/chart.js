@@ -48,7 +48,8 @@ export default class Chart {
             },
             position: isEven ? 'left' : 'right',
             ticks: {
-              callback: scale === 'percent' ? percent(intl) : bignum(intl)
+              callback: scale === 'percent' ? percent(intl) : bignum(intl),
+              maxTicksLimit: scale === 'log' ? 6 : 11
             },
             type: scale === 'log' ? 'logarithmic' : 'linear'
           }

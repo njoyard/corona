@@ -57,7 +57,9 @@ export default class ChartSeries {
       normalized: true,
       data: field(f)
         .apply(zone)
-        .filter(({ value }) => !isNaN(value))
+        .filter(
+          ({ value }) => !isNaN(value) && (scale !== 'log' || value !== 0)
+        )
         .map(({ date, value }) => ({
           x: date,
           y: value

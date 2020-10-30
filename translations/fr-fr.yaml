@@ -34,6 +34,7 @@ app:
       repo: |
         Le code source de l'application est disponible sous license MIT
         <a href="//github.com/njoyard/corona" target="_blank" rel="noopener noreferer">sur GitHub</a>.
+        N'hésitez pas à y <a href="//github.com/njoyard/corona/issues" target="_blank" rel="noopener noreferer">signaler tout problème</a> ou y faire des suggestions.
       logo: |
         Logo fourni par <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferer">Becris</a>,
         sous license <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0</a>.
@@ -113,6 +114,9 @@ charts:
   cases:
     title: 'Cas de Covid'
     description: 'Cas confirmés, décès et taux de mortalité'
+  change:
+    title: 'Évolution'
+    description: 'Nouveaux cas et nouveaux décès quotidiens, échelle logarithmique'
   tests:
     title: 'Tests de dépistage'
     description: 'Évolution du nombre de tests effectués, du nombre de positifs et du taux de positivité'
@@ -122,6 +126,8 @@ charts:
 
 fields:
   confirmed: 'Cas confirmés'
+  confirmed-change: 'Nouveaux cas quotidiens'
+  confirmed-weekly: 'Nouveaux cas quotidiens (7 jours glissants)'
   tests: 'Tests effectués'
   positives: 'Tests positifs'
   positivity: 'Taux de positivité'
@@ -130,6 +136,8 @@ fields:
   intensive: 'Patients en réanimation'
   dismissed: 'Rentrés à domicile'
   deceased: 'Décès'
+  deceased-change: 'Nouveaux décès'
+  deceased-weekly: 'Nouveaux décès (7 jours glissants)'
   mortality-weekly: 'Taux de mortalité (7 jours glissants)'
 
 zones:

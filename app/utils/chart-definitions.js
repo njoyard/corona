@@ -1,8 +1,11 @@
-import { ratio, reverse, weekly } from './fields'
+import { change, ratio, reverse, weekly } from './fields'
 import { blue, orange, red, gray, alpha } from './colors'
 import { abs, percent } from './formats'
 
 const positivity = ratio('positives', 'tests')
+const confirmedChange = change('confirmed')
+const deceasedChange = change('deceased')
+const hospitalChange = change('hospital')
 
 const chartDefinitions = [
   {
@@ -22,6 +25,31 @@ const chartDefinitions = [
         id: 'mortality-weekly',
         field: weekly(ratio('deceased', 'confirmed')),
         options: { color: alpha(gray, 0.75), scale: 'percent', format: percent }
+      }
+    ]
+  },
+  {
+    id: 'change',
+    series: [
+      {
+        id: 'confirmed-change',
+        field: confirmedChange,
+        options: { color: alpha(blue, 0.5), type: 'points', scale: 'log' }
+      },
+      {
+        id: 'confirmed-weekly',
+        field: weekly(confirmedChange),
+        options: { color: alpha(blue, 0.75), scale: 'log' }
+      },
+      {
+        id: 'deceased-change',
+        field: deceasedChange,
+        options: { color: alpha(gray, 0.5), type: 'points', scale: 'log' }
+      },
+      {
+        id: 'deceased-weekly',
+        field: weekly(deceasedChange),
+        options: { color: alpha(gray, 0.75), scale: 'log' }
       }
     ]
   },
