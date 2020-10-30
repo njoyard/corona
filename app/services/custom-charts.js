@@ -2,6 +2,7 @@ import { A } from '@ember/array'
 import Service from '@ember/service'
 
 import Chart from 'corona/models/chart'
+import chartDefinitions from 'corona/utils/chart-definitions'
 import slugify from 'corona/utils/slugify'
 
 const LS_KEY = 'corona:custom-charts'
@@ -45,7 +46,10 @@ export default class CustomChartsService extends Service {
     let slug = base
     let counter = 0
 
-    while (charts.find((c) => c.id === slug)) {
+    while (
+      charts.find((c) => c.id === slug) ||
+      chartDefinitions.find((c) => c.id === slug)
+    ) {
       slug = `${base}-${++counter}`
     }
 
