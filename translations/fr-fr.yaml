@@ -117,9 +117,6 @@ charts:
   cases:
     title: Cas de Covid
     description: Cas confirmés, décès et taux de mortalité
-  change:
-    title: Évolution
-    description: Nouveaux cas et nouveaux décès quotidiens, échelle logarithmique
   tests:
     title: Tests de dépistage
     description: Évolution du nombre de tests effectués, du nombre de positifs et du taux de positivité
@@ -130,19 +127,20 @@ charts:
 fields:
   confirmed: Cas confirmés
   confirmed-change: Nouveaux cas quotidiens
-  confirmed-weekly: Nouveaux cas quotidiens (moyenne glissante)
+  confirmed-weekly: Nouveaux cas quotidiens (moyenne hebdo)
   tests: Tests effectués
-  tests-weekly: Tests effectués (moyenne glissante)
+  tests-weekly: Tests effectués (moyenne hebdo)
   positives: Tests positifs
   positivity: Taux de positivité
-  positivity-weekly: Taux de positivité (moyenne glissante)
+  positivity-weekly: Taux de positivité (moyenne hebdo)
   hospital: Patients hospitalisés
+  hospital-weekly: Nouvelles hospitalisations (moyenne hebdo)
   intensive: Patients en réanimation
   dismissed: Rentrés à domicile
   deceased: Décès
   deceased-change: Nouveaux décès
-  deceased-weekly: Nouveaux décès (moyenne glissante)
-  mortality-weekly: Taux de mortalité (moyenne glissante)
+  deceased-weekly: Nouveaux décès (moyenne hebdo)
+  mortality-weekly: Taux de mortalité (moyenne hebdo)
 
 zones:
   World: Monde

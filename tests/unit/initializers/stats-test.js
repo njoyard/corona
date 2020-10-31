@@ -1,29 +1,32 @@
-import Application from '@ember/application';
+import Application from '@ember/application'
 
-import { initialize } from 'corona/initializers/stats';
-import { module, test } from 'qunit';
-import Resolver from 'ember-resolver';
-import { run } from '@ember/runloop';
+import { initialize } from 'corona/initializers/stats'
+import { module, test } from 'qunit'
+import Resolver from 'ember-resolver'
+import { run } from '@ember/runloop'
 
-module('Unit | Initializer | stats', function(hooks) {
-  hooks.beforeEach(function() {
+module('Unit | Initializer | stats', function (hooks) {
+  hooks.beforeEach(function () {
     this.TestApplication = class TestApplication extends Application {}
     this.TestApplication.initializer({
       name: 'initializer under test',
       initialize
-    });
+    })
 
-    this.application = this.TestApplication.create({ autoboot: false, Resolver });
-  });
+    this.application = this.TestApplication.create({
+      autoboot: false,
+      Resolver
+    })
+  })
 
-  hooks.afterEach(function() {
-    run(this.application, 'destroy');
-  });
+  hooks.afterEach(function () {
+    run(this.application, 'destroy')
+  })
 
   // TODO: Replace this with your real tests.
-  test('it works', async function(assert) {
-    await this.application.boot();
+  test('it works', async function (assert) {
+    await this.application.boot()
 
-    assert.ok(true);
-  });
-});
+    assert.ok(true)
+  })
+})

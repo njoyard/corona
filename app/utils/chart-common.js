@@ -64,7 +64,7 @@ function yScales(series, intl) {
           gridLines: {
             borderDash: isEven ? [] : [5, 5]
           },
-          position: isEven ? 'left' : 'right',
+          position: isEven ? 'right' : 'left',
           ticks: {
             callback: scale === 'percent' ? percent(intl) : bignum(intl),
             maxTicksLimit: scale === 'log' ? 6 : 11
@@ -75,10 +75,6 @@ function yScales(series, intl) {
 
       return scales
     }, {})
-
-  if (Object.keys(scales).length === 1) {
-    Object.values(scales)[0].position = 'right'
-  }
 
   return scales
 }

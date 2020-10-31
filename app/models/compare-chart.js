@@ -8,9 +8,8 @@ import {
   yScales
 } from 'corona/utils/chart-common'
 import { compareFields } from 'corona/utils/chart-definitions'
-import { colors } from 'corona/utils/colors'
 import { field } from 'corona/utils/fields'
-import { number, percent } from 'corona/utils/formats'
+import { number } from 'corona/utils/formats'
 
 export default class CompareChart {
   id = null
@@ -77,7 +76,7 @@ export default class CompareChart {
       datasets: this.validChildren(zone).map((zone, index) =>
         new ChartSeries(
           null,
-          this.field,
+          field,
           Object.assign(
             { label: zone.label, scale, format },
             compareStyle(index)

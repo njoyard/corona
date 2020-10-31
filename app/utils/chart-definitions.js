@@ -11,7 +11,7 @@ const confirmedChange = change('confirmed')
 const weeklyConfirmedChange = weekly(confirmedChange)
 const deceasedChange = change('deceased')
 const weeklyDeceasedChange = weekly(deceasedChange)
-const hospitalChange = change('hospital')
+const weeklyHospitalChange = weekly(change('hospital'))
 
 const chartDefinitions = [
   {
@@ -31,31 +31,6 @@ const chartDefinitions = [
         id: 'mortality-weekly',
         field: weekly(ratio('deceased', 'confirmed')),
         options: { color: grey, scale: 'percent', format: percent }
-      }
-    ]
-  },
-  {
-    id: 'change',
-    series: [
-      {
-        id: 'confirmed-change',
-        field: confirmedChange,
-        options: { color: alpha(blue, 0.75), type: 'points', scale: 'log' }
-      },
-      {
-        id: 'confirmed-weekly',
-        field: weeklyConfirmedChange,
-        options: { color: blue, scale: 'log' }
-      },
-      {
-        id: 'deceased-change',
-        field: deceasedChange,
-        options: { color: alpha(grey, 0.75), type: 'points', scale: 'log' }
-      },
-      {
-        id: 'deceased-weekly',
-        field: weeklyDeceasedChange,
-        options: { color: grey, scale: 'log' }
       }
     ]
   },
@@ -129,6 +104,10 @@ const compareFields = {
   },
   'deceased-weekly': {
     field: weeklyDeceasedChange,
+    options: { format: integer }
+  },
+  'hospital-weekly': {
+    field: weeklyHospitalChange,
     options: { format: integer }
   },
   'tests-weekly': { field: weekly('tests'), options: { format: integer } },

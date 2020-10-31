@@ -3,6 +3,7 @@ import Service from '@ember/service'
 import { tracked } from '@glimmer/tracking'
 
 import Chart from 'corona/models/chart'
+import { chartDefinitions } from 'corona/utils/chart-definitions'
 import slugify from 'corona/utils/slugify'
 
 const LS_KEY = 'corona:custom-charts'
