@@ -21,14 +21,18 @@ export default class ChartZoneController extends Controller {
     return this.model.zone
   }
 
+  get isCompareChart() {
+    return this.model.chart.isCompareChart
+  }
+
   /*********************************
    * Chart display
    */
 
   get zones() {
-    let { zone, multi } = this
+    let { zone, multi, isCompareChart } = this
 
-    if (multi && zone.children.length > 1) {
+    if (!isCompareChart && multi && zone.children.length > 1) {
       return zone.children.map((c) => c.zone)
     } else {
       return [zone.zone]
@@ -37,13 +41,16 @@ export default class ChartZoneController extends Controller {
 
   get zoneColumns() {
     let {
-      zones: { length }
+      zones: { length },
+      isCompareChart
     } = this
 
-    if (length >= 16) return '1 sm-2 md-3 lg-4 xl-5'
-    if (length >= 9) return '1 sm-2 md-3 gt-md-4'
-    if (length >= 4) return '1 sm-2 gt-sm-3'
-    if (length > 1) return '1 gt-xs-2'
+    if (!isCompareChart) {
+      if (length >= 16) return '1 sm-2 md-3 lg-4 xl-5'
+      if (length >= 9) return '1 sm-2 md-3 gt-md-4'
+      if (length >= 4) return '1 sm-2 gt-sm-3'
+      if (length > 1) return '1 gt-xs-2'
+    }
 
     return null
   }

@@ -70,6 +70,9 @@ export default class ChartSeries {
       dataset.type = 'line'
       dataset.showLine = false
       dataset.pointRadius = 2
+    } else if (type === 'thin' || type === 'dashed' || type === 'dotted') {
+      dataset.type = 'line'
+      dataset.borderWidth = 1
     } else {
       dataset.type = type
     }
@@ -79,9 +82,20 @@ export default class ChartSeries {
       dataset.categoryPercentage = 0.95
     }
 
-    if (type === 'line') {
+    if (
+      type === 'line' ||
+      type === 'thin' ||
+      type === 'dashed' ||
+      type === 'dotted'
+    ) {
       dataset.spanGaps = true
       dataset.pointRadius = 0
+    }
+
+    if (type === 'dashed') {
+      dataset.borderDash = [5, 5]
+    } else if (type === 'dotted') {
+      dataset.borderDash = [2, 8]
     }
 
     if (stack) {

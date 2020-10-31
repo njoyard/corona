@@ -22,6 +22,7 @@ class Field {
     this.compute = compute
     this.name = name || '<unknown>'
     this.applied = new WeakMap()
+    this.mrvs = new WeakMap()
   }
 
   canApply() {
@@ -36,6 +37,20 @@ class Field {
     }
 
     return applied.get(zone)
+  }
+
+  mostRecentValue(zone) {
+    let { mrvs } = this
+
+    if (!mrvs.has(zone)) {
+      let value = [...this.apply(zone)]
+        .reverse()
+        .find(({ value }) => !isNaN(value))
+
+      mrvs.set(zone, value && value.value)
+    }
+
+    return mrvs.get(zone)
   }
 }
 
@@ -315,6 +330,10 @@ function fieldify(thing) {
     return thing.map((t) => fieldify(t))
   }
 
+  if (thing instanceof Field) {
+    return thing
+  }
+
   if (typeof thing === 'number') {
     if (!(thing in constCache)) {
       constCache[thing] = new Constant(thing)
@@ -329,10 +348,6 @@ function fieldify(thing) {
     }
 
     return sourceCache[thing]
-  }
-
-  if (thing instanceof Field) {
-    return thing
   }
 
   throw new Error(`Cannot fieldify ${thing}`)

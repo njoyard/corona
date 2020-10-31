@@ -83,7 +83,9 @@
                 @zone={{this.previewZone.zone}}
                 @chart={{this.preview.chart}} />
           {{else}}
-            {{t 'custom.not-previewable'}}
+            <div class="error">
+              {{t 'custom.not-previewable'}}
+            </div>
           {{/if}}
         </card.content>
       </PaperCard>

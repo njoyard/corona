@@ -7,9 +7,7 @@ export default class ChartRoute extends Route {
 
   model({ chart_id }) {
     let { dataset, multi } = this.modelFor('application')
-    let chart =
-      dataset.charts.find(({ id }) => id === chart_id) ||
-      this.customCharts.get(chart_id)
+    let chart = dataset.findChart(chart_id) || this.customCharts.get(chart_id)
 
     if (!chart) {
       return null

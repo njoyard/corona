@@ -32,6 +32,12 @@ $font-size: 9px;
     background-color: paper-color('grey', '100');
   }
 
+  .compare-field {
+    background-color: white;
+    margin-left: 8px;
+    font-size: 80%;
+  }
+
   .chart-list-item.selected {
     background-color: paper-color('blue-grey', '100');
   }
@@ -73,11 +79,6 @@ $font-size: 9px;
         top: 32px;
         left: 0;
         right: 0;
-
-        color: paper-color($warn, '500');
-        text-align: center;
-        font-style: italic;
-        font-size: 80%;
       }
 
       h5 {
@@ -192,6 +193,13 @@ md-toolbar.md-default-theme.main-toolbar {
 
 .muted {
   opacity: 0.5;
+}
+
+.error {
+  color: paper-color($warn, '500');
+  text-align: center;
+  font-style: italic;
+  font-size: 80%;
 }
 
 .custom-chart-container {

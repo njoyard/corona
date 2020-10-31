@@ -3,10 +3,13 @@ import { action } from '@ember/object'
 import { inject as service } from '@ember/service'
 import { tracked } from '@glimmer/tracking'
 
+import { compareFields } from 'corona/utils/chart-definitions'
+
 export default class ApplicationController extends Controller {
   @service data
   @service intl
   @service router
+  @service routing
   @service('customCharts') custom
 
   queryParams = ['multi']
@@ -43,6 +46,32 @@ export default class ApplicationController extends Controller {
    */
 
   @tracked multi = false
+
+  /*********************************
+   * Comparison charts
+   */
+
+  compareFields = Object.keys(compareFields)
+
+  get isCompareChart() {
+    return (
+      this.routing.selectedChart &&
+      this.routing.selectedChart.startsWith('compare:')
+    )
+  }
+
+  get compareField() {
+    return this.routing.selectedChart.replace(/compare:/, '')
+  }
+
+  @action
+  showCompareChart(field) {
+    if (typeof field !== 'string') {
+      field = this.compareFields[0]
+    }
+
+    this.router.transitionTo('chart', `compare:${field}`)
+  }
 
   /*********************************
    * Custom charts

@@ -1,6 +1,28 @@
 import { DateTime } from 'luxon'
 
+import { colors } from 'corona/utils/colors'
 import { bignum, percent } from 'corona/utils/formats'
+
+// Only use every other color to avoid confusing charts
+const styleColors = Object.values(colors).filter((c, index) => index % 2 == 1)
+
+function compareStyle(index) {
+  let type = 'line'
+
+  if (index >= styleColors.length) {
+    type = 'thin'
+  }
+
+  if (index >= 2 * styleColors.length) {
+    type = 'dashed'
+  }
+
+  if (index >= 3 * styleColors.length) {
+    type = 'dotted'
+  }
+
+  return { color: styleColors[index % styleColors.length], type }
+}
 
 const baseOptions = {
   fontFamily: 'Roboto, "Helvetica Neue", sans-serif;',
@@ -32,7 +54,7 @@ const timeScale = {
 }
 
 function yScales(series, intl) {
-  return series
+  let scales = series
     .map((s) => s.scale)
     .reduce((scales, scale) => {
       if (!(scale in scales)) {
@@ -53,6 +75,12 @@ function yScales(series, intl) {
 
       return scales
     }, {})
+
+  if (Object.keys(scales).length === 1) {
+    Object.values(scales)[0].position = 'right'
+  }
+
+  return scales
 }
 
 function timeTitleCallback([context]) {
@@ -61,21 +89,31 @@ function timeTitleCallback([context]) {
   )
 }
 
-function labelCallback(series, intl) {
+function labelCallback(seriesOrFormatter, intl) {
   return (context) => {
     let label = context.dataset.label || ''
-    let serie = series.find((s) => s.id === context.dataset.id)
+    let formatter =
+      typeof seriesOrFormatter === 'function'
+        ? seriesOrFormatter
+        : seriesOrFormatter.find((s) => s.id === context.dataset.id).format
 
     if (label) {
       label += ': '
     }
 
     if (!isNaN(context.dataPoint.y)) {
-      label += serie.format(intl, context.dataPoint.y)
+      label += formatter(intl, context.dataPoint.y)
     }
 
     return label
   }
 }
 
-export { baseOptions, labelCallback, timeScale, timeTitleCallback, yScales }
+export {
+  baseOptions,
+  compareStyle,
+  labelCallback,
+  timeScale,
+  timeTitleCallback,
+  yScales
+}

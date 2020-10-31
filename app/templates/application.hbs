@@ -17,6 +17,24 @@
     <PaperContent>
       <PaperList>
         <PaperSubheader>{{t 'app.chartTypes'}}</PaperSubheader>
+        <PaperItem @class={{concat "md-2-line md-long-text chart-list-item" (if this.isCompareChart " selected")}} @onClick={{unless this.isCompareChart this.showCompareChart}}>
+          <img src='assets/chart-compare.png' alt={{t 'charts.compare.title'}} class="md-avatar">
+          <div class="md-list-item-text">
+            <h3>{{t 'charts.compare.title'}}</h3>
+            <p>
+              {{t 'charts.compare.description'}}
+            </p>
+          </div>
+        </PaperItem>
+
+        {{#if this.isCompareChart}}
+          {{#each this.compareFields as |field|}}
+            <PaperItem @class={{concat "chart-list-item compare-field" (if (eq this.compareField field) " selected")}} @onClick={{fn this.showCompareChart field}}>
+              <p>{{t (concat 'fields.' field)}}</p>
+            </PaperItem>
+          {{/each}}
+        {{/if}}
+
         <ChartList @charts={{this.charts}} />
         <ChartList @charts={{this.customCharts}} />
         <PaperItem @onClick={{this.createChart}}>
@@ -24,23 +42,25 @@
           <p>{{t 'custom.add'}}</p>
         </PaperItem>
 
-        <PaperDivider />
-        <PaperSubheader>{{t 'app.chartOptions'}}</PaperSubheader>
-        <PaperItem class="md-2-line" as |controls|>
-          <div class="md-list-item-text">
-            <h3>{{t 'app.multiChart.title'}}</h3>
-            <p>
-              {{#if this.multi}}
-                {{t 'app.multiChart.onHint'}}
-              {{else}}
-                {{t 'app.multiChart.offHint'}}
-              {{/if}}
-            </p>
-          </div>
-          <div class="md-secondary-container">
-            <controls.switch @secondary={{true}} @value={{this.multi}} @onChange={{fn (mut this.multi)}} />
-          </div>
-        </PaperItem>
+        {{#unless this.isCompareChart}}
+          <PaperDivider />
+          <PaperSubheader>{{t 'app.chartOptions'}}</PaperSubheader>
+          <PaperItem class="md-2-line" as |controls|>
+            <div class="md-list-item-text">
+              <h3>{{t 'app.multiChart.title'}}</h3>
+              <p>
+                {{#if this.multi}}
+                  {{t 'app.multiChart.onHint'}}
+                {{else}}
+                  {{t 'app.multiChart.offHint'}}
+                {{/if}}
+              </p>
+            </div>
+            <div class="md-secondary-container">
+              <controls.switch @secondary={{true}} @value={{this.multi}} @onChange={{fn (mut this.multi)}} />
+            </div>
+          </PaperItem>
+        {{/unless}}
 
         <PaperDivider />
         <PaperSubheader>{{t 'app.about.menuHeader'}}</PaperSubheader>

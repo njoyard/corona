@@ -31,4 +31,6 @@
 
 {{outlet 'charts'}}
 
-<Legend @chart={{this.chart}} />
+{{#unless this.chart.isCompareChart}}
+  <Legend @chart={{this.chart}} />
+{{/unless}}

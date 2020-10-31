@@ -1,12 +1,16 @@
 import { change, ratio, reverse, weekly } from 'corona/utils/fields'
 import { colors, alpha } from 'corona/utils/colors'
-import { abs, percent } from 'corona/utils/formats'
+import { abs, percent, integer } from 'corona/utils/formats'
 
 const { blue, teal, orange, red, grey } = colors
 
+// Fields cache their computations, try to reuse them as much as possible
 const positivity = ratio('positives', 'tests')
+const weeklyPositivity = weekly(positivity)
 const confirmedChange = change('confirmed')
+const weeklyConfirmedChange = weekly(confirmedChange)
 const deceasedChange = change('deceased')
+const weeklyDeceasedChange = weekly(deceasedChange)
 const hospitalChange = change('hospital')
 
 const chartDefinitions = [
@@ -40,7 +44,7 @@ const chartDefinitions = [
       },
       {
         id: 'confirmed-weekly',
-        field: weekly(confirmedChange),
+        field: weeklyConfirmedChange,
         options: { color: blue, scale: 'log' }
       },
       {
@@ -50,7 +54,7 @@ const chartDefinitions = [
       },
       {
         id: 'deceased-weekly',
-        field: weekly(deceasedChange),
+        field: weeklyDeceasedChange,
         options: { color: grey, scale: 'log' }
       }
     ]
@@ -111,7 +115,7 @@ const chartDefinitions = [
       },
       {
         id: 'positivity-weekly',
-        field: weekly(positivity),
+        field: weeklyPositivity,
         options: { color: red, scale: 'percent', format: percent }
       }
     ]
@@ -119,10 +123,19 @@ const chartDefinitions = [
 ]
 
 const compareFields = {
-  confirmed: { field: 'confirmed' },
-  deceased: { field: 'deceased' },
-  tests: { field: 'tests' },
-  positivity: { field: positivity, options: { scale: 'percent' } }
+  'confirmed-weekly': {
+    field: weeklyConfirmedChange,
+    options: { format: integer }
+  },
+  'deceased-weekly': {
+    field: weeklyDeceasedChange,
+    options: { format: integer }
+  },
+  'tests-weekly': { field: weekly('tests'), options: { format: integer } },
+  'positivity-weekly': {
+    field: weeklyPositivity,
+    options: { scale: 'percent', format: percent }
+  }
 }
 
 export { chartDefinitions, compareFields }

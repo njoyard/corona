@@ -15,7 +15,7 @@ app:
     title: About
     close: Close
     text: |
-      This app uses data from the CSSE at John Hopkins University, and Santé Publique France.
+      This app uses data from the CSSE at John Hopkins University, from the European Centre for Disease Prevention and Control (ECDC), and from Santé Publique France.
 
       Please note that CSSE and ECDC data comes from officially reported figures, and is only indicative of the actual situation. It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
 
@@ -109,6 +109,9 @@ subdivision:
   department: Department
 
 charts:
+  compare:
+    title: Comparison chart
+    description: Compare the same indicator between different areas
   cases:
     title: 'Covid cases'
     description: 'Confirmed cases, deaths and mortality rate'

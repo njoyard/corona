@@ -3,6 +3,7 @@ app:
   starting: Chargement...
 
   chartTypes: Type de graphique
+  compare: Comparatif
   chartOptions: Options
   multiChart:
     title: Graphiques multiples
@@ -15,7 +16,7 @@ app:
     title: À propos
     close: Fermer
     text: |
-      Cette application utilise les données en provenance du CSSE à l'université John Hopkins, ainsi que celles de Santé Publique France.
+      Cette application utilise les données en provenance du CSSE à l'université John Hopkins, du Centre Européen pour la Prévention et le Contrôle des Maladies (ECDC), ainsi que celles de Santé Publique France.
 
       Notez que les données CSSE et de l'ECDC sont fournies uniquement à titre indicatif. Elles sont agrégées à partir des informations fournies par plusieurs organismes distincts, qui utilisent des méthodes de relevé et de comptage diverses. Les chiffres réels sont probablement plus élevés.
 
@@ -94,7 +95,7 @@ custom:
     accumulate: accumule (additionne) les valeurs dans le temps
     nonzero: exclut les points pour lesquels l'expression vaut zéro
     lag: renvoie la valeur que <code><i>expr</i></code> avait <code><i>days</i></code> jours avant
-  not-previewable: Impossible de dessiner le graphique, aucune série n'est valide
+  not-previewable: Impossible de tracer le graphique, aucune série n'est valide
   errors:
     missing-title: Un titre est nécessaire
     syntax: Expression invalide
@@ -110,34 +111,38 @@ subdivision:
   department: Département
 
 charts:
+  compare:
+    title: Comparatif
+    description: Comparaison d'un même indicateur entre plusieurs zones géographiques
   cases:
-    title: 'Cas de Covid'
-    description: 'Cas confirmés, décès et taux de mortalité'
+    title: Cas de Covid
+    description: Cas confirmés, décès et taux de mortalité
   change:
-    title: 'Évolution'
-    description: 'Nouveaux cas et nouveaux décès quotidiens, échelle logarithmique'
+    title: Évolution
+    description: Nouveaux cas et nouveaux décès quotidiens, échelle logarithmique
   tests:
-    title: 'Tests de dépistage'
-    description: 'Évolution du nombre de tests effectués, du nombre de positifs et du taux de positivité'
+    title: Tests de dépistage
+    description: Évolution du nombre de tests effectués, du nombre de positifs et du taux de positivité
   hospital:
-    title: 'Hopitaux'
-    description: 'Nombre de patients hospitalisés, en réanimation, rentrés à domicile et décédés'
+    title: Hopitaux
+    description: Nombre de patients hospitalisés, en réanimation, rentrés à domicile et décédés
 
 fields:
-  confirmed: 'Cas confirmés'
-  confirmed-change: 'Nouveaux cas quotidiens'
-  confirmed-weekly: 'Nouveaux cas quotidiens (7 jours glissants)'
-  tests: 'Tests effectués'
-  positives: 'Tests positifs'
-  positivity: 'Taux de positivité'
-  positivity-weekly: 'Taux de positivité (7 jours glissants)'
-  hospital: 'Patients hospitalisés'
-  intensive: 'Patients en réanimation'
-  dismissed: 'Rentrés à domicile'
-  deceased: 'Décès'
-  deceased-change: 'Nouveaux décès'
-  deceased-weekly: 'Nouveaux décès (7 jours glissants)'
-  mortality-weekly: 'Taux de mortalité (7 jours glissants)'
+  confirmed: Cas confirmés
+  confirmed-change: Nouveaux cas quotidiens
+  confirmed-weekly: Nouveaux cas quotidiens (moyenne glissante)
+  tests: Tests effectués
+  tests-weekly: Tests effectués (moyenne glissante)
+  positives: Tests positifs
+  positivity: Taux de positivité
+  positivity-weekly: Taux de positivité (moyenne glissante)
+  hospital: Patients hospitalisés
+  intensive: Patients en réanimation
+  dismissed: Rentrés à domicile
+  deceased: Décès
+  deceased-change: Nouveaux décès
+  deceased-weekly: Nouveaux décès (moyenne glissante)
+  mortality-weekly: Taux de mortalité (moyenne glissante)
 
 zones:
   World: Monde
