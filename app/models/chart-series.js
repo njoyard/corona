@@ -52,8 +52,9 @@ export default class ChartSeries {
       label: label || intl.t(`fields.${id}`),
       fill: false,
       yAxisID: scale,
-      backgroundColor: alpha(color, 0.75),
-      borderColor: color,
+      borderWidth: 2,
+      backgroundColor: alpha(color, type === 'bar' ? 0.5 : 0.75),
+      borderColor: alpha(color, type === 'bar' ? 0.5 : 0.75),
       normalized: true,
       data: field(f)
         .apply(zone)
@@ -70,7 +71,9 @@ export default class ChartSeries {
       dataset.type = 'line'
       dataset.showLine = false
       dataset.pointRadius = 2
-    } else if (type === 'thin' || type === 'dashed' || type === 'dotted') {
+    } else if (type === 'dotted') {
+      dataset.type = 'line'
+    } else if (type === 'thin' || type === 'dashed') {
       dataset.type = 'line'
       dataset.borderWidth = 1
     } else {
@@ -79,7 +82,8 @@ export default class ChartSeries {
 
     if (type === 'bar') {
       dataset.barPercentage = 1
-      dataset.categoryPercentage = 0.95
+      dataset.categoryPercentage = 1
+      dataset.borderWidth = 0
     }
 
     if (
@@ -95,7 +99,7 @@ export default class ChartSeries {
     if (type === 'dashed') {
       dataset.borderDash = [5, 5]
     } else if (type === 'dotted') {
-      dataset.borderDash = [2, 8]
+      dataset.borderDash = [2, 5]
     }
 
     if (stack) {

@@ -10,15 +10,15 @@ function compareStyle(index) {
   let type = 'line'
 
   if (index >= styleColors.length) {
-    type = 'thin'
+    type = 'dotted'
   }
 
   if (index >= 2 * styleColors.length) {
-    type = 'dashed'
+    type = 'thin'
   }
 
   if (index >= 3 * styleColors.length) {
-    type = 'dotted'
+    type = 'dashed'
   }
 
   return { color: styleColors[index % styleColors.length], type }

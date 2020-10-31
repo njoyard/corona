@@ -1,6 +1,6 @@
 <PaperItem @class={{concat "md-2-line md-long-text chart-list-item" (if @selected " selected")}} @onClick={{@onClick}} as |controls|>
   {{#if this.isCustom}}
-    <PaperIcon @icon="person" />
+    <PaperIcon @icon="stacked_line_chart" />
   {{else}}
     <img src={{this.img}} alt={{this.title}} class="md-avatar">
   {{/if}}

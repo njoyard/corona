@@ -20,7 +20,7 @@ const colors = {
   blueGrey: '#607d8b'
 }
 
-function alpha(color, opacity) {
+function alpha(color, opacity, apply = false) {
   let values
 
   if (color.match(/^#/)) {
@@ -28,17 +28,21 @@ function alpha(color, opacity) {
       .replace(/#(..)(..)(..)/, '0x$1,0x$2,0x$3')
       .split(',')
       .map(Number)
-      .join(',')
   } else {
     values = color
       .replace(/rgba\((.+),(.+),(.+),(.+)\)/, '$1,$2,$3,$4')
       .split(',')
+      .map(Number)
 
-    opacity = opacity * Number(values.pop())
-    values = values.join(',')
+    opacity = opacity * values.pop()
   }
 
-  return `rgba(${values},${opacity})`
+  if (apply) {
+    values = values.map((v) => v * opacity + 255 * (1 - opacity))
+    opacity = 1
+  }
+
+  return `rgba(${values.join(',')},${opacity})`
 }
 
 export { alpha, colors }
