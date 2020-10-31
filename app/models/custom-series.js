@@ -1,6 +1,6 @@
 import { tracked } from '@glimmer/tracking'
 
-import { gray, allColors } from 'corona/utils/colors'
+import { colors } from 'corona/utils/colors'
 import parse from 'corona/utils/field-parser'
 
 export default class CustomSeries {
@@ -8,7 +8,7 @@ export default class CustomSeries {
   @tracked expr = ''
   @tracked type = 'line'
   @tracked scale = 'count'
-  @tracked color = gray
+  @tracked color = colors.grey
 
   allFields = null
 
@@ -42,15 +42,15 @@ export default class CustomSeries {
       e: expr.replace(/\s/g, ''),
       t: type,
       s: scale,
-      c: Object.keys(allColors).find((k) => allColors[k] === color)
+      c: color
     }
   }
 
   static fromRepr(repr, intl, allFields) {
-    let { l: label, e: expr, t: type, s: scale, c: colorName } = repr
+    let { l: label, e: expr, t: type, s: scale, c: color } = repr
 
     let series = new CustomSeries(label, intl, allFields)
-    Object.assign(series, { expr, type, scale, color: allColors[colorName] })
+    Object.assign(series, { expr, type, scale, color: color })
 
     return series
   }

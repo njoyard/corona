@@ -14,7 +14,7 @@ export default class LegendComponent extends Component {
     return series.map(({ label, id, color, type }) => {
       return {
         label: label || this.intl.t(`fields.${id}`),
-        color: color.bright,
+        color,
         type
       }
     })

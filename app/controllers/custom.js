@@ -5,7 +5,7 @@ import { tracked } from '@glimmer/tracking'
 
 import Chart from 'corona/models/chart'
 import CustomSeries from 'corona/models/custom-series'
-import { allColors } from 'corona/utils/colors'
+import { colors } from 'corona/utils/colors'
 import slugify from 'corona/utils/slugify'
 
 export default class CustomController extends Controller {
@@ -18,7 +18,7 @@ export default class CustomController extends Controller {
    * Enum values
    */
 
-  colors = Object.values(allColors)
+  colors = Object.values(colors)
   types = ['line', 'points', 'bar']
   scales = ['count', 'percent', 'log']
 

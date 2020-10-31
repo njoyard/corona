@@ -6,7 +6,7 @@ import config from 'corona/config/environment'
 import Chart from 'corona/models/chart'
 import ChartSeries from 'corona/models/chart-series'
 import Dataset from 'corona/models/dataset'
-import chartDefinitions from 'corona/utils/chart-definitions'
+import { chartDefinitions } from 'corona/utils/chart-definitions'
 
 const {
   environment,

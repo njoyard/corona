@@ -125,7 +125,7 @@
                   </PaperSelect>
 
                   <PaperSelect @label={{t 'custom.color'}} @selected={{series.color}} @options={{this.colors}} @onChange={{fn (mut series.color)}} as |option|>
-                    <div class="color-option" style={{concat "border-color: " option.bright}}></div>
+                    <ColorSwatch @type="rect" @color={{option}} />
                   </PaperSelect>
 
                   <div class="flex" />
@@ -136,7 +136,6 @@
                     </PaperButton>
                   {{/if}}
                 </div>
-
               </card.content>
             </PaperCard>
           {{/each}}

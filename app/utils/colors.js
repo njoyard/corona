@@ -1,78 +1,44 @@
-const yellow = {
-  bright: '#fce94f',
-  normal: '#edd400',
-  dark: '#c4a000'
-}
-
-const orange = {
-  bright: '#fcaf3e',
-  normal: '#f57900',
-  dark: '#ce5c00'
-}
-
-const brown = {
-  bright: '#e9b96e',
-  normal: '#c17d11',
-  dark: '#8f5902'
-}
-
-const green = {
-  bright: '#8ae234',
-  normal: '#73d216',
-  dark: '#4e9a06'
-}
-
-const blue = {
-  bright: '#729fcf',
-  normal: '#3465a4',
-  dark: '#204a87'
-}
-
-const purple = {
-  bright: '#ad7fa8',
-  normal: '#75507b',
-  dark: '#5c3566'
-}
-
-const red = {
-  bright: '#ef2929',
-  normal: '#cc0000',
-  dark: '#a40000'
-}
-
-const gray = {
-  bright: '#888a85',
-  normal: '#555753',
-  dark: '#2e3436'
+const colors = {
+  red: '#f44336',
+  pink: '#e91e63',
+  purple: '#9c27b0',
+  deepPurple: '#673ab7',
+  indigo: '#3f51b5',
+  blue: '#2196f3',
+  lightBlue: '#03a9f4',
+  cyan: '#00bcd4',
+  teal: '#009688',
+  green: '#4caf50',
+  lightGreen: '#8bc34a',
+  lime: '#cddc39',
+  yellow: '#ffeb3b',
+  amber: '#ffc107',
+  orange: '#ff9800',
+  deepOrange: '#ff5722',
+  brown: '#795548',
+  grey: '#9e9e9e',
+  blueGrey: '#607d8b'
 }
 
 function alpha(color, opacity) {
-  let alpha = {}
+  let values
 
-  for (let key in color) {
-    let values = color[key]
+  if (color.match(/^#/)) {
+    values = color
       .replace(/#(..)(..)(..)/, '0x$1,0x$2,0x$3')
       .split(',')
       .map(Number)
       .join(',')
+  } else {
+    values = color
+      .replace(/rgba\((.+),(.+),(.+),(.+)\)/, '$1,$2,$3,$4')
+      .split(',')
 
-    alpha[key] = `rgba(${values},${opacity})`
+    opacity = opacity * Number(values.pop())
+    values = values.join(',')
   }
 
-  return alpha
+  return `rgba(${values},${opacity})`
 }
 
-const allColors = { yellow, orange, brown, green, blue, purple, red, gray }
-
-export {
-  yellow,
-  orange,
-  brown,
-  green,
-  blue,
-  purple,
-  red,
-  gray,
-  alpha,
-  allColors
-}
+export { alpha, colors }

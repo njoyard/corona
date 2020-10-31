@@ -1,4 +1,4 @@
-import { gray, alpha, allColors } from 'corona/utils/colors'
+import { alpha, colors } from 'corona/utils/colors'
 import { field } from 'corona/utils/fields'
 import parse from 'corona/utils/field-parser'
 import { number, percent } from 'corona/utils/formats'
@@ -10,7 +10,7 @@ export default class ChartSeries {
   custom = null
 
   static fromCustomRepr(id, repr, stacked) {
-    let { l: label, e: expr, c: colorName, t: type, s: scale } = repr
+    let { l: label, e: expr, c: color, t: type, s: scale } = repr
 
     let series = new ChartSeries(id, parse(expr), {
       label,
@@ -18,7 +18,7 @@ export default class ChartSeries {
       scale,
       stack: stacked && type === 'bar' ? 'stack' : null,
       format: scale === 'percent' ? percent : number,
-      color: alpha(allColors[colorName], 0.75)
+      color: type === 'point' ? alpha(color, 0.75) : color
     })
 
     Object.assign(series, {
@@ -34,7 +34,7 @@ export default class ChartSeries {
 
     Object.assign(
       this,
-      { type: 'line', color: gray, scale: 'count', format: number },
+      { type: 'line', color: colors.grey, scale: 'count', format: number },
       options
     )
   }
@@ -52,8 +52,8 @@ export default class ChartSeries {
       label: label || intl.t(`fields.${id}`),
       fill: false,
       yAxisID: scale,
-      backgroundColor: color.bright,
-      borderColor: color.normal,
+      backgroundColor: alpha(color, 0.75),
+      borderColor: color,
       normalized: true,
       data: field(f)
         .apply(zone)
