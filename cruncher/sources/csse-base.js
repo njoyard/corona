@@ -53,10 +53,38 @@ export default class CCSEDataSource {
         )
       )
 
-      for (let [, iso2, , , , a, p, c, , , , pop] of csvLines) {
-        metaData[`${c}|${p}|${a}`] = {
-          pop: pop !== '' ? Number(pop) : null,
-          iso: iso2.toLowerCase()
+      let isos = {}
+
+      for (let [
+        ,
+        iso2,
+        ,
+        ,
+        ,
+        admin,
+        province,
+        country,
+        ,
+        ,
+        ,
+        pop
+      ] of csvLines) {
+        // Save iso only for entry of country without province (ignore provinces isos that don't match country iso)
+        if (!province) {
+          isos[country] = iso2.toLowerCase
+        }
+
+        metaData[`${country}|${province}|${admin}`] = {
+          pop: pop !== '' ? Number(pop) : null
+        }
+      }
+
+      // Set isos
+      for (let [country, iso] of Object.entries(isos)) {
+        for (let key of Object.keys(metaData).filter((k) =>
+          k.startsWith(`${country}|`)
+        )) {
+          metaData[key].iso = iso
         }
       }
     }
