@@ -70,7 +70,7 @@ export default class ApplicationController extends Controller {
       field = this.compareFields[0]
     }
 
-    this.router.transitionTo('chart', `compare:${field}`)
+    this.routing.selectChart(`compare:${field}`)
   }
 
   /*********************************

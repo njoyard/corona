@@ -17,6 +17,10 @@ export default class RoutingService extends Service {
   selectChart(chart) {
     let { router } = this
 
+    if (typeof chart === 'string') {
+      chart = { id: chart }
+    }
+
     let chartRoute = router.currentRoute.find(({ name }) => name === 'chart')
     if (!chartRoute || chartRoute.params.chart_id !== chart.id) {
       router.transitionTo('chart', chart.id)
