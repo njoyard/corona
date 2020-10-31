@@ -1,3 +1,4 @@
+import config from 'corona/config/environment'
 import ChartSeries from 'corona/models/chart-series'
 import {
   baseOptions,
@@ -10,6 +11,10 @@ import {
 import { compareFields } from 'corona/utils/chart-definitions'
 import { field } from 'corona/utils/fields'
 import { number } from 'corona/utils/formats'
+
+const {
+  APP: { compareMaxSeries }
+} = config
 
 export default class CompareChart {
   id = null
@@ -59,6 +64,7 @@ export default class CompareChart {
             (a, b) =>
               this.field.mostRecentValue(b) - this.field.mostRecentValue(a)
           )
+          .slice(0, compareMaxSeries)
       )
     }
 

@@ -20,6 +20,7 @@ module.exports = function (environment) {
     APP: {
       buildDate: Date.now(),
       dataThreshold: 5,
+      compareMaxSeries: 12,
       dataURL:
         'https://raw.githubusercontent.com/njoyard/corona/data/corona.json'
     }
