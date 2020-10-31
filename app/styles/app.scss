@@ -74,10 +74,10 @@ $font-size: 9px;
         left: 0;
         right: 0;
 
+        color: paper-color($warn, '500');
         text-align: center;
         font-style: italic;
         font-size: 80%;
-        opacity: 0.5;
       }
 
       h5 {

@@ -59,7 +59,13 @@ export default class ChartComponent extends Component {
     try {
       config = this.getChartConfig()
     } catch (e) {
-      this.dataError = e
+      if (typeof e !== 'string') {
+        console.error(`getChartConfig error`, e)
+        this.dataError = 'app.errors.chart-error'
+      } else {
+        this.dataError = e
+      }
+
       this.loading = false
       return
     }

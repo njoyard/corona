@@ -43,8 +43,7 @@ app:
   data: Open data
 
   errors:
-    no-zone: Please select a zone
-    no-chart: Please select a chart
+    chart-error: Could not draw this chart
     no-data: No data for this chart
 
 custom:
