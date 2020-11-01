@@ -60,6 +60,14 @@ function aggregateZone(zone, data) {
   // Extract available fields from children
   let allChildFields = union(...children.map((c) => c.meta.fields))
 
+  // Aggregate population
+  if (!meta.population) {
+    meta.population = children.reduce(
+      (pop, child) => pop + (child.meta.population || 0),
+      0
+    )
+  }
+
   // Aggregate fields that are in 90% of children
   let aggregateFields = new Set(
     [...allChildFields].filter(
