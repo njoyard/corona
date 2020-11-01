@@ -24,6 +24,10 @@ export default class CustomSeries {
     try {
       parse(expr.replace(/\s/g, ''), allFields)
     } catch (e) {
+      if (e.name !== 'SyntaxError') {
+        throw e
+      }
+
       if (e.message.type) {
         return [intl.t(`custom.errors.${e.message.type}`, e.message)]
       } else {
