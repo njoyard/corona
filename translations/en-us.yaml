@@ -6,8 +6,7 @@ app:
   chartOptions: Chart options
   multiChart:
     title: Multiple charts
-    onHint: Disable to only display one chart for the selected zone
-    offHint: Enable to display one chart per region in the selected zone
+    hint: Display one chart per region in the selected area
 
   about:
     menuHeader: About

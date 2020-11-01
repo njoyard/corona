@@ -6,8 +6,7 @@ app:
   chartOptions: Options
   multiChart:
     title: Graphiques multiples
-    onHint: Désactiver pour afficher un seul graphique pour la zone sélectionnée
-    offHint: Activer pour afficher un graphique par région dans la zone sélectionnée
+    hint: Affiche un graphique par région dans la zone géographique sélectionnée
 
   about:
     menuHeader: À propos
