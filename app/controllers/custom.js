@@ -34,8 +34,12 @@ export default class CustomController extends Controller {
     return this.model.dataset
   }
 
-  get fieldNames() {
+  get allFields() {
     return this.dataset.allFields
+  }
+
+  get fieldNames() {
+    return [...this.allFields].sort()
   }
 
   get series() {
@@ -112,7 +116,7 @@ export default class CustomController extends Controller {
    */
 
   createSeries() {
-    let { intl, fieldNames, series } = this
+    let { intl, allFields, series } = this
     let label = intl.t('custom.new-series')
     let counter = 0
 
@@ -120,7 +124,7 @@ export default class CustomController extends Controller {
       label = `${intl.t('custom.new-series')} #${++counter}`
     }
 
-    let created = new CustomSeries(label, intl, fieldNames)
+    let created = new CustomSeries(label, intl, allFields)
 
     return created
   }
