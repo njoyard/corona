@@ -41,7 +41,7 @@ export default class ChartSeries {
 
   validForZone(zone) {
     let { field: f } = this
-    return field(f).canApply(zone.fields)
+    return field(f).canApply(zone)
   }
 
   dataForZone(zone, intl) {

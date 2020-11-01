@@ -59,7 +59,7 @@ export default class CompareChart {
       this.zoneChildrenCache.set(
         zone,
         zone.children
-          .filter((c) => this.field.canApply(c.fields))
+          .filter((c) => this.field.canApply(c))
           .sort(
             (a, b) =>
               this.field.mostRecentValue(b) - this.field.mostRecentValue(a)

@@ -1,4 +1,5 @@
 const DAY = 86400000
+const META_FIELDS = ['population']
 
 /**************************************
  * Base field classes & helpers
@@ -97,8 +98,19 @@ class Source extends SinglePointField {
     this.fieldName = name
   }
 
-  canApply(fields) {
+  canApply({ fields }) {
     return fields.has(this.fieldName)
+  }
+}
+
+class Meta extends Field {
+  constructor(name) {
+    super((zone) => zone.points.map(() => zone[this.metaName]))
+    this.metaName = name
+  }
+
+  canApply(zone) {
+    return Boolean(zone[this.metaName])
   }
 }
 
@@ -113,8 +125,8 @@ class Scale extends MultiField {
     this.fields = [field, scale]
   }
 
-  canApply(fields) {
-    return this.fields.every((f) => f.canApply(fields))
+  canApply(zone) {
+    return this.fields.every((f) => f.canApply(zone))
   }
 }
 
@@ -129,8 +141,8 @@ class Ratio extends MultiField {
     this.fields = [num, denom]
   }
 
-  canApply(fields) {
-    return this.fields.every((f) => f.canApply(fields))
+  canApply(zone) {
+    return this.fields.every((f) => f.canApply(zone))
   }
 }
 
@@ -145,8 +157,8 @@ class Offset extends MultiField {
     this.fields = [field, offset]
   }
 
-  canApply(fields) {
-    return this.fields.every((f) => f.canApply(fields))
+  canApply(zone) {
+    return this.fields.every((f) => f.canApply(zone))
   }
 }
 
@@ -167,8 +179,8 @@ class Coalesce extends MultiField {
     this.fields = fields
   }
 
-  canApply(fields) {
-    return this.fields.some((f) => f.canApply(fields))
+  canApply(zone) {
+    return this.fields.some((f) => f.canApply(zone))
   }
 }
 
@@ -198,8 +210,8 @@ class Lag extends Field {
     this.fields = [field, days]
   }
 
-  canApply(fields) {
-    return this.fields.every((f) => f.canApply(fields))
+  canApply(zone) {
+    return this.fields.every((f) => f.canApply(zone))
   }
 }
 
@@ -221,8 +233,8 @@ class Change extends Field {
     this.field = field
   }
 
-  canApply(fields) {
-    return this.field.canApply(fields)
+  canApply(zone) {
+    return this.field.canApply(zone)
   }
 }
 
@@ -251,8 +263,8 @@ class Accumulate extends Field {
     this.field = field
   }
 
-  canApply(fields) {
-    return this.field.canApply(fields)
+  canApply(zone) {
+    return this.field.canApply(zone)
   }
 }
 
@@ -296,8 +308,8 @@ class Weekly extends Field {
     this.field = field
   }
 
-  canApply(fields) {
-    return this.field.canApply(fields)
+  canApply(zone) {
+    return this.field.canApply(zone)
   }
 }
 
@@ -313,8 +325,8 @@ class NonZero extends Field {
     this.field = field
   }
 
-  canApply(fields) {
-    return this.field.canApply(fields)
+  canApply(zone) {
+    return this.field.canApply(zone)
   }
 }
 
@@ -344,7 +356,9 @@ function fieldify(thing) {
 
   if (typeof thing === 'string') {
     if (!(thing in sourceCache)) {
-      sourceCache[thing] = new Source(thing)
+      sourceCache[thing] = META_FIELDS.includes(thing)
+        ? new Meta(thing)
+        : new Source(thing)
     }
 
     return sourceCache[thing]

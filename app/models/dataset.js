@@ -21,7 +21,7 @@ export default class Dataset {
   }
 
   get allFields() {
-    let fields = new Set()
+    let fields = new Set(['population'])
     let rec = [this.world]
 
     while (rec.length) {
