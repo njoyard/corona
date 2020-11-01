@@ -122,19 +122,40 @@ charts:
     description: Total tests made, number of positive tests and positivity rate over time
 
 fields:
-  confirmed: Confirmed cases
-  confirmed-change: Daily new cases
-  confirmed-weekly: Daily new cases (7-day moving average)
-  tests: Total tests made
-  tests-weekly: Total tests made (7-day moving average)
-  positives: Number of positive tests
-  positivity: Positivity rate
-  positivity-weekly: Positivity rate (7-day moving average)
-  hospital: Patients in hospital
-  hospital-weekly: New patients in hospital (7-day moving average)
-  intensive: Patients in intensive care
-  dismissed: Dismissed patients
-  deceased: Deaths
-  deceased-change: Daily new deaths
-  deceased-weekly: Daily new deaths (7-day moving average)
-  mortality-weekly: Mortality rate (7-day moving average)
+  confirmed:
+    short: Confirmed cases
+  confirmed-change:
+    short: Daily new cases
+  confirmed-weekly:
+    short: Daily new cases
+    long: Daily new cases (7-day moving average)
+  tests:
+    short: Total tests made
+  tests-weekly:
+    short: Total tests made
+    long: Total tests made (7-day moving average)
+  positives:
+    short: Number of positive tests
+  positivity:
+    short: Positivity rate
+  positivity-weekly:
+    short: Positivity rate
+    long: Positivity rate (7-day moving average)
+  hospital:
+    short: Patients in hospital
+  hospital-weekly:
+    short: New patients in hospital
+    long: New patients in hospital (7-day moving average)
+  intensive:
+    short: Patients in intensive care
+  dismissed:
+    short: Dismissed patients
+  deceased:
+    short: Deaths
+  deceased-change:
+    short: Daily new deaths
+  deceased-weekly:
+    short: Daily new deaths
+    long: Daily new deaths (7-day moving average)
+  mortality-weekly:
+    short: Mortality rate (7-day moving average)

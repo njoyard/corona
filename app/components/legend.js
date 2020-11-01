@@ -8,7 +8,8 @@ export default class LegendComponent extends Component {
 
   get items() {
     let {
-      args: { chart, zone }
+      args: { chart, zone },
+      intl
     } = this
 
     if (!chart) {
@@ -29,7 +30,11 @@ export default class LegendComponent extends Component {
         })
     } else {
       return chart.series.map(({ label, id, color, type }) => ({
-        label: label || this.intl.t(`fields.${id}`),
+        label:
+          label ||
+          (intl.exists(`fields.${id}.long`)
+            ? intl.t(`fields.${id}.long`)
+            : intl.t(`fields.${id}.short`)),
         color,
         type
       }))

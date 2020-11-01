@@ -123,22 +123,43 @@ charts:
     description: Nombre de patients hospitalisés, en réanimation, rentrés à domicile et décédés
 
 fields:
-  confirmed: Cas confirmés
-  confirmed-change: Nouveaux cas quotidiens
-  confirmed-weekly: Nouveaux cas quotidiens (moyenne hebdo)
-  tests: Tests effectués
-  tests-weekly: Tests effectués (moyenne hebdo)
-  positives: Tests positifs
-  positivity: Taux de positivité
-  positivity-weekly: Taux de positivité (moyenne hebdo)
-  hospital: Patients hospitalisés
-  hospital-weekly: Nouvelles hospitalisations (moyenne hebdo)
-  intensive: Patients en réanimation
-  dismissed: Rentrés à domicile
-  deceased: Décès
-  deceased-change: Nouveaux décès
-  deceased-weekly: Nouveaux décès (moyenne hebdo)
-  mortality-weekly: Taux de mortalité (moyenne hebdo)
+  confirmed:
+    short: Cas confirmés
+  confirmed-change:
+    short: Nouveaux cas quotidiens
+  confirmed-weekly:
+    short: Nouveaux cas quotidiens
+    long: Nouveaux cas quotidiens (moyenne glissante sur 7 jours)
+  tests:
+    short: Tests effectués
+  tests-weekly:
+    short: Tests effectués
+    long: Tests effectués (moyenne glissante sur 7 jours)
+  positives:
+    short: Tests positifs
+  positivity:
+    short: Taux de positivité
+  positivity-weekly:
+    short: Taux de positivité
+    long: Taux de positivité (moyenne glissante sur 7 jours)
+  hospital:
+    short: Patients hospitalisés
+  hospital-weekly:
+    short: Nouvelles hospitalisations
+    long: Nouvelles hospitalisations (moyenne glissante sur 7 jours)
+  intensive:
+    short: Patients en réanimation
+  dismissed:
+    short: Rentrés à domicile
+  deceased:
+    short: Décès
+  deceased-change:
+    short: Nouveaux décès
+  deceased-weekly:
+    short: Nouveaux décès
+    long: Nouveaux décès (moyenne glissante sur 7 jours)
+  mortality-weekly:
+    short: Taux de mortalité (moyenne hebdo)
 
 zones:
   World: Monde

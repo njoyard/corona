@@ -49,7 +49,7 @@ export default class ChartSeries {
 
     let dataset = {
       id,
-      label: label || intl.t(`fields.${id}`),
+      label: label || intl.t(`fields.${id}.short`),
       fill: false,
       yAxisID: scale,
       borderWidth: 2,

@@ -3,6 +3,7 @@ import { action } from '@ember/object'
 import { inject as service } from '@ember/service'
 
 export default class ChartZoneController extends Controller {
+  @service intl
   @service routing
 
   /*********************************
@@ -28,6 +29,22 @@ export default class ChartZoneController extends Controller {
   /*********************************
    * Chart display
    */
+
+  get title() {
+    let { isCompareChart, chart, zone, zones, intl } = this
+
+    if (isCompareChart) {
+      return intl.exists(`fields.${chart.id}.long`)
+        ? intl.t(`fields.${chart.id}.long`)
+        : intl.t(`fields.${chart.id}.short`)
+    } else {
+      if (zone === zones.firstObject) {
+        return null
+      } else {
+        return zones.firstObject.label
+      }
+    }
+  }
 
   get zones() {
     let { zone, multi, isCompareChart } = this

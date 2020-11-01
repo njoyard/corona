@@ -30,7 +30,7 @@
         {{#if this.isCompareChart}}
           {{#each this.compareFields as |field|}}
             <PaperItem @class={{concat "chart-list-item compare-field" (if (eq this.compareField field) " selected")}} @onClick={{fn this.showCompareChart field}}>
-              <p>{{t (concat 'fields.' field)}}</p>
+              <p>{{t (concat 'fields.' field '.short')}}</p>
             </PaperItem>
           {{/each}}
         {{/if}}

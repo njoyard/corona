@@ -15,7 +15,7 @@
     <Chart
       @zone={{this.zones.firstObject}}
       @chart={{this.chart}}
-      @title={{if (or this.isCompareChart (eq this.zone this.zones.firstObject)) false this.zones.firstObject.label}}
+      @title={{this.title}}
       @onTitleClicked={{this.selectZone}}/>
   {{/if}}
 </div>
