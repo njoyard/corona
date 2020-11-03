@@ -4,9 +4,14 @@ app:
 
   chartTypes: Chart type
   chartOptions: Chart options
-  multiChart:
-    title: Multiple charts
-    hint: Display one chart per region in the selected area
+
+  options:
+    multi:
+      title: Multiple charts
+      hint: Display one chart per region in the selected area
+    perCapita:
+      title: Per capita
+      hint: Show counts per 100k people, when applicable
 
   about:
     menuHeader: About
@@ -73,10 +78,18 @@ custom:
     line: Line
     points: Points
     bar: Bars
+  scaleMin: Minimum
+  scaleMax: Maximum
   scales:
-    count: Number
-    percent: Percent
-    log: Logarithmic
+    count:
+      option: Number
+      config: Numeric scale
+    percent:
+      option: Percent
+      config: Percent scale
+    log:
+      option: Logarithmic
+      config: Log scale
   help:
     headline: Writing series expressions
     intro: |
@@ -124,6 +137,8 @@ charts:
 fields:
   confirmed:
     short: Confirmed cases
+  confirmed-cumulative:
+    short: Cumulative confirmed cases
   confirmed-change:
     short: Daily new cases
   confirmed-weekly:
@@ -152,6 +167,8 @@ fields:
     short: Dismissed patients
   deceased:
     short: Deaths
+  deceased-cumulative:
+    short: Cumulative deaths
   deceased-change:
     short: Daily new deaths
   deceased-weekly:

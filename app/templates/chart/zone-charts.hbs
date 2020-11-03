@@ -7,6 +7,7 @@
             @zone={{zone}}
             @chart={{this.chart}}
             @title={{zone.label}}
+            @options={{this.options}}
             @onTitleClicked={{this.selectZone}} />
         </grid.tile>
       {{/each}}
@@ -16,10 +17,7 @@
       @zone={{this.zones.firstObject}}
       @chart={{this.chart}}
       @title={{this.title}}
+      @options={{this.options}}
       @onTitleClicked={{this.selectZone}}/>
   {{/if}}
 </div>
-
-{{#if this.isCompareChart}}
-  <Legend @chart={{this.chart}} @zone={{this.zones.firstObject}} />
-{{/if}}

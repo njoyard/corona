@@ -34,13 +34,14 @@ export default class DataService extends Service {
 
   get charts() {
     return chartDefinitions.map(
-      ({ id, series }) =>
+      ({ id, series, scales }) =>
         new Chart(
           id,
           series.map(
             ({ id, field, options }) =>
               new ChartSeries(id, field, options || {})
-          )
+          ),
+          scales
         )
     )
   }

@@ -46,6 +46,10 @@ export default class CustomController extends Controller {
     return this.chart.series
   }
 
+  get scaleConfigs() {
+    return this.chart.activeScales
+  }
+
   get hasBars() {
     return this.series.some((s) => s.type === 'bar')
   }

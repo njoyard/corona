@@ -98,10 +98,12 @@ const chartDefinitions = [
 ]
 
 const compareFields = {
+  'confirmed-cumulative': { field: 'confirmed', format: integer },
   'confirmed-weekly': {
     field: weeklyConfirmedChange,
     options: { format: integer }
   },
+  'deceased-cumulative': { field: 'deceased', format: integer },
   'deceased-weekly': {
     field: weeklyDeceasedChange,
     options: { format: integer }

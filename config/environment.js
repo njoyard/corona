@@ -7,30 +7,33 @@ module.exports = function (environment) {
     rootURL: process.env.CORONA_ROOT_URL || '/',
     locationType: 'hash',
     EmberENV: {
-      FEATURES: {
-        // Here you can enable experimental features on an ember canary build
-        // e.g. EMBER_NATIVE_DECORATOR_SUPPORT: true
-      },
+      FEATURES: {},
       EXTEND_PROTOTYPES: {
-        // Prevent Ember Data from overriding Date.parse.
         Date: false
       }
     },
 
     APP: {
       buildDate: Date.now(),
+
+      // Ignore datasets with too few non-NaN points
       dataThreshold: 5,
-      compareMaxSeries: 12,
+
+      // When comparing only keep this number of series
+      compareMaxSeries: 20,
+
+      // Data source
       dataURL:
-        'https://raw.githubusercontent.com/njoyard/corona/data/corona.json'
+        'https://raw.githubusercontent.com/njoyard/corona/data/corona.json',
+
+      // Sorting method for compare charts, one of 'max' or 'most-recent'
+      sortMethod: 'max'
     }
   }
 
   if (environment === 'test') {
-    // Testem prefers this...
     ENV.locationType = 'none'
 
-    // keep test console output quieter
     ENV.APP.LOG_ACTIVE_GENERATION = false
     ENV.APP.LOG_VIEW_LOOKUPS = false
 

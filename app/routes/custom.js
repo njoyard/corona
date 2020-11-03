@@ -9,7 +9,7 @@ export default class CustomRoute extends Route {
   @service customCharts
 
   model({ chart_id }) {
-    let { dataset } = this.modelFor('application')
+    let dataset = this.modelFor('application')
     let { allFields } = dataset
     let { intl, customCharts } = this
     let chart

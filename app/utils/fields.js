@@ -1,3 +1,9 @@
+import config from 'corona/config/environment'
+
+const {
+  APP: { sortMethod }
+} = config
+
 const DAY = 86400000
 const META_FIELDS = ['population']
 
@@ -23,7 +29,7 @@ class Field {
     this.compute = compute
     this.name = name || '<unknown>'
     this.applied = new WeakMap()
-    this.mrvs = new WeakMap()
+    this.svs = new WeakMap()
   }
 
   canApply() {
@@ -40,18 +46,30 @@ class Field {
     return applied.get(zone)
   }
 
-  mostRecentValue(zone) {
-    let { mrvs } = this
+  sortValue(zone) {
+    let { svs } = this
 
-    if (!mrvs.has(zone)) {
-      let value = [...this.apply(zone)]
-        .reverse()
-        .find(({ value }) => !isNaN(value))
+    if (!svs.has(zone)) {
+      let values = this.apply(zone)
+      let value
 
-      mrvs.set(zone, value && value.value)
+      if (sortMethod === 'most-recent') {
+        let mostRecent = [...values]
+          .reverse()
+          .find(({ value }) => !isNaN(value))
+        value = mostRecent && mostRecent.value
+      } else {
+        value = Math.max(
+          ...values
+            .filter(({ value }) => !isNaN(value))
+            .map(({ value }) => value)
+        )
+      }
+
+      svs.set(zone, value && value.value)
     }
 
-    return mrvs.get(zone)
+    return svs.get(zone)
   }
 }
 

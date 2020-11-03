@@ -4,9 +4,14 @@ app:
 
   chartTypes: Type de graphique
   chartOptions: Options
-  multiChart:
-    title: Graphiques multiples
-    hint: Affiche un graphique par région dans la zone géographique sélectionnée
+
+  options:
+    multi:
+      title: Graphiques multiples
+      hint: Affiche un graphique par région dans la zone géographique sélectionnée
+    perCapita:
+      title: Par habitant
+      hint: Affiche les données pour 100 000 habitants, si applicable
 
   about:
     menuHeader: À propos
@@ -73,10 +78,18 @@ custom:
     line: Ligne
     points: Points
     bar: Barres
+  scaleMin: Minimum
+  scaleMax: Maximum
   scales:
-    count: Nombre
-    percent: Pourcentage
-    log: Logarithmique
+    count:
+      option: Nombre
+      config: Échelle numérique
+    percent:
+      option: Pourcentage
+      config: Échelle en pourcent
+    log:
+      option: Logarithmique
+      config: Échelle logarithmique
   help:
     headline: Syntaxe des expressions de séries
     intro: |
@@ -125,6 +138,8 @@ charts:
 fields:
   confirmed:
     short: Cas confirmés
+  confirmed-cumulative:
+    short: Cas confirmés (cumul)
   confirmed-change:
     short: Nouveaux cas quotidiens
   confirmed-weekly:
@@ -153,6 +168,8 @@ fields:
     short: Rentrés à domicile
   deceased:
     short: Décès
+  deceased-cumulative:
+    short: Décès (cumul)
   deceased-change:
     short: Nouveaux décès
   deceased-weekly:

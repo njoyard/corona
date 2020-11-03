@@ -6,7 +6,7 @@ export default class ChartRoute extends Route {
   @service customCharts
 
   model({ chart_id }) {
-    let { dataset, multi } = this.modelFor('application')
+    let dataset = this.modelFor('application')
     let chart = dataset.findChart(chart_id) || this.customCharts.get(chart_id)
 
     if (!chart) {
@@ -15,7 +15,6 @@ export default class ChartRoute extends Route {
 
     return {
       world: dataset.world,
-      multi,
       chart,
       root: dataset.forChart(chart)
     }
@@ -42,11 +41,7 @@ export default class ChartRoute extends Route {
         }
       }
 
-      if (zone === root.id && !root.hasSelfData) {
-        this.transitionTo('chart.zone', zone, { queryParams: { multi: true } })
-      } else {
-        this.transitionTo('chart.zone', zone)
-      }
+      this.transitionTo('chart.zone', zone)
     }
   }
 }

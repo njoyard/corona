@@ -51,6 +51,14 @@
             <PaperInput @label={{t 'custom.description'}} @value={{this.chart.description}} @onChange={{fn (mut this.chart.description)}} />
           </div>
 
+          {{#each this.scaleConfigs as |s|}}
+            <div class="layout">
+              <span class="nowrap">{{t (concat 'custom.scales.' s.scale '.config')}}</span>
+              <PaperInput @type="number" @label={{t 'custom.scaleMin'}} @value={{s.min}} @onChange={{fn (mut s.min)}} />
+              <PaperInput @type="number" @label={{t 'custom.scaleMax'}} @value={{s.max}} @onChange={{fn (mut s.max)}} />
+            </div>
+          {{/each}}
+
           {{#if this.hasBars}}
             <div class="layout">
               <PaperCheckbox @value={{this.chart.stacked}} @onChange={{fn (mut this.chart.stacked)}}>
@@ -123,7 +131,7 @@
                   </PaperSelect>
 
                   <PaperSelect @label={{t 'custom.scale'}} @selected={{series.scale}} @options={{this.scales}} @onChange={{fn (mut series.scale)}} as |option|>
-                    {{t (concat 'custom.scales.' option)}}
+                    {{t (concat 'custom.scales.' option '.option')}}
                   </PaperSelect>
 
                   <PaperSelect @label={{t 'custom.color'}} @selected={{series.color}} @options={{this.colors}} @onChange={{fn (mut series.color)}} as |option|>

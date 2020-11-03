@@ -1,5 +1,5 @@
 import { alpha, colors } from 'corona/utils/colors'
-import { field } from 'corona/utils/fields'
+import { field, ratio, scale } from 'corona/utils/fields'
 import parse from 'corona/utils/field-parser'
 import { number, percent } from 'corona/utils/formats'
 
@@ -31,6 +31,7 @@ export default class ChartSeries {
   constructor(id, field, options = {}) {
     this.id = id
     this.field = field
+    this.pcField = scale(100000, ratio(field, 'population'))
 
     Object.assign(
       this,
@@ -44,22 +45,33 @@ export default class ChartSeries {
     return field(f).canApply(zone)
   }
 
-  dataForZone(zone, intl) {
-    let { id, label, field: f, type, color, scale, stack } = this
+  dataForZone(zone, { perCapita }, intl) {
+    let {
+      id,
+      label,
+      field: f,
+      pcField,
+      type,
+      color,
+      scale: yScale,
+      stack
+    } = this
+
+    let dataField = perCapita && yScale === 'count' ? pcField : field(f)
 
     let dataset = {
       id,
       label: label || intl.t(`fields.${id}.short`),
       fill: false,
-      yAxisID: scale,
+      yAxisID: yScale,
       borderWidth: 2,
       backgroundColor: alpha(color, type === 'bar' ? 0.5 : 0.75),
       borderColor: alpha(color, type === 'bar' ? 0.5 : 0.75),
       normalized: true,
-      data: field(f)
+      data: dataField
         .apply(zone)
         .filter(
-          ({ value }) => !isNaN(value) && (scale !== 'log' || value !== 0)
+          ({ value }) => !isNaN(value) && (yScale !== 'log' || value !== 0)
         )
         .map(({ date, value }) => ({
           x: date,

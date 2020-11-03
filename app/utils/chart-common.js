@@ -43,6 +43,10 @@ const baseOptions = {
   }
 }
 
+const baseTooltipOptions = {
+  backgroundColor: 'rgba(0, 0, 0, 0.65)'
+}
+
 const timeScale = {
   gridLines: {
     display: false
@@ -53,7 +57,7 @@ const timeScale = {
   }
 }
 
-function yScales(series, intl) {
+function yScales(series, intl, scaleOptions = {}) {
   let scales = series
     .map((s) => s.scale)
     .reduce((scales, scale) => {
@@ -70,6 +74,14 @@ function yScales(series, intl) {
             maxTicksLimit: scale === 'log' ? 6 : 11
           },
           type: scale === 'log' ? 'logarithmic' : 'linear'
+        }
+
+        if (scaleOptions[scale]) {
+          for (let key of ['min', 'max']) {
+            if (scaleOptions[scale][key] !== null) {
+              scales[scale][key] = scaleOptions[scale][key]
+            }
+          }
         }
       }
 
@@ -107,6 +119,7 @@ function labelCallback(seriesOrFormatter, intl) {
 
 export {
   baseOptions,
+  baseTooltipOptions,
   compareStyle,
   labelCallback,
   timeScale,

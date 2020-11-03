@@ -29,8 +29,12 @@ export default class ApplicationController extends Controller {
    * Aliases
    */
 
+  get dataset() {
+    return this.model
+  }
+
   get charts() {
-    return this.model.dataset.charts
+    return this.dataset.charts
   }
 
   get customCharts() {

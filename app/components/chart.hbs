@@ -20,7 +20,7 @@
   {{else}}
     <canvas
       {{did-insert this.createChart}}
-      {{did-update this.updateChart @chart @zone}}
+      {{did-update this.updateChart @chart @zone @options}}
       {{will-destroy this.destroyChart}} />
   {{/if}}
 </div>

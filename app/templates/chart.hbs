@@ -30,7 +30,4 @@
 </PaperToolbar>
 
 {{outlet 'charts'}}
-
-{{#unless this.chart.isCompareChart}}
-  <Legend @chart={{this.chart}} />
-{{/unless}}
+{{outlet 'legend'}}

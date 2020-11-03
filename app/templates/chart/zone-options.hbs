@@ -1,0 +1,28 @@
+{{#if this.hasChartOptions}}
+  <PaperDivider />
+  <PaperSubheader>{{t 'app.chartOptions'}}</PaperSubheader>
+{{/if}}
+
+{{#if this.hasMultiOption}}
+  <PaperItem class="md-2-line md-long-text" as |controls|>
+    <div class="md-list-item-text">
+      <h3>{{t 'app.options.multi.title'}}</h3>
+      <p>{{t 'app.options.multi.hint'}}</p>
+    </div>
+    <div class="md-secondary-container">
+      <controls.checkbox @value={{this.multi}} @secondary={{true}} @onChange={{action (mut this.multi)}} />
+    </div>
+  </PaperItem>
+{{/if}}
+
+{{#if this.hasPerCapitaOption}}
+  <PaperItem class="md-2-line md-long-text" as |controls|>
+    <div class="md-list-item-text">
+      <h3>{{t 'app.options.perCapita.title'}}</h3>
+      <p>{{t 'app.options.perCapita.hint'}}</p>
+    </div>
+    <div class="md-secondary-container">
+      <controls.checkbox @value={{this.perCapita}} @secondary={{true}} @onChange={{action (mut this.perCapita)}} />
+    </div>
+  </PaperItem>
+{{/if}}

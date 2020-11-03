@@ -42,19 +42,7 @@
           <p>{{t 'custom.add'}}</p>
         </PaperItem>
 
-        {{#unless this.isCompareChart}}
-          <PaperDivider />
-          <PaperSubheader>{{t 'app.chartOptions'}}</PaperSubheader>
-          <PaperItem class="md-2-line" as |controls|>
-            <div class="md-list-item-text">
-              <h3>{{t 'app.multiChart.title'}}</h3>
-              <p>{{t 'app.multiChart.hint'}}</p>
-            </div>
-            <div class="md-secondary-container">
-              <controls.checkbox @value={{this.multi}} @secondary={{true}} @onChange={{action (mut this.multi)}} />
-            </div>
-          </PaperItem>
-        {{/unless}}
+        {{outlet 'chart-options'}}
 
         <PaperDivider />
         <PaperSubheader>{{t 'app.about.menuHeader'}}</PaperSubheader>

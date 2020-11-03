@@ -25,11 +25,11 @@ export default class ChartComponent extends Component {
 
   getChartConfig() {
     let {
-      args: { chart, zone, title, isPreview },
+      args: { chart, zone, title, isPreview, options },
       intl
     } = this
 
-    let data = chart.dataForZone(zone, intl)
+    let data = chart.dataForZone(zone, options, intl)
 
     if (data.datasets.every((ds) => ds.data.length < dataThreshold)) {
       throw 'app.errors.no-data'

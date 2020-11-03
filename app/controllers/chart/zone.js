@@ -1,10 +1,13 @@
 import Controller from '@ember/controller'
 import { action } from '@ember/object'
 import { inject as service } from '@ember/service'
+import { tracked } from '@glimmer/tracking'
 
 export default class ChartZoneController extends Controller {
   @service intl
   @service routing
+
+  queryParams = [{ multi: 'm' }, { perCapita: 'c' }]
 
   /*********************************
    * Aliases
@@ -14,16 +17,48 @@ export default class ChartZoneController extends Controller {
     return this.model.chart
   }
 
-  get multi() {
-    return this.model.multi
-  }
-
   get zone() {
     return this.model.zone
   }
 
   get isCompareChart() {
-    return this.model.chart.isCompareChart
+    return this.chart.isCompareChart
+  }
+
+  /*********************************
+   * Chart options
+   */
+
+  @tracked multi = false
+  @tracked perCapita = false
+
+  get hasMultiOption() {
+    return !this.isCompareChart
+  }
+
+  get hasPerCapitaOption() {
+    let {
+      zone: { zone },
+      zones,
+      isCompareChart,
+      chart
+    } = this
+
+    let checkedZones = isCompareChart ? zone.children : zones
+    let hasCountSeries = isCompareChart
+      ? chart.scale === 'count'
+      : chart.series.some((s) => (s.scale || 'count') === 'count')
+
+    return checkedZones.every((z) => z.population) && hasCountSeries
+  }
+
+  get hasChartOptions() {
+    return this.hasMultiOption || this.hasPerCapitaOption
+  }
+
+  get options() {
+    let { hasPerCapitaOption, perCapita } = this
+    return { perCapita: hasPerCapitaOption ? perCapita : false }
   }
 
   /*********************************
@@ -70,6 +105,11 @@ export default class ChartZoneController extends Controller {
     }
 
     return null
+  }
+
+  get legend() {
+    let { chart, intl, perCapita, zone } = this
+    return chart.legendFor(zone.zone, intl, { perCapita })
   }
 
   @action
