@@ -4,11 +4,15 @@ This is a Covid-19 cases visualisation app using CSSE and French Government data
 
 Access the [live instance](https://corona.njoyard.fr/develop) of this app.
 
+![](public/assets/screenshot-v2.png)
+
 ## About this app
 
 ### Data sources
 
-TODO (in the meantime see `cruncher/sources/*.js`)
+- [Center for Systems Science and Engineering (CSSE) at Johns Hopkins University](http://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series)
+- [European Centre for Disease Prevention and Control (ECDC)](http://www.ecdc.europa.eu/en/publications-data/download-data-hospital-and-icu-admission-rates-and-current-occupancy-covid-19)
+- [Santé Publique France on the data.gouv.fr platform](http://www.data.gouv.fr/fr/datasets/donnees-hospitalieres-relatives-a-lepidemie-de-covid-19/)
 
 ### License and developer info
 
