@@ -1,6 +1,6 @@
 import { change, ratio, reverse, weekly } from 'corona/utils/fields'
 import { colors, alpha } from 'corona/utils/colors'
-import { abs, percent, integer } from 'corona/utils/formats'
+import { abs, percent } from 'corona/utils/formats'
 
 const { blue, teal, orange, red, grey } = colors
 
@@ -98,21 +98,12 @@ const chartDefinitions = [
 ]
 
 const compareFields = {
-  'confirmed-cumulative': { field: 'confirmed', format: integer },
-  'confirmed-weekly': {
-    field: weeklyConfirmedChange,
-    options: { format: integer }
-  },
-  'deceased-cumulative': { field: 'deceased', format: integer },
-  'deceased-weekly': {
-    field: weeklyDeceasedChange,
-    options: { format: integer }
-  },
-  'hospital-weekly': {
-    field: weeklyHospitalChange,
-    options: { format: integer }
-  },
-  'tests-weekly': { field: weekly('tests'), options: { format: integer } },
+  'confirmed-cumulative': { field: 'confirmed' },
+  'confirmed-weekly': { field: weeklyConfirmedChange },
+  'deceased-cumulative': { field: 'deceased' },
+  'deceased-weekly': { field: weeklyDeceasedChange },
+  'hospital-weekly': { field: weeklyHospitalChange },
+  'tests-weekly': { field: weekly('tests') },
   'positivity-weekly': {
     field: weeklyPositivity,
     options: { scale: 'percent', format: percent }
