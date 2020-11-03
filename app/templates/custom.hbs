@@ -52,8 +52,8 @@
           </div>
 
           {{#each this.scaleConfigs as |s|}}
-            <div class="layout">
-              <span class="nowrap">{{t (concat 'custom.scales.' s.scale '.config')}}</span>
+            <div class="layout scale-config">
+              <span class="nowrap label">{{t (concat 'custom.scales.' s.scale '.config')}}</span>
               <PaperInput @type="number" @label={{t 'custom.scaleMin'}} @value={{s.min}} @onChange={{fn (mut s.min)}} />
               <PaperInput @type="number" @label={{t 'custom.scaleMax'}} @value={{s.max}} @onChange={{fn (mut s.max)}} />
             </div>

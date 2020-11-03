@@ -66,7 +66,7 @@ class Field {
         )
       }
 
-      svs.set(zone, value && value.value)
+      svs.set(zone, value)
     }
 
     return svs.get(zone)

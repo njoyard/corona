@@ -231,6 +231,21 @@ md-toolbar.md-default-theme.main-toolbar {
   }
 }
 
+.scale-config {
+  .label {
+    margin-top: $baseline-grid;
+    margin-right: $baseline-grid;
+  }
+
+  md-input-container {
+    margin: 0 0 16px 0;
+  }
+
+  .md-errors-spacer {
+    display: none;
+  }
+}
+
 .color-option {
   border: 2px solid;
   height: 0;
