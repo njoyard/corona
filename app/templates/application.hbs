@@ -58,9 +58,17 @@
           </svg>
           <p>{{t 'app.source'}}</p>
         </PaperItem>
+        <PaperItem @onClick={{fn this.openLink 'new-issue'}}>
+          <PaperIcon @icon="bug_report" />
+          <p>{{t 'app.issues'}}</p>
+        </PaperItem>
         <PaperItem @onClick={{fn this.openLink 'data'}}>
           <PaperIcon @icon="snippet_folder" />
           <p>{{t 'app.data'}}</p>
+        </PaperItem>
+        <PaperItem @onClick={{fn this.openLink 'contact'}}>
+          <PaperIcon @icon="alternate_email" />
+          <p>{{t 'app.contact'}}</p>
         </PaperItem>
       </PaperList>
     </PaperContent>

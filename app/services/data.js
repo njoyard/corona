@@ -18,7 +18,9 @@ export default class DataService extends Service {
 
   links = [
     { id: 'github', href: '//github.com/njoyard/corona' },
-    { id: 'data', href: '//github.com/njoyard/corona/tree/data' }
+    { id: 'new-issue', href: '//github.com/njoyard/corona/issues/new' },
+    { id: 'data', href: '//github.com/njoyard/corona/tree/data' },
+    { id: 'contact', href: '//twitter.com/njoyard' }
   ]
 
   sources = {

@@ -38,13 +38,15 @@ app:
       repo: |
         Le code source de l'application est disponible sous license MIT
         <a href="//github.com/njoyard/corona" target="_blank" rel="noopener noreferer">sur GitHub</a>.
-        N'hésitez pas à y <a href="//github.com/njoyard/corona/issues" target="_blank" rel="noopener noreferer">signaler tout problème</a> ou y faire des suggestions.
+        N'hésitez pas à y <a href="//github.com/njoyard/corona/issues/new" target="_blank" rel="noopener noreferer">signaler tout problème</a> ou y faire des suggestions.
       logo: |
         Logo fourni par <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferer">Becris</a>,
         sous license <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0</a>.
 
   source: Code source
+  issues: Signaler un problème
   data: Open Data
+  contact: Contact
 
   errors:
     chart-error: Could not draw this chart
