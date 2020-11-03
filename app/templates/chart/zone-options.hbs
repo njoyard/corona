@@ -10,7 +10,7 @@
       <p>{{t 'app.options.multi.hint'}}</p>
     </div>
     <div class="md-secondary-container">
-      <controls.checkbox @value={{this.multi}} @secondary={{true}} @onChange={{action (mut this.multi)}} />
+      <controls.checkbox @value={{this.multi}} @secondary={{true}} @onChange={{fn (mut this.multi)}} />
     </div>
   </PaperItem>
 {{/if}}
@@ -22,7 +22,7 @@
       <p>{{t 'app.options.perCapita.hint'}}</p>
     </div>
     <div class="md-secondary-container">
-      <controls.checkbox @value={{this.perCapita}} @secondary={{true}} @onChange={{action (mut this.perCapita)}} />
+      <controls.checkbox @value={{this.perCapita}} @secondary={{true}} @onChange={{fn (mut this.perCapita)}} />
     </div>
   </PaperItem>
 {{/if}}

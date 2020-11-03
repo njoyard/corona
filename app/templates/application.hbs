@@ -37,9 +37,11 @@
 
         <ChartList @charts={{this.charts}} />
         <ChartList @charts={{this.customCharts}} />
-        <PaperItem @onClick={{this.createChart}}>
+        <PaperItem @class="md-2-line md-long-text chart-list-item" @onClick={{this.createChart}}>
           <PaperIcon @icon="addchart" />
-          <p>{{t 'custom.add'}}</p>
+          <div class="md-list-item-text">
+            <h3>{{t 'custom.add'}}</h3>
+          </div>
         </PaperItem>
 
         {{outlet 'chart-options'}}

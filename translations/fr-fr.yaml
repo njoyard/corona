@@ -176,7 +176,7 @@ fields:
     short: Nouveaux décès
     long: Nouveaux décès (moyenne glissante sur 7 jours)
   mortality-weekly:
-    short: Taux de mortalité (moyenne hebdo)
+    short: Taux de mortalité (moyenne glissante sur 7 jours)
 
 zones:
   World: Monde
