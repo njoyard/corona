@@ -89,7 +89,8 @@
              <Chart
                 @isPreview={{true}}
                 @zone={{this.previewZone.zone}}
-                @chart={{this.preview.chart}} />
+                @chart={{this.preview.chart}}
+                @options={{hash perCapita=false}} />
           {{else}}
             <div class="error">
               {{t 'custom.not-previewable'}}
