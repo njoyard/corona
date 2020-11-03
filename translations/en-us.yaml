@@ -21,7 +21,7 @@ app:
     text: |
       This app uses data from the CSSE at John Hopkins University, from the European Centre for Disease Prevention and Control (ECDC), and from Santé Publique France.
 
-      Please note that CSSE and ECDC data comes from officially reported figures, and is only indicative of the actual situation. It comes from various organizations and countries, and may use different counting methods. Actual figures are most likely higher.
+      Please note that CSSE and ECDC data comes from officially reported figures, and is only indicative of the actual situation. It comes from various organizations and countries, and may use different counting methods. Some figures are probably underestimated (like the number of cases), others are probably overestimated (like mortality rate).
 
       Data is refreshed twice a day, independently of source updates.
     built: This version was built on {buildDate, date, medium} at {buildDate, time, full}

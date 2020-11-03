@@ -21,7 +21,7 @@ app:
     text: |
       Cette application utilise les données en provenance du CSSE à l'université John Hopkins, du Centre Européen pour la Prévention et le Contrôle des Maladies (ECDC), ainsi que celles de Santé Publique France.
 
-      Notez que les données CSSE et de l'ECDC sont fournies uniquement à titre indicatif. Elles sont agrégées à partir des informations fournies par plusieurs organismes distincts, qui utilisent des méthodes de relevé et de comptage diverses. Les chiffres réels sont probablement plus élevés.
+      Notez que les données CSSE et de l'ECDC sont fournies uniquement à titre indicatif. Elles sont agrégées à partir des informations fournies par plusieurs organismes distincts, qui utilisent des méthodes de relevé et de comptage diverses. Certains chiffres sont probablement sous-estimés (comme le nombre de cas), et d'autres surestimés (comme le taux de mortalité).
 
       Les données sont récupérées par l'application deux fois par jour, indépendemment de la mise à jour des données sources.
     built: Cette version a été générée le {buildDate, date, medium} à {buildDate, time, full}
