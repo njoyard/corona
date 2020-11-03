@@ -71,7 +71,7 @@ export default class CCSEDataSource {
       ] of csvLines) {
         // Save iso only for entry of country without province (ignore provinces isos that don't match country iso)
         if (!province) {
-          isos[country] = iso2.toLowerCase
+          isos[country] = iso2.toLowerCase()
         }
 
         metaData[`${country}|${province}|${admin}`] = {
