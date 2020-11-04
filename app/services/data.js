@@ -17,10 +17,19 @@ export default class DataService extends Service {
   @service intl
 
   links = [
-    { id: 'github', href: '//github.com/njoyard/corona' },
-    { id: 'new-issue', href: '//github.com/njoyard/corona/issues/new' },
-    { id: 'data', href: '//github.com/njoyard/corona/tree/data' },
-    { id: 'contact', href: '//twitter.com/njoyard' }
+    {
+      id: 'data',
+      icon: 'snippet_folder',
+      href: '//github.com/njoyard/corona/tree/data'
+    },
+    { id: 'github', icon: 'github', href: '//github.com/njoyard/corona' },
+    {
+      id: 'new-issue',
+      icon: 'bug_report',
+      href: '//github.com/njoyard/corona/issues/new'
+    },
+
+    { id: 'contact', icon: 'alternate_email', href: '//twitter.com/njoyard' }
   ]
 
   sources = {

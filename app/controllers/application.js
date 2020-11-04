@@ -98,7 +98,5 @@ export default class ApplicationController extends Controller {
   @tracked showAbout = false
 
   @action
-  openLink(id) {
-    document.querySelector(`a.hidden-link#${id}`).click()
-  }
+  noop() {}
 }

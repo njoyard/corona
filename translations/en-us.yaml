@@ -43,10 +43,11 @@ app:
         Coronavirus icon courtesy of <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferrer">Becris</a>,
         shared under the <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">Creative Commons CC-BY-SA version 3.0 license</a>.
 
-  source: Source code
-  issues: Report issues
-  data: Open data
-  contact: Contact
+  links:
+    github: Source code
+    new-issue: Report issues
+    data: Open data
+    contact: Contact
 
   errors:
     chart-error: Could not draw this chart
