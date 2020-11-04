@@ -1,4 +1,4 @@
-import { nextByDate, debugOutput } from '../utils'
+import { nextByDate, debugOutput, union } from '../utils'
 
 // Merges data
 // Output has exactly one point set for each zone, with one point for each date

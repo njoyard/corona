@@ -13,7 +13,10 @@ function createIntermediateZones(data) {
 
   let all = [
     { zone: 'World' },
-    ...Object.keys(continents).map((c) => ({ zone: c, parent: 'World' })),
+    ...Object.keys(continents).map((c) => ({
+      zone: c,
+      parent: 'World'
+    })),
     ...[...zones].map((z) => {
       let levels = z.split('|')
       let parent =
@@ -36,7 +39,12 @@ function createIntermediateZones(data) {
     let existing = data.find((z) => z.zone === zone)
 
     if (!existing) {
-      data.push({ zone, parent, meta: { fields: [] }, points: [] })
+      data.push({
+        zone,
+        parent,
+        meta: { fields: [] },
+        points: []
+      })
     } else {
       existing.parent = parent
     }

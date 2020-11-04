@@ -16,7 +16,7 @@ export default async function fetch() {
       continue
     }
 
-    console.log(`Filtering nulls, removing empty points and sorting by date`)
+    console.log(`  filtering nulls, removing empty points and sorting by date`)
 
     for (let zone of data) {
       if (zone.points) {

@@ -97,10 +97,18 @@ export default class CCSEDataSource {
     let csvLines = parseCSV(await fetchText(this.urlFor(scope)))
     let dates = csvLines.shift().slice(skip).map(parseDate)
 
-    let entries = csvLines.map((line) => {
+    let entries = csvLines.map((line, index) => {
       let levelNames = levels.map((l) => (typeof l === 'string' ? l : line[l]))
 
       let counts = line.slice(skip).map(Number)
+
+      if (levelNames.join('|') === '|') {
+        console.warn(
+          `  ! bogus line in ${scope} (line ${index + 2}): ${line
+            .slice(0, 10)
+            .join(',')}...`
+        )
+      }
 
       return {
         levelsJoined: levelNames.join('|'),
@@ -115,6 +123,10 @@ export default class CCSEDataSource {
 
     for (let entry of entries) {
       let { levelsJoined, levelNames, dates, counts } = entry
+
+      if (levelsJoined === '|') {
+        continue
+      }
 
       let meta = await this.metaFor(...levelNames)
       let population, iso

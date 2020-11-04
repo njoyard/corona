@@ -1,7 +1,7 @@
 import { ensureDir, writeFile } from 'fs-extra'
 import { dirname, resolve } from 'path'
 
-import { DATA_DIR } from './utils'
+import { DATA_DIR, debugOutput } from './utils'
 import steps from './steps'
 
 const README = `
@@ -25,6 +25,14 @@ export default async function crunch() {
   await ensureDir(DATA_DIR)
   await writeFile(resolve(DATA_DIR, 'corona.json'), JSON.stringify(data))
   await writeFile(resolve(DATA_DIR, 'README.md'), README)
+
+  if (process.env.DEBUG_OUTPUT) {
+    for (let z of data) {
+      delete z.points
+    }
+
+    await debugOutput('final-no-points', data)
+  }
 
   if (process.env.DEV_OUTPUT) {
     await writeFile(
