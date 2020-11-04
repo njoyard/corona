@@ -4,7 +4,7 @@
 {{/if}}
 
 {{#if @zone.siblings.length}}
-  <PaperMenu as |menu|>
+  <PaperMenu @offset="0 24" as |menu|>
     <menu.trigger>
       <a>
         {{@zone.label}}
@@ -26,7 +26,7 @@
 
 {{#if @zone.children.length}}
   <PaperIcon @icon="chevron_right" @class="muted" />
-  <PaperMenu as |menu|>
+  <PaperMenu @offset="0 24" as |menu|>
     <menu.trigger>
       <a class="muted">
         {{t @zone.subdivKey}}
