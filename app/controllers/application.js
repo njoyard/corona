@@ -12,8 +12,6 @@ export default class ApplicationController extends Controller {
   @service routing
   @service('customCharts') custom
 
-  queryParams = ['multi']
-
   /*********************************
    * Side nav handling
    */
@@ -44,12 +42,6 @@ export default class ApplicationController extends Controller {
   get links() {
     return this.data.links
   }
-
-  /*********************************
-   * Charting options
-   */
-
-  @tracked multi = false
 
   /*********************************
    * Comparison charts

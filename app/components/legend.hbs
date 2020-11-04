@@ -1,5 +1,15 @@
 <div class="legend">
   {{#each @items as |item|}}
-    <LegendItem @type={{item.type}} @color={{item.color}} @label={{item.label}} />
+    {{#if (eq item.type 'truncate-hint')}}
+      <div class="legend__item">
+        <PaperIcon @icon="more" @size={{18}}>
+          <PaperTooltip @position="top">
+            {{t 'app.compare.truncate-hint' count=item.count}}
+          </PaperTooltip>
+        </PaperIcon>
+      </div>
+    {{else}}
+      <LegendItem @type={{item.type}} @color={{item.color}} @label={{item.label}} />
+    {{/if}}
   {{/each}}
 </div>

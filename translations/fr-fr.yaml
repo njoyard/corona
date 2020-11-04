@@ -5,6 +5,9 @@ app:
   chartTypes: Type de graphique
   chartOptions: Options
 
+  compare:
+    truncate-hint: '{count} {count, plural, one {zone masquée} other {zones masquées}} ayant des valeurs inférieures'
+
   options:
     multi:
       title: Graphiques multiples

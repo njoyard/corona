@@ -71,14 +71,18 @@ export default class CompareChart {
 
     if (!this[cacheKey].has(zone)) {
       let field = perCapita ? this.pcField : this.field
+      let validChildren = zone.children
+        .filter((c) => field.canApply(c))
+        .sort((a, b) => this.field.sortValue(b) - this.field.sortValue(a))
 
-      this[cacheKey].set(
-        zone,
-        zone.children
-          .filter((c) => field.canApply(c))
-          .sort((a, b) => this.field.sortValue(b) - this.field.sortValue(a))
-          .slice(0, compareMaxSeries)
-      )
+      if (validChildren.length > compareMaxSeries) {
+        let truncated = validChildren.length - compareMaxSeries
+
+        validChildren = validChildren.slice(0, compareMaxSeries)
+        validChildren.truncated = truncated
+      }
+
+      this[cacheKey].set(zone, validChildren)
     }
 
     return this[cacheKey].get(zone)
@@ -89,7 +93,8 @@ export default class CompareChart {
   }
 
   legendFor(zone, intl, options) {
-    return this.validChildren(zone, options)
+    let validChildren = this.validChildren(zone, options)
+    let entries = validChildren
       .map(({ label }, index) => ({
         label,
         ...compareStyle(index)
@@ -99,6 +104,12 @@ export default class CompareChart {
         if (a > b) return 1
         return 0
       })
+
+    if (validChildren.truncated) {
+      entries.push({ type: 'truncate-hint', count: validChildren.truncated })
+    }
+
+    return entries
   }
 
   dataForZone(zone, options, intl) {

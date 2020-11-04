@@ -5,6 +5,9 @@ app:
   chartTypes: Chart type
   chartOptions: Chart options
 
+  compare:
+    truncate-hint: '{count} hidden {count, plural, one {area} other {areas}} with lower values'
+
   options:
     multi:
       title: Multiple charts

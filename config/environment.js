@@ -20,7 +20,7 @@ module.exports = function (environment) {
       dataThreshold: 5,
 
       // When comparing only keep this number of series
-      compareMaxSeries: 20,
+      compareMaxSeries: 15,
 
       // Data source
       dataURL:
