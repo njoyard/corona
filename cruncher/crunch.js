@@ -26,18 +26,18 @@ export default async function crunch() {
   await writeFile(resolve(DATA_DIR, 'corona.json'), JSON.stringify(data))
   await writeFile(resolve(DATA_DIR, 'README.md'), README)
 
+  if (process.env.DEV_OUTPUT) {
+    await writeFile(
+      resolve(dirname(__dirname), 'public/corona.json'),
+      JSON.stringify(data)
+    )
+  }
+
   if (process.env.DEBUG_OUTPUT) {
     for (let z of data) {
       delete z.points
     }
 
     await debugOutput('final-no-points', data)
-  }
-
-  if (process.env.DEV_OUTPUT) {
-    await writeFile(
-      resolve(dirname(__dirname), 'public/corona.json'),
-      JSON.stringify(data)
-    )
   }
 }
