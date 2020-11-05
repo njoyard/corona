@@ -14,3 +14,26 @@ export default class WeakCache {
     return map.get(key)
   }
 }
+
+/*
+  Decorator to cache method results
+  Decorated methods must have a single parameter, which will be used as
+  a key, and must be an object.
+ */
+function decorate(prototype, name, descriptor) {
+  let getter = descriptor.value
+  let instanceCaches = new WeakMap()
+
+  descriptor.value = function (key) {
+    let instance = this
+
+    if (!instanceCaches.has(instance)) {
+      instanceCaches.set(instance, new WeakCache(getter))
+    }
+
+    let cache = instanceCaches.get(instance)
+    return cache.get(key, instance)
+  }
+}
+
+export { decorate }

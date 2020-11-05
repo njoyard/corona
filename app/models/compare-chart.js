@@ -12,7 +12,7 @@ import {
 import { compareFields } from 'corona/utils/chart-definitions'
 import { field, scale, ratio } from 'corona/utils/fields'
 import { number } from 'corona/utils/formats'
-import WeakCache from 'corona/utils/weak-cache'
+import { decorate as cached } from 'corona/utils/weak-cache'
 
 const {
   APP: { compareMaxSeries }
@@ -43,14 +43,6 @@ export default class CompareChart {
       this,
       { id, field: field(f), pcField: scale(100000, ratio(f, 'population')) },
       options
-    )
-
-    this.validChildrenPlainCache = new WeakCache((zone) =>
-      this._validChildren(this.field, zone)
-    )
-
-    this.validChildrenPerCapitaCache = new WeakCache((zone) =>
-      this._validChildren(this.pcField, zone)
     )
   }
 
@@ -86,11 +78,21 @@ export default class CompareChart {
     return validChildren
   }
 
+  @cached
+  _validChildrenPerCapita(zone) {
+    return this._validChildren(this.pcField, zone)
+  }
+
+  @cached
+  _validChildrenFullScale(zone) {
+    return this._validChildren(this.field, zone)
+  }
+
   validChildren(zone, { perCapita }) {
     if (perCapita) {
-      return this.validChildrenPerCapitaCache.get(zone)
+      return this._validChildrenPerCapita(zone)
     } else {
-      return this.validChildrenPlainCache.get(zone)
+      return this._validChildrenFullScale(zone)
     }
   }
 
@@ -118,6 +120,7 @@ export default class CompareChart {
     return entries
   }
 
+  @cached
   rangeForZone(zone) {
     let { field } = this
 

@@ -2,6 +2,7 @@ import { alpha, colors } from 'corona/utils/colors'
 import { field, ratio, scale } from 'corona/utils/fields'
 import parse from 'corona/utils/field-parser'
 import { number, percent } from 'corona/utils/formats'
+import { decorate as cached } from 'corona/utils/weak-cache'
 
 export default class ChartSeries {
   id = null
@@ -45,6 +46,7 @@ export default class ChartSeries {
     return field(f).canApply(zone)
   }
 
+  @cached
   rangeForZone(zone) {
     let { field: f } = this
 

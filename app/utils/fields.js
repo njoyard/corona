@@ -1,5 +1,5 @@
 import config from 'corona/config/environment'
-import WeakCache from 'corona/utils/weak-cache'
+import { decorate as cached } from 'corona/utils/weak-cache'
 
 const {
   APP: { sortMethod }
@@ -29,40 +29,30 @@ class Field {
   constructor(compute, name) {
     this.compute = compute
     this.name = name || '<unknown>'
-
-    this.applyCache = new WeakCache((zone) =>
-      zipDates(zone.points, compute(zone))
-    )
-
-    this.sortCache = new WeakCache((zone) => {
-      let values = this.apply(zone)
-      let value
-
-      if (sortMethod === 'most-recent') {
-        let mostRecent = [...values]
-          .reverse()
-          .find(({ value }) => !isNaN(value))
-        return mostRecent && mostRecent.value
-      } else {
-        return Math.max(
-          ...values
-            .filter(({ value }) => !isNaN(value))
-            .map(({ value }) => value)
-        )
-      }
-    })
   }
 
   canApply() {
     throw new Error('Not implemented')
   }
 
+  @cached
   apply(zone) {
-    return this.applyCache.get(zone)
+    let { compute } = this
+    return zipDates(zone.points, compute(zone))
   }
 
+  @cached
   sortValue(zone) {
-    return this.sortCache.get(zone)
+    let values = this.apply(zone)
+
+    if (sortMethod === 'most-recent') {
+      let mostRecent = [...values].reverse().find(({ value }) => !isNaN(value))
+      return mostRecent && mostRecent.value
+    } else {
+      return Math.max(
+        ...values.filter(({ value }) => !isNaN(value)).map(({ value }) => value)
+      )
+    }
   }
 }
 

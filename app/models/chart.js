@@ -7,6 +7,7 @@ import {
   timeTitleCallback,
   yScales
 } from 'corona/utils/chart-common'
+import { decorate as cached } from 'corona/utils/weak-cache'
 
 export default class Chart {
   id = null
@@ -84,6 +85,7 @@ export default class Chart {
     }))
   }
 
+  @cached
   rangeForZone(zone) {
     return this.series
       .map((s) => s.rangeForZone(zone))
