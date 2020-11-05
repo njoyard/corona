@@ -16,7 +16,8 @@ export default class ChartRoute extends Route {
     return {
       world: dataset.world,
       chart,
-      root: dataset.forChart(chart)
+      root: dataset.forChart(chart),
+      start: dataset.start
     }
   }
 

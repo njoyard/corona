@@ -15,6 +15,12 @@ app:
     perCapita:
       title: Par habitant
       hint: Affiche les données pour 100 000 habitants, si applicable
+    range:
+      title: Plage temporelle
+      all: 'Tout'
+      between: 'Du {from, date, medium} au {to, date, medium}'
+      from: À partir du {from, date, long}
+      to: Jusqu'au {to, date, long}
 
   about:
     menuHeader: À propos
@@ -133,7 +139,7 @@ charts:
     description: Comparaison d'un même indicateur entre plusieurs zones géographiques
   cases:
     title: Cas de Covid
-    description: Cas confirmés, décès et taux de mortalité
+    description: Cas confirmés et décès
   tests:
     title: Tests de dépistage
     description: Évolution du nombre de tests effectués, du nombre de positifs et du taux de positivité
@@ -181,8 +187,6 @@ fields:
   deceased-weekly:
     short: Nouveaux décès
     long: Nouveaux décès (moyenne glissante sur 7 jours)
-  mortality-weekly:
-    short: Taux de mortalité (moyenne glissante sur 7 jours)
 
 zones:
   World: Monde

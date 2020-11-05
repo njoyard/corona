@@ -17,10 +17,11 @@
     <div class="error">
       {{t this.dataError}}
     </div>
-  {{else}}
-    <canvas
-      {{did-insert this.createChart}}
-      {{did-update this.updateChart @chart @zone @options}}
-      {{will-destroy this.destroyChart}} />
   {{/if}}
+
+  <canvas
+    class={{if this.dataError 'error-canvas'}}
+    {{did-insert this.createChart}}
+    {{did-update this.updateChart @chart @zone @options}}
+    {{will-destroy this.destroyChart}} />
 </div>

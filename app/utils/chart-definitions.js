@@ -18,19 +18,19 @@ const chartDefinitions = [
     id: 'cases',
     series: [
       {
-        id: 'confirmed',
-        field: 'confirmed',
-        options: { color: orange }
+        id: 'confirmed-change',
+        field: confirmedChange,
+        options: { type: 'bar', color: teal }
+      },
+      {
+        id: 'confirmed-weekly',
+        field: weeklyConfirmedChange,
+        options: { color: blue }
       },
       {
         id: 'deceased',
         field: 'deceased',
-        options: { color: red }
-      },
-      {
-        id: 'mortality-weekly',
-        field: weekly(ratio('deceased', 'confirmed')),
-        options: { color: grey, scale: 'percent', format: percent }
+        options: { color: orange }
       }
     ]
   },

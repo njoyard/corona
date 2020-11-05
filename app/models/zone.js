@@ -38,6 +38,10 @@ export default class Zone {
       })
   }
 
+  get start() {
+    return Math.min(this.points[0].date, ...this.children.map((c) => c.start))
+  }
+
   _setMeta(meta) {
     this.fields = new Set(meta.fields)
 

@@ -26,3 +26,38 @@
     </div>
   </PaperItem>
 {{/if}}
+
+{{#if this.hasRangeOption}}
+  <PaperItem class="md-2-line md-long-text" as |controls|>
+    <div class="md-list-item-text">
+      <h3>{{t 'app.options.range.title'}}</h3>
+      <p>
+        {{#if (and this.displayStart this.displayEnd)}}
+          {{t 'app.options.range.between' from=this.displayStart to=this.displayEnd}}
+        {{else if this.displayStart}}
+          {{t 'app.options.range.from' from=this.displayStart}}
+        {{else if this.displayEnd}}
+          {{t 'app.options.range.to' to=this.displayEnd}}
+        {{else}}
+          {{t 'app.options.range.all'}}
+        {{/if}}
+      </p>
+
+      <PaperDualSlider
+        @class="flex"
+        @min={{this.rangeMin}}
+        @max={{this.rangeMax}}
+        @step={{this.rangeStep}}
+        @start={{this.sliderStart}}
+        @end={{this.sliderEnd}}
+        @onChange={{this.setRange}}
+        @onSettled={{this.commitRange}}
+        @minDistance={{this.rangeMinDistance}} />
+    </div>
+    <div class="md-secondary-container">
+      <controls.button @iconButton={{true}} @onClick={{this.resetRange}}>
+        <PaperIcon @icon="clear" @size={{18}} />
+      </controls.button>
+    </div>
+  </PaperItem>
+{{/if}}

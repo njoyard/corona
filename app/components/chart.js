@@ -14,6 +14,7 @@ const {
 export default class ChartComponent extends Component {
   @service intl
 
+  canvas = null
   chartInstance = null
   notifier = null
 
@@ -51,9 +52,14 @@ export default class ChartComponent extends Component {
   }
 
   @action
-  createChart(element) {
-    let context = element.getContext('2d')
+  createChart(canvas) {
+    if (this.chartInstance) {
+      this.chartInstance.destroy()
+      this.chartInstance = null
+    }
 
+    this.canvas = canvas
+    let context = canvas.getContext('2d')
     let config
 
     try {
@@ -71,15 +77,15 @@ export default class ChartComponent extends Component {
     }
 
     this.chartInstance = new Chart(context, config)
-
     this.loading = false
   }
 
   @action
   updateChart() {
-    if (this.chartInstance) {
-      this.loading = true
+    this.loading = true
+    this.dataError = null
 
+    if (this.chartInstance) {
       let config
 
       try {
@@ -95,6 +101,8 @@ export default class ChartComponent extends Component {
       this.chartInstance.update('none')
 
       this.loading = false
+    } else {
+      this.createChart(this.canvas)
     }
   }
 
@@ -104,5 +112,7 @@ export default class ChartComponent extends Component {
       this.chartInstance.destroy()
       this.chartInstance = null
     }
+
+    this.canvas = null
   }
 }

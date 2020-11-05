@@ -58,6 +58,14 @@ $checkbox-width: 16px;
     fill: paper-color('grey', '600');
     fill: var(--foreground-2);
   }
+
+  md-slider {
+    margin: 0 12px;
+
+    .md-thumb: {
+      touch-action: none;
+    }
+  }
 }
 
 .site-content-container {
@@ -212,6 +220,10 @@ md-toolbar.md-default-theme.main-toolbar {
   text-align: center;
   font-style: italic;
   font-size: 80%;
+}
+
+.error-canvas {
+  opacity: 0;
 }
 
 .custom-chart-container {

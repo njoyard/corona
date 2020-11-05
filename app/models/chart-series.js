@@ -45,7 +45,7 @@ export default class ChartSeries {
     return field(f).canApply(zone)
   }
 
-  dataForZone(zone, { perCapita }, intl) {
+  dataForZone(zone, { perCapita, start, end }, intl) {
     let {
       id,
       label,
@@ -71,7 +71,11 @@ export default class ChartSeries {
       data: dataField
         .apply(zone)
         .filter(
-          ({ value }) => !isNaN(value) && (yScale !== 'log' || value !== 0)
+          ({ date, value }) =>
+            (!start || date >= start) &&
+            (!end || date <= end) &&
+            !isNaN(value) &&
+            (yScale !== 'log' || value !== 0)
         )
         .map(({ date, value }) => ({
           x: date,
