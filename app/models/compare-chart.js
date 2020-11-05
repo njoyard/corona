@@ -10,6 +10,7 @@ import {
   yScales
 } from 'corona/utils/chart-common'
 import { compareFields } from 'corona/utils/chart-definitions'
+import { compareLabels } from 'corona/utils/collection'
 import { field, scale, ratio } from 'corona/utils/fields'
 import { number } from 'corona/utils/formats'
 import { decorate as cached } from 'corona/utils/weak-cache'
@@ -107,11 +108,7 @@ export default class CompareChart {
         label,
         ...compareStyle(index)
       }))
-      .sort(({ label: a }, { label: b }) => {
-        if (a < b) return -1
-        if (a > b) return 1
-        return 0
-      })
+      .sort(compareLabels)
 
     if (validChildren.truncated) {
       entries.push({ type: 'truncate-hint', count: validChildren.truncated })

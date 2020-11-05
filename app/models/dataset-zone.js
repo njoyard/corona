@@ -1,3 +1,5 @@
+import { compareLabels } from 'corona/utils/collection'
+
 export default class DatasetZone {
   constructor(chart, zone, parent = null) {
     this.zone = zone
@@ -33,11 +35,7 @@ export default class DatasetZone {
         rec.push(...dz.children)
       }
 
-      this.all = all.sort(({ label: a }, { label: b }) => {
-        if (a < b) return -1
-        if (a > b) return 1
-        return 0
-      })
+      this.all = all.sort(compareLabels)
     }
   }
 

@@ -1,5 +1,7 @@
 import { getName } from 'ember-i18n-iso-countries'
 
+import { compareLabels } from 'corona/utils/collection'
+
 export default class Zone {
   id = null
   parent = null
@@ -31,11 +33,7 @@ export default class Zone {
     this.children = data
       .filter((z) => z.parent === id)
       .map((z) => new Zone(z.id, data, intl, this))
-      .sort(({ label: a }, { label: b }) => {
-        if (a < b) return -1
-        if (a > b) return 1
-        return 0
-      })
+      .sort(compareLabels)
   }
 
   get start() {
