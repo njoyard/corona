@@ -87,24 +87,16 @@ export default class ChartZoneController extends Controller {
   rangeStep = DAY
   rangeMinDistance = dataThreshold * DAY
 
+  get rangeLimits() {
+    return this.chart.rangeForZone(this.zone.zone)
+  }
+
   get rangeMin() {
-    let {
-      zone: {
-        zone: { points }
-      }
-    } = this
-    let { date } = points[0]
-    return date
+    return this.rangeLimits.min
   }
 
   get rangeMax() {
-    let {
-      zone: {
-        zone: { points }
-      }
-    } = this
-    let { date } = points[points.length - 1]
-    return date
+    return this.rangeLimits.max
   }
 
   get displayStart() {

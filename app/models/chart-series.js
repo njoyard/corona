@@ -45,6 +45,20 @@ export default class ChartSeries {
     return field(f).canApply(zone)
   }
 
+  rangeForZone(zone) {
+    let { field: f } = this
+
+    let points = field(f).apply(zone)
+    let firstValue = points.find((p) => !isNaN(p.value))
+    let lastValue =
+      firstValue && [...points].reverse().find((p) => !isNaN(p.value))
+
+    return {
+      min: firstValue ? firstValue.date : Infinity,
+      max: lastValue ? lastValue.date : -Infinity
+    }
+  }
+
   dataForZone(zone, { perCapita, start, end }, intl) {
     let {
       id,

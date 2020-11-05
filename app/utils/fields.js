@@ -1,4 +1,5 @@
 import config from 'corona/config/environment'
+import WeakCache from 'corona/utils/weak-cache'
 
 const {
   APP: { sortMethod }
@@ -28,28 +29,12 @@ class Field {
   constructor(compute, name) {
     this.compute = compute
     this.name = name || '<unknown>'
-    this.applied = new WeakMap()
-    this.svs = new WeakMap()
-  }
 
-  canApply() {
-    throw new Error('Not implemented')
-  }
+    this.applyCache = new WeakCache((zone) =>
+      zipDates(zone.points, compute(zone))
+    )
 
-  apply(zone) {
-    let { applied, compute } = this
-
-    if (!applied.has(zone)) {
-      applied.set(zone, zipDates(zone.points, compute(zone)))
-    }
-
-    return applied.get(zone)
-  }
-
-  sortValue(zone) {
-    let { svs } = this
-
-    if (!svs.has(zone)) {
+    this.sortCache = new WeakCache((zone) => {
       let values = this.apply(zone)
       let value
 
@@ -57,19 +42,27 @@ class Field {
         let mostRecent = [...values]
           .reverse()
           .find(({ value }) => !isNaN(value))
-        value = mostRecent && mostRecent.value
+        return mostRecent && mostRecent.value
       } else {
-        value = Math.max(
+        return Math.max(
           ...values
             .filter(({ value }) => !isNaN(value))
             .map(({ value }) => value)
         )
       }
+    })
+  }
 
-      svs.set(zone, value)
-    }
+  canApply() {
+    throw new Error('Not implemented')
+  }
 
-    return svs.get(zone)
+  apply(zone) {
+    return this.applyCache.get(zone)
+  }
+
+  sortValue(zone) {
+    return this.sortCache.get(zone)
   }
 }
 
@@ -110,7 +103,7 @@ class Source extends SinglePointField {
   constructor(name) {
     super(
       (point) => (typeof point[name] === 'number' ? point[name] : NaN),
-      `${name}`
+      name
     )
 
     this.fieldName = name
@@ -123,7 +116,7 @@ class Source extends SinglePointField {
 
 class Meta extends Field {
   constructor(name) {
-    super((zone) => zone.points.map(() => zone[this.metaName]))
+    super((zone) => zone.points.map(() => zone[this.metaName]), name)
     this.metaName = name
   }
 

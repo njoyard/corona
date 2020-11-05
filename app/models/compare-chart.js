@@ -12,6 +12,7 @@ import {
 import { compareFields } from 'corona/utils/chart-definitions'
 import { field, scale, ratio } from 'corona/utils/fields'
 import { number } from 'corona/utils/formats'
+import WeakCache from 'corona/utils/weak-cache'
 
 const {
   APP: { compareMaxSeries }
@@ -43,6 +44,14 @@ export default class CompareChart {
       { id, field: field(f), pcField: scale(100000, ratio(f, 'population')) },
       options
     )
+
+    this.validChildrenPlainCache = new WeakCache((zone) =>
+      this._validChildren(this.field, zone)
+    )
+
+    this.validChildrenPerCapitaCache = new WeakCache((zone) =>
+      this._validChildren(this.pcField, zone)
+    )
   }
 
   getOptions(intl) {
@@ -62,30 +71,27 @@ export default class CompareChart {
     }
   }
 
+  _validChildren(field, zone) {
+    let validChildren = zone.children
+      .filter((c) => field.canApply(c))
+      .sort((a, b) => field.sortValue(b) - field.sortValue(a))
+
+    if (validChildren.length > compareMaxSeries) {
+      let truncated = validChildren.length - compareMaxSeries
+
+      validChildren = validChildren.slice(0, compareMaxSeries)
+      validChildren.truncated = truncated
+    }
+
+    return validChildren
+  }
+
   validChildren(zone, { perCapita }) {
-    let cacheKey = perCapita ? 'zoneChildrenCachePC' : 'zoneChildrenCache'
-
-    if (!this[cacheKey]) {
-      this[cacheKey] = new WeakMap()
+    if (perCapita) {
+      return this.validChildrenPerCapitaCache.get(zone)
+    } else {
+      return this.validChildrenPlainCache.get(zone)
     }
-
-    if (!this[cacheKey].has(zone)) {
-      let field = perCapita ? this.pcField : this.field
-      let validChildren = zone.children
-        .filter((c) => field.canApply(c))
-        .sort((a, b) => this.field.sortValue(b) - this.field.sortValue(a))
-
-      if (validChildren.length > compareMaxSeries) {
-        let truncated = validChildren.length - compareMaxSeries
-
-        validChildren = validChildren.slice(0, compareMaxSeries)
-        validChildren.truncated = truncated
-      }
-
-      this[cacheKey].set(zone, validChildren)
-    }
-
-    return this[cacheKey].get(zone)
   }
 
   validForZone(zone, options = {}) {
@@ -110,6 +116,30 @@ export default class CompareChart {
     }
 
     return entries
+  }
+
+  rangeForZone(zone) {
+    let { field } = this
+
+    return this.validChildren(zone, {})
+      .map((zone) => {
+        let points = field.apply(zone)
+        let firstValue = points.find((p) => !isNaN(p.value))
+        let lastValue =
+          firstValue && [...points].reverse().find((p) => !isNaN(p.value))
+
+        return {
+          min: firstValue ? firstValue.date : Infinity,
+          max: lastValue ? lastValue.date : -Infinity
+        }
+      })
+      .reduce(
+        ({ min, max }, { min: thisMin, max: thisMax }) => ({
+          min: Math.min(min, thisMin),
+          max: Math.max(max, thisMax)
+        }),
+        { min: Infinity, max: -Infinity }
+      )
   }
 
   dataForZone(zone, options, intl) {

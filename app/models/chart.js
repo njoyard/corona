@@ -84,6 +84,18 @@ export default class Chart {
     }))
   }
 
+  rangeForZone(zone) {
+    return this.series
+      .map((s) => s.rangeForZone(zone))
+      .reduce(
+        ({ min, max }, { min: thisMin, max: thisMax }) => ({
+          min: Math.min(min, thisMin),
+          max: Math.max(max, thisMax)
+        }),
+        { min: Infinity, max: -Infinity }
+      )
+  }
+
   validForZone(zone) {
     let { series } = this
     let threshold = series.length > 2 ? 2 : 1
