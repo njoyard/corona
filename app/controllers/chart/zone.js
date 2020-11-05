@@ -16,10 +16,10 @@ export default class ChartZoneController extends Controller {
   @service routing
 
   queryParams = [
-    { multi: 'm' },
-    { perCapita: 'c' },
-    { rangeStart: 'f' },
-    { rangeEnd: 't' }
+    { multi: { scope: 'controller', as: 'm' } },
+    { perCapita: { scope: 'controller', as: 'c' } },
+    { rangeStart: { scope: 'controller', as: 'f' } },
+    { rangeEnd: { scope: 'controller', as: 't' } }
   ]
 
   /*********************************
