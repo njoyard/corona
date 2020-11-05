@@ -102,6 +102,7 @@ const compareFields = {
   'confirmed-weekly': { field: weeklyConfirmedChange },
   'deceased-cumulative': { field: 'deceased' },
   'deceased-weekly': { field: weeklyDeceasedChange },
+  hospital: { field: 'hospital' },
   'hospital-weekly': { field: weeklyHospitalChange },
   'tests-weekly': { field: weekly('tests') },
   'positivity-weekly': {

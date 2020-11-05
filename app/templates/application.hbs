@@ -29,7 +29,8 @@
 
         {{#if this.isCompareChart}}
           {{#each this.compareFields as |field|}}
-            <PaperItem @class={{concat "chart-list-item compare-field" (if (eq this.compareField field) " selected")}} @onClick={{fn this.showCompareChart field}}>
+            <PaperItem @class="chart-list-item compare-field" as |controls|>
+              <controls.radio @groupValue={{this.compareField}} @value={{field}} @onChange={{fn this.showCompareChart}} />
               <p>{{t (concat 'fields.' field '.short')}}</p>
             </PaperItem>
           {{/each}}
@@ -48,8 +49,8 @@
 
         <PaperDivider />
         <PaperSubheader>{{t 'app.about.menuHeader'}}</PaperSubheader>
-        <PaperItem @onClick={{fn (mut this.showAbout) true}}>
-          <PaperIcon @icon="help" />
+        <PaperItem @class="menu-link" @onClick={{fn (mut this.showAbout) true}}>
+          <PaperIcon @icon="help" @size={{18}} />
           <p>{{t 'app.about.menuEntry'}}</p>
         </PaperItem>
 
@@ -60,7 +61,7 @@
                 {{#if (eq link.icon 'github')}}
                   <GithubIcon />
                 {{else}}
-                  <PaperIcon @icon={{link.icon}} />
+                  <PaperIcon @icon={{link.icon}} @size={{18}} />
                 {{/if}}
               {{/if}}
 

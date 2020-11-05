@@ -4,6 +4,7 @@ $warn: 'red';
 
 $baseline-grid: 6px;
 $font-size: 8px;
+$radio-width: 16px;
 $checkbox-width: 16px;
 
 @import 'ember-paper';
@@ -36,8 +37,11 @@ $checkbox-width: 16px;
 
   .compare-field {
     background-color: white;
-    margin-left: $baseline-grid;
     font-size: 80%;
+
+    md-radio-button {
+      margin-bottom: 0;
+    }
   }
 
   .chart-list-item.selected {
@@ -47,13 +51,20 @@ $checkbox-width: 16px;
   .menu-link {
     color: currentColor;
     text-decoration: none;
+
+    font-size: 12.8px;
+
+    md-icon {
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+    }
   }
 
-  .github-icon {
-    width: 20px;
-    height: 20px;
-    margin-left: 2px;
-    margin-right: 21px;
+  .menu-link .github-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 1px;
+    margin-right: 25px;
 
     fill: paper-color('grey', '600');
     fill: var(--foreground-2);
@@ -284,5 +295,16 @@ md-toolbar.md-default-theme.main-toolbar {
 
   .indent {
     margin-left: 16px;
+  }
+}
+
+.about-dialog {
+  a {
+    color: paper-color($primary, '500');
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
   }
 }
