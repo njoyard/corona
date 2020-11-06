@@ -4,7 +4,7 @@
 {{/if}}
 
 {{#if this.hasMultiOption}}
-  <PaperItem class="md-2-line md-long-text" as |controls|>
+  <PaperItem @class="md-2-line md-long-text" as |controls|>
     <div class="md-list-item-text">
       <h3>{{t 'app.options.multi.title'}}</h3>
       <p>{{t 'app.options.multi.hint'}}</p>
@@ -16,7 +16,7 @@
 {{/if}}
 
 {{#if this.hasPerCapitaOption}}
-  <PaperItem class="md-2-line md-long-text" as |controls|>
+  <PaperItem @class="md-2-line md-long-text" as |controls|>
     <div class="md-list-item-text">
       <h3>{{t 'app.options.perCapita.title'}}</h3>
       <p>{{t 'app.options.perCapita.hint'}}</p>
@@ -28,7 +28,7 @@
 {{/if}}
 
 {{#if this.hasRangeOption}}
-  <PaperItem class="md-2-line md-long-text" as |controls|>
+  <PaperItem @class="md-2-line md-long-text slider-text-container" as |controls|>
     <div class="md-list-item-text">
       <h3>{{t 'app.options.range.title'}}</h3>
       <p>
@@ -42,22 +42,31 @@
           {{t 'app.options.range.all'}}
         {{/if}}
       </p>
+    </div>
 
-      <PaperDualSlider
-        @class="flex"
-        @min={{this.rangeMin}}
-        @max={{this.rangeMax}}
-        @step={{this.rangeStep}}
-        @start={{this.sliderStart}}
-        @end={{this.sliderEnd}}
-        @onChange={{this.setRange}}
-        @onSettled={{this.commitRange}}
-        @minDistance={{this.rangeMinDistance}} />
-    </div>
-    <div class="md-secondary-container">
-      <controls.button @iconButton={{true}} @onClick={{this.resetRange}}>
-        <PaperIcon @icon="clear" @size={{18}} />
-      </controls.button>
-    </div>
+    {{#if (or this.displayStart this.displayEnd)}}
+      <div class="md-secondary-container">
+        <controls.button @iconButton={{true}} @onClick={{this.resetRange}}>
+          <PaperIcon @icon="clear" @size={{18}}>
+            <PaperTooltip @position="top">
+              {{t 'app.options.range.reset'}}
+            </PaperTooltip>
+          </PaperIcon>
+        </controls.button>
+      </div>
+    {{/if}}
+  </PaperItem>
+
+  <PaperItem @class="md-2-line md-long-text slider-container">
+    <PaperDualSlider
+      @class="flex"
+      @min={{this.rangeMin}}
+      @max={{this.rangeMax}}
+      @step={{this.rangeStep}}
+      @start={{this.sliderStart}}
+      @end={{this.sliderEnd}}
+      @onChange={{this.setRange}}
+      @onSettled={{this.commitRange}}
+      @minDistance={{this.rangeMinDistance}} />
   </PaperItem>
 {{/if}}

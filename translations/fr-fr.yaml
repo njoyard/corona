@@ -17,8 +17,9 @@ app:
       hint: Affiche les données pour 100 000 habitants, si applicable
     range:
       title: Plage temporelle
-      all: 'Tout'
-      between: 'Du {from, date, medium} au {to, date, medium}'
+      reset: Réinitialiser
+      all: Toutes les données
+      between: Du {from, date, medium} au {to, date, medium}
       from: À partir du {from, date, long}
       to: Jusqu'au {to, date, long}
 

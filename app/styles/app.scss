@@ -70,11 +70,27 @@ $checkbox-width: 16px;
     fill: var(--foreground-2);
   }
 
-  md-slider {
-    margin: 0 12px;
+  .slider-text-container {
+    margin: 0 !important;
+  }
 
-    .md-thumb: {
-      touch-action: none;
+  .slider-container {
+    margin: 0 !important;
+    height: 32px;
+    min-height: initial;
+
+    md-slider {
+      height: 32px;
+      margin: 0 12px;
+
+      .md-thumb {
+        top: 6px;
+        touch-action: none;
+      }
+
+      .md-track-container {
+        top: 15px;
+      }
     }
   }
 }

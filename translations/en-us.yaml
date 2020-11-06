@@ -17,8 +17,9 @@ app:
       hint: Show counts per 100k people, when applicable
     range:
       title: Date range
-      all: 'All data'
-      between: 'From {from, date, medium} until {to, date, medium}'
+      reset: Reset
+      all: All data
+      between: From {from, date, medium} until {to, date, medium}
       from: From {from, date, medium}
       to: Until {to, date, medium}
 
