@@ -79,7 +79,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Test
-        run: yarn test
+        run: yarn test:ember
 
   deploy:
     name: Deploy app to GitHub Pages

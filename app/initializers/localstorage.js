@@ -4,9 +4,9 @@ export function initialize() {
 
   if (!version) {
     // Clean up previous version keys
-    let keys = [...Array(localStorage.length).keys()].map((i) =>
-      localStorage.key(i)
-    )
+    let keys = [...Array(localStorage.length).keys()]
+      .map((i) => localStorage.key(i))
+      .filter(Boolean)
 
     for (let key of keys) {
       if (
