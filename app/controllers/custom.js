@@ -39,7 +39,7 @@ export default class CustomController extends Controller {
   }
 
   get fieldNames() {
-    return [...this.allFields].sort()
+    return Array.from(this.allFields).sort()
   }
 
   get series() {
