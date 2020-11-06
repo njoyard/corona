@@ -88,6 +88,10 @@ export default class CustomController extends Controller {
       let preview = Chart.fromCustomRepr(chart.repr)
       let { root } = dataset.forChart(preview)
 
+      if (!root.hasSelfData) {
+        root = root.children.firstObject
+      }
+
       return { chart: preview, root }
     }
 
