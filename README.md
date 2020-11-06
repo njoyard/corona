@@ -2,7 +2,7 @@
 
 This is a Covid-19 cases visualisation app using CSSE and French Government data built with EmberJS. It runs completely in the browser and does not require a backend server.
 
-Access the [live instance](https://corona.njoyard.fr/develop) of this app.
+Access the [live instance](https://corona.njoyard.fr/) of this app.
 
 ![](public/assets/screenshot-v2.png)
 
