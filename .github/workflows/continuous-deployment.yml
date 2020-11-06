@@ -22,9 +22,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Install dependencies
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: install
+        run: yarn install
 
   lintjs:
     name: Lint JS
@@ -43,9 +41,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Lint JS
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: lint:js
+        run: yarn lint:js
 
   linthbs:
     name: Lint HBS
@@ -64,9 +60,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Lint HBS
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: lint:hbs
+        run: yarn lint:hbs
 
   test:
     name: Run test suite
@@ -85,7 +79,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Test
-        uses: alexlafroscia/actions-ember-testing@master
+        run: yarn test
 
   deploy:
     name: Deploy app to GitHub Pages
@@ -107,9 +101,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-v2-${{ env.cache-name }}-
       - name: Build
-        uses: borales/actions-yarn@v2.0.0
-        with:
-          cmd: build
+        run: yarn build
       - name: Deploy
         uses: crazy-max/ghaction-github-pages@v1
         with:
