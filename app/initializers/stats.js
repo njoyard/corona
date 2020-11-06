@@ -15,7 +15,7 @@ export function initialize() {
     let available = true
     let pending = location.hash ? [location.pathname + location.hash] : []
 
-    function sendCounts() {
+    let sendCounts = () => {
       while (pending.length) {
         window.goatcounter.count({ path: pending.shift() })
       }
