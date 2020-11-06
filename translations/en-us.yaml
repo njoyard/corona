@@ -52,6 +52,8 @@ app:
       logo: |
         Coronavirus icon courtesy of <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferrer">Becris</a>,
         shared under the <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">Creative Commons CC-BY-SA version 3.0 license</a>.
+    stats: |
+      <a href="//www.goatcounter.com/" target="_blank" rel="noopener noreferrer">GoatCounter</a> is used to record access statistics, which you can access <a href="//stats.njoyard.fr" target="_blank" rel="noopener noreferrer">here</a>. No personal information is recorded (and no cookies are used), the only information kept is: URL, time of access, referrer URL (when available), browser user-agent string, screen size and country (deduced from the IP, but the IP itself is not saved).
 
   links:
     github: Source code

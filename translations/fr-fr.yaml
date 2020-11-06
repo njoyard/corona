@@ -52,6 +52,8 @@ app:
       logo: |
         Logo fourni par <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferer">Becris</a>,
         sous license <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0</a>.
+    stats: |
+      L'application utilise <a href="//www.goatcounter.com/" target="_blank" rel="noopener noreferrer">GoatCounter</a> pour enregistrer les statistiques d'accès, que vous pouvez consulter <a href="//stats.njoyard.fr" target="_blank" rel="noopener noreferrer">ici</a>. Aucune information personnelle n'est enregistrée (et aucun cookie n'est utilisé), les seules informations conservées sont : l'URL, la date et heure d'accès, l'URL de provenance (<i>referrer</i>), la version de votre navigateur (<i>user-agent</i>), la taille de votre écran et le pays d'origine (déduit à partir de votre adresse IP, qui n'est pas elle-même conservée).
 
   links:
     github: Code source

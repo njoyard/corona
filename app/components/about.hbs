@@ -23,7 +23,7 @@
 
       <p>
         {{!-- template-lint-disable no-triple-curlies --}}
-        {{{t 'app.about.opendata'}}}
+        {{{t 'app.about.opendata' htmlSafe=true}}}
       </p>
 
       <h3>{{t 'app.about.devInfo.title'}}</h3>
@@ -35,6 +35,11 @@
         {{!-- template-lint-disable no-triple-curlies --}}
         {{{t 'app.about.devInfo.logo' htmlSafe=true}}}
       </p>
+      <p>
+        {{!-- template-lint-disable no-triple-curlies --}}
+        {{{t 'app.about.stats' htmlSafe=true}}}
+      </p>
+
       <p><i>{{t 'app.about.built' buildDate=this.buildDate}}</i></p>
     </PaperDialogContent>
 
