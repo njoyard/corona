@@ -131,7 +131,7 @@ export default class ChartSeries {
     if (type === 'dashed') {
       dataset.borderDash = [5, 5]
     } else if (type === 'dotted') {
-      dataset.borderDash = [2, 5]
+      dataset.borderDash = [3, 5]
     }
 
     if (stack) {
