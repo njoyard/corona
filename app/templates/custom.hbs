@@ -46,14 +46,14 @@
         </card.title>
 
         <card.content>
-          <div class="layout">
+          <div class="layout chart-properties">
             <PaperInput @label={{t 'custom.title'}} @value={{this.chart.title}} @onChange={{fn (mut this.chart.title)}} @errors={{this.titleErrors}} />
-            <PaperInput @label={{t 'custom.description'}} @value={{this.chart.description}} @onChange={{fn (mut this.chart.description)}} />
+            <PaperInput @class="flex" @label={{t 'custom.description'}} @value={{this.chart.description}} @onChange={{fn (mut this.chart.description)}} />
           </div>
 
           {{#each this.scaleConfigs as |s|}}
             <div class="layout scale-config">
-              <span class="nowrap label">{{t (concat 'custom.scales.' s.scale '.config')}}</span>
+              <span class="nowrap label flex">{{t (concat 'custom.scales.' s.scale '.config')}}</span>
               <PaperInput @type="number" @label={{t 'custom.scaleMin'}} @value={{s.min}} @onChange={{fn (mut s.min)}} />
               <PaperInput @type="number" @label={{t 'custom.scaleMax'}} @value={{s.max}} @onChange={{fn (mut s.max)}} />
             </div>

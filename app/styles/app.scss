@@ -4,6 +4,7 @@ $warn: 'red';
 
 $baseline-grid: 6px;
 $font-size: 8px;
+$main-font-size: 12.8px;
 $radio-width: 16px;
 $checkbox-width: 16px;
 
@@ -52,7 +53,7 @@ $checkbox-width: 16px;
     color: currentColor;
     text-decoration: none;
 
-    font-size: 12.8px;
+    font-size: $main-font-size;
 
     md-icon {
       margin-top: 0 !important;
@@ -276,10 +277,17 @@ md-toolbar.md-default-theme.main-toolbar {
   }
 }
 
+.chart-properties {
+  md-input-container {
+    margin: 0 0 $baseline-grid 0;
+  }
+}
+
 .scale-config {
   .label {
-    margin-top: $baseline-grid;
+    margin-top: #{$baseline-grid * 1.8};
     margin-right: $baseline-grid;
+    text-align: right;
   }
 
   md-input-container {
@@ -315,6 +323,10 @@ md-toolbar.md-default-theme.main-toolbar {
 }
 
 .about-dialog {
+  md-dialog-content {
+    font-size: $main-font-size;
+  }
+
   a {
     color: paper-color($primary, '500');
     text-decoration: none;
@@ -322,5 +334,17 @@ md-toolbar.md-default-theme.main-toolbar {
 
   a:hover {
     text-decoration: underline;
+  }
+}
+
+md-card {
+  font-size: $main-font-size;
+
+  md-card-title {
+    padding-top: 16px;
+
+    .md-headline {
+      font-size: #{$main-font-size * 1.2};
+    }
   }
 }
