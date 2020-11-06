@@ -10,10 +10,14 @@ function buildFormatter(options, transform = (x) => x) {
   }
 }
 
+function precision(num) {
+  if (num >= 1000) return Math.round(num)
+  if (num >= 100) return Math.round(num * 10) / 10
+  return Math.round(num * 100) / 100
+}
+
 const percent = buildFormatter({ style: 'percent', maximumFractionDigits: 1 })
-const number = buildFormatter({}, (x) =>
-  x > 1000 ? Math.round(x) : Math.round(x * 10) / 10
-)
+const number = buildFormatter({}, precision)
 const integer = buildFormatter({}, (x) => Math.round(x))
 const abs = buildFormatter({}, (x) => Math.abs(x))
 const bignum = buildFormatter({ notation: 'compact' })
