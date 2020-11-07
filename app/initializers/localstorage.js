@@ -1,27 +1,19 @@
 export function initialize() {
-  let versionKey = 'corona:ls-version'
+  let versionKey = 'corona:version'
   let version = localStorage.getItem(versionKey)
 
   if (!version) {
-    // Clean up previous version keys
-    let keys = [...Array(localStorage.length).keys()]
-      .map((i) => localStorage.key(i))
-      .filter(Boolean)
+    let customKey = 'corona:custom-charts'
+    let customCharts = localStorage.getItem(customKey)
 
-    for (let key of keys) {
-      if (
-        key === 'queryparams' ||
-        key === 'corona:queryparams' ||
-        key.startsWith('fetch-cache:')
-      ) {
-        localStorage.removeItem(key)
-      }
+    localStorage.clear()
+
+    if (customCharts) {
+      localStorage.setItem(customKey, customCharts)
     }
-  } else if (version === '1') {
-    localStorage.removeItem('corona:query-params')
   }
 
-  localStorage.setItem(versionKey, '2')
+  localStorage.setItem(versionKey, '1')
 }
 
 export default {
