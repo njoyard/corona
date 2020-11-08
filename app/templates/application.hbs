@@ -49,7 +49,7 @@
 
         <PaperDivider />
         <PaperSubheader>{{t 'app.about.menuHeader'}}</PaperSubheader>
-        <PaperItem @class="menu-link" @onClick={{fn (mut this.showAbout) true}}>
+        <PaperItem @class="menu-link" @onClick={{this.showAbout}}>
           <PaperIcon @icon="help" @size={{18}} />
           <p>{{t 'app.about.menuEntry'}}</p>
         </PaperItem>
@@ -82,5 +82,4 @@
   </div>
 </PaperSidenavContainer>
 
-<About @show={{this.showAbout}} @onClose={{fn (mut this.showAbout) false}} />
-<ModalsContainer/>
+<ModalContainer/>

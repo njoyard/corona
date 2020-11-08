@@ -4627,16 +4627,6 @@ elliptic@^6.5.3:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-ember-angle-bracket-invocation-polyfill@^2.0.2:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/ember-angle-bracket-invocation-polyfill/-/ember-angle-bracket-invocation-polyfill-2.1.0.tgz#3e9ebd41387fe6150977c3f22e273460f3ccb171"
-  integrity sha512-njvnsjw3aD2kSfr4Gld56YP28TIbrdcymeHH2lDpOMuOsJCZ+tZMLowpdNX18et4UzFsOuf6Mnvkg/PUctYHlA==
-  dependencies:
-    ember-cli-babel "^6.17.0"
-    ember-cli-version-checker "^2.1.2"
-    ember-compatibility-helpers "^1.0.2"
-    silent-error "^1.1.1"
-
 ember-assign-polyfill@^2.6.0:
   version "2.7.2"
   resolved "https://registry.yarnpkg.com/ember-assign-polyfill/-/ember-assign-polyfill-2.7.2.tgz#58f6f60235126cb23df248c846008fa9a3245fc1"
@@ -4705,7 +4695,7 @@ ember-cli-babel-plugin-helpers@^1.0.0, ember-cli-babel-plugin-helpers@^1.1.0, em
   resolved "https://registry.yarnpkg.com/ember-cli-babel-plugin-helpers/-/ember-cli-babel-plugin-helpers-1.1.1.tgz#5016b80cdef37036c4282eef2d863e1d73576879"
   integrity sha512-sKvOiPNHr5F/60NLd7SFzMpYPte/nnGkq/tMIfXejfKHIhaiIkYFqX8Z9UFTKWLLn+V7NOaby6niNPZUdvKCRw==
 
-ember-cli-babel@^6.0.0-beta.4, ember-cli-babel@^6.16.0, ember-cli-babel@^6.17.0, ember-cli-babel@^6.3.0, ember-cli-babel@^6.6.0, ember-cli-babel@^6.8.1:
+ember-cli-babel@^6.0.0-beta.4, ember-cli-babel@^6.16.0, ember-cli-babel@^6.3.0, ember-cli-babel@^6.6.0, ember-cli-babel@^6.8.1:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-6.18.0.tgz#3f6435fd275172edeff2b634ee7b29ce74318957"
   integrity sha512-7ceC8joNYxY2wES16iIBlbPSxwKDBhYwC8drU3ZEvuPDMwVv1KzxCNu1fvxyFEBWhwaRNTUxSCsEVoTd9nosGA==
@@ -4824,7 +4814,7 @@ ember-cli-htmlbars@^4.0.8, ember-cli-htmlbars@^4.2.0, ember-cli-htmlbars@^4.2.2:
     strip-bom "^4.0.0"
     walk-sync "^2.0.2"
 
-ember-cli-htmlbars@^5.1.2, ember-cli-htmlbars@^5.3.1:
+ember-cli-htmlbars@^5.3.1:
   version "5.3.1"
   resolved "https://registry.yarnpkg.com/ember-cli-htmlbars/-/ember-cli-htmlbars-5.3.1.tgz#61793964fc2599ce750db9e972ab55c6dd177c48"
   integrity sha512-ZjQTt44euDoqLvUkWbt1svgNCXgLzOztEbc2qqYMQvhQig416LMrWK7l3SSbNU+BtLD5UIxmwvLfF1tsO2CVyA==
@@ -5005,7 +4995,7 @@ ember-cli-typescript@^2.0.2:
     stagehand "^1.0.0"
     walk-sync "^1.0.0"
 
-ember-cli-typescript@^3.1.3, ember-cli-typescript@^3.1.4:
+ember-cli-typescript@^3.1.3:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/ember-cli-typescript/-/ember-cli-typescript-3.1.4.tgz#21d6ccd670d1f2e34c9cce68c6e32c442f46806b"
   integrity sha512-HJ73kL45OGRmIkPhBNFt31I1SGUvdZND+LCH21+qpq3pPlFpJG8GORyXpP+2ze8PbnITNLzwe5AwUrpyuRswdQ==
@@ -5179,7 +5169,7 @@ ember-cli@~3.22.0:
     workerpool "^6.0.1"
     yam "^1.0.0"
 
-ember-compatibility-helpers@^1.0.2, ember-compatibility-helpers@^1.1.1, ember-compatibility-helpers@^1.1.2, ember-compatibility-helpers@^1.2.0:
+ember-compatibility-helpers@^1.1.1, ember-compatibility-helpers@^1.1.2, ember-compatibility-helpers@^1.2.0:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ember-compatibility-helpers/-/ember-compatibility-helpers-1.2.1.tgz#87c92c4303f990ff455c28ca39fb3ee11441aa16"
   integrity sha512-6wzYvnhg1ihQUT5yGqnLtleq3Nv5KNv79WhrEuNU9SwR4uIxCO+KpyC7r3d5VI0EM7/Nmv9Nd0yTkzmTMdVG1A==
@@ -5233,15 +5223,6 @@ ember-data@~3.22.0:
     ember-cli-babel "^7.18.0"
     ember-cli-typescript "^3.1.3"
     ember-inflector "^3.0.1"
-
-ember-decorators-polyfill@^1.1.1:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/ember-decorators-polyfill/-/ember-decorators-polyfill-1.1.5.tgz#49203c302ea4486618ba4866923ec657cf2c9f3d"
-  integrity sha512-O154i8sLoVjsiKzSqxGRfHGr+N+drT6mRrLDbNgJCnW/V5uLg/ppZFpUsrdxuXnp5Q9us3OfXV1nX2CH+7bUpA==
-  dependencies:
-    ember-cli-babel "^7.1.2"
-    ember-cli-version-checker "^3.1.3"
-    ember-compatibility-helpers "^1.2.0"
 
 ember-decorators@^6.1.1:
   version "6.1.1"
@@ -5385,18 +5366,6 @@ ember-maybe-in-element@^0.4.0:
   dependencies:
     ember-cli-babel "^7.1.0"
 
-ember-modals-manager-internal@^2.0.4:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/ember-modals-manager-internal/-/ember-modals-manager-internal-2.3.0.tgz#63205fc5cef6e510586c03e4eafa6e8a25d78119"
-  integrity sha512-w5NpfxxrAjYdrXHckb/QHRsDHYd9RcHgw5GnSk5ixoqA18/leNCCDrXHW1LrlCHcW4to+18I+yPoseY8fjDbTQ==
-  dependencies:
-    ember-angle-bracket-invocation-polyfill "^2.0.2"
-    ember-cli-babel "^7.22.1"
-    ember-cli-htmlbars "^5.3.1"
-    ember-cli-typescript "^3.1.4"
-    ember-decorators "^6.1.1"
-    ember-decorators-polyfill "^1.1.1"
-
 ember-modifier-manager-polyfill@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ember-modifier-manager-polyfill/-/ember-modifier-manager-polyfill-1.2.0.tgz#cf4444e11a42ac84f5c8badd85e635df57565dda"
@@ -5413,16 +5382,6 @@ ember-paper-expansion-panel@^0.0.4:
   dependencies:
     ember-cli-babel "^6.6.0"
     ember-cli-htmlbars "^1.1.1"
-
-ember-paper-modals-manager@^1.9.1:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/ember-paper-modals-manager/-/ember-paper-modals-manager-1.9.1.tgz#1007648f18736f078c73838eea5280b4ff3672a0"
-  integrity sha512-3MFbNlYongbAOXsqfLg6NjPYU794hJwO6nSItL1yB4b1o3Vn+dDWEtNbkpwAuz4RnojUNKyoBvBf7xUXHbqJ8w==
-  dependencies:
-    ember-cli-babel "^7.20.5"
-    ember-cli-htmlbars "^5.1.2"
-    ember-decorators "^6.1.1"
-    ember-modals-manager-internal "^2.0.4"
 
 ember-paper@^1.0.0-beta.35:
   version "1.0.0-beta.35"

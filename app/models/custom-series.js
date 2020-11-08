@@ -54,7 +54,12 @@ export default class CustomSeries {
     let { l: label, e: expr, t: type, s: scale, c: color } = repr
 
     let series = new CustomSeries(label, intl, allFields)
-    Object.assign(series, { expr, type, scale, color: color })
+    Object.assign(series, {
+      expr,
+      type,
+      scale,
+      color
+    })
 
     return series
   }

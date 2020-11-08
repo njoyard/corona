@@ -6,11 +6,12 @@ import { tracked } from '@glimmer/tracking'
 import { compareFields } from 'corona/utils/chart-definitions'
 
 export default class ApplicationController extends Controller {
+  @service('customCharts') custom
   @service data
   @service intl
+  @service modals
   @service router
   @service routing
-  @service('customCharts') custom
 
   /*********************************
    * Side nav handling
@@ -87,7 +88,10 @@ export default class ApplicationController extends Controller {
    * About & Links
    */
 
-  @tracked showAbout = false
+  @action
+  showAbout() {
+    this.modals.about()
+  }
 
   @action
   noop() {}

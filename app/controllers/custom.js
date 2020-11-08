@@ -11,7 +11,7 @@ import slugify from 'corona/utils/slugify'
 export default class CustomController extends Controller {
   @service customCharts
   @service intl
-  @service('modalsManager') modals
+  @service modals
   @service router
 
   /*********************************
@@ -176,14 +176,9 @@ export default class CustomController extends Controller {
 
     try {
       await modals.confirm({
-        title: '',
-        clickOutsideToClose: true,
-        escapeToClose: true,
-        body: intl.t('custom.delete-confirm.message', { chart: title }),
+        text: intl.t('custom.delete-confirm.message', { chart: title }),
         confirm: intl.t('custom.delete-confirm.confirm'),
-        decline: intl.t('custom.delete-confirm.decline'),
-        declineButtonPrimary: true,
-        declineButtonRaised: true
+        cancel: intl.t('custom.delete-confirm.decline')
       })
     } catch (e) {
       return

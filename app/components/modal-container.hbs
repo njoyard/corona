@@ -1,0 +1,15 @@
+{{#if (eq this.active 'about')}}
+  <Modals::About @onClose={{this.close}}/>
+{{else if (eq this.active 'value')}}
+  <Modals::Value
+    @onClose={{this.close}}
+    @title={{this.params.title}}
+    @value={{this.params.value}} />
+{{else if (eq this.active 'confirm')}}
+  <Modals::Confirm
+    @onClose={{this.close}}
+    @title={{this.params.title}}
+    @text={{this.params.text}}
+    @confirm={{this.params.confirm}}
+    @cancel={{this.params.cancel}} />
+{{/if}}

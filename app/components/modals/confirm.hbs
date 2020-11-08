@@ -1,0 +1,15 @@
+<PaperDialog @class="about-dialog" @onClose={{fn @onClose false}} @clickOutsideToClose={{true}} @escapeToClose={{true}}>
+  <PaperDialogContent>
+    <p>{{@text}}</p>
+  </PaperDialogContent>
+
+  <PaperDialogActions @class="layout-row">
+    <span class="flex"></span>
+    <PaperButton @warn={{true}} @onClick={{fn @onClose true}}>
+      {{@confirm}}
+    </PaperButton>
+    <PaperButton @onClick={{fn @onClose false}}>
+      {{@cancel}}
+    </PaperButton>
+  </PaperDialogActions>
+</PaperDialog>
