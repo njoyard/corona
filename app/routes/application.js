@@ -6,7 +6,9 @@ export default class ApplicationRoute extends Route {
   @service intl
 
   beforeModel() {
-    this.intl.setLocale(navigator.languages)
+    let languages = [...navigator.languages, 'en-us']
+
+    this.intl.setLocale(languages)
     document.title = this.intl.t('app.title')
   }
 
