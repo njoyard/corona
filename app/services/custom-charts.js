@@ -1,5 +1,5 @@
 import { A } from '@ember/array'
-import Service from '@ember/service'
+import Service, { inject as service } from '@ember/service'
 import { tracked } from '@glimmer/tracking'
 
 import Chart from 'corona/models/chart'
@@ -94,5 +94,41 @@ export default class CustomChartsService extends Service {
     this._persist()
 
     return repr.id
+  }
+
+  export(id) {
+    let chart = this.get(id)
+
+    if (!chart) {
+      throw new Error(`Unknown chart: ${id}`)
+    }
+
+    let noid = Object.assign({}, chart.custom)
+    delete noid.id
+
+    return btoa(JSON.stringify(noid))
+  }
+
+  import(b64repr) {
+    let repr
+    try {
+      repr = JSON.parse(atob(b64repr))
+    } catch (e) {
+      return { error: e }
+    }
+
+    let str = JSON.stringify(repr)
+    let existing = this.charts.find((c) => {
+      let noid = Object.assign({}, c.custom)
+      delete noid.id
+
+      return JSON.stringify(noid) === str
+    })
+
+    if (existing) {
+      return { existing: existing.id }
+    }
+
+    return { imported: this.save(repr) }
   }
 }

@@ -14,6 +14,9 @@
 
   {{#if this.isCustom}}
     <div class="md-secondary-container">
+      <controls.button @secondary={{true}} @iconButton={{true}} @onClick={{@onShare}}>
+        <PaperIcon @icon="share" @size={{18}} />
+      </controls.button>
       <controls.button @secondary={{true}} @iconButton={{true}} @onClick={{@onEdit}}>
         <PaperIcon @icon="edit" @size={{18}} />
       </controls.button>

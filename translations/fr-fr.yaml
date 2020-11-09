@@ -4,6 +4,11 @@ app:
 
   chartTypes: Type de graphique
   chartOptions: Options
+  share:
+    text: Utilisez l'adresse ci-dessous pour partager ce graphique.
+    error: Impossible d'importer ce graphique, vérifiez que l'URL a été copiée correctement.
+    existing: Ce graphique a déjà été importé.
+    imported: Graphique importé.
 
   compare:
     truncate-hint: '{count} {count, plural, one {zone masquée} other {zones masquées}} ayant des valeurs inférieures'

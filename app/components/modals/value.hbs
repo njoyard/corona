@@ -1,0 +1,16 @@
+<PaperDialog @class="about-dialog" @onClose={{@onClose}} @clickOutsideToClose={{true}} @escapeToClose={{true}}>
+  <PaperDialogContent>
+    <h3>{{@title}}</h3>
+    <div class="layout">
+      <PaperInput class="flex" @readonly={{true}} @value={{@value}} @onChange={{null}} {{did-insert this.onInputInserted}}/>
+    </div>
+  </PaperDialogContent>
+
+  <PaperDialogActions @class="layout-row">
+    <span class="flex"></span>
+    <PaperButton @onClick={{@onClose}}>
+      {{t 'app.about.close'}}
+    </PaperButton>
+  </PaperDialogActions>
+</PaperDialog>
+

@@ -23,7 +23,7 @@ export default class ChartRoute extends Route {
 
   redirect(model, transition) {
     if (!model) {
-      this.router.transitionTo('application')
+      this.transitionTo('application')
     }
 
     let { root } = model

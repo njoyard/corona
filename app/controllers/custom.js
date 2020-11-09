@@ -12,7 +12,6 @@ export default class CustomController extends Controller {
   @service customCharts
   @service intl
   @service modals
-  @service router
 
   /*********************************
    * Enum values
@@ -153,14 +152,14 @@ export default class CustomController extends Controller {
 
   @action
   save() {
-    let { isValid, chart, customCharts, router } = this
+    let { isValid, chart, customCharts } = this
 
     if (isValid) {
       let newId = chart.id
         ? customCharts.update(chart.id, chart.repr)
         : customCharts.save(chart.repr)
 
-      router.transitionTo('chart', newId)
+      this.transitionToRoute('chart', newId)
     }
   }
 
@@ -168,7 +167,7 @@ export default class CustomController extends Controller {
   async delete() {
     let {
       chart: { id, title },
-      router,
+      dataset: { defaultChart },
       customCharts,
       modals,
       intl
@@ -185,6 +184,6 @@ export default class CustomController extends Controller {
     }
 
     customCharts.remove(id)
-    router.transitionTo('application')
+    this.transitionToRoute('chart', defaultChart)
   }
 }

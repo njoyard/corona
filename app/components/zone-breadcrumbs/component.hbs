@@ -1,0 +1,9 @@
+{{#if @inline}}
+  <span class="zone-breadcrumb">
+    <ZoneBreadcrumbs::Inner @onSelect={{@onSelect}} @zone={{@zone}} />
+  </span>
+{{else}}
+  <h2 class="zone-breadcrumb layout-row layout-nowrap">
+    <ZoneBreadcrumbs::Inner @onSelect={{@onSelect}} @zone={{@zone}} />
+  </h2>
+{{/if}}

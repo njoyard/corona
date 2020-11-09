@@ -13,7 +13,6 @@ const DAY = 86400000
 
 export default class ChartZoneController extends Controller {
   @service intl
-  @service routing
 
   queryParams = [
     { multi: { scope: 'controller', as: 'm' } },
@@ -224,6 +223,6 @@ export default class ChartZoneController extends Controller {
 
   @action
   selectZone(zone) {
-    this.routing.selectZone(zone)
+    this.transitionToRoute('chart.zone', zone.id)
   }
 }

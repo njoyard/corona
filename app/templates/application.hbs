@@ -30,15 +30,23 @@
         {{#if this.isCompareChart}}
           {{#each this.compareFields as |field|}}
             <PaperItem @class="chart-list-item compare-field" as |controls|>
-              <controls.radio @groupValue={{this.compareField}} @value={{field}} @onChange={{fn this.showCompareChart}} />
+              <controls.radio @groupValue={{this.compareField}} @value={{field}} @onChange={{this.showCompareChart}} />
               <p>{{t (concat 'fields.' field '.short')}}</p>
             </PaperItem>
           {{/each}}
         {{/if}}
 
-        <ChartList @charts={{this.charts}} />
-        <ChartList @charts={{this.customCharts}} />
-        <PaperItem @class="md-2-line md-long-text chart-list-item" @onClick={{this.createChart}}>
+        <ChartList
+          @charts={{this.charts}}
+          @selected={{this.selectedChart}}
+          @onSelect={{this.selectChart}} />
+        <ChartList
+          @charts={{this.customCharts}}
+          @selected={{this.selectedChart}}
+          @onSelect={{this.selectChart}}
+          @onEdit={{this.editChart}}
+          @onShare={{this.shareChart}} />
+        <PaperItem @class="md-2-line md-long-text chart-list-item" @onClick={{this.editChart}}>
           <PaperIcon @icon="addchart" />
           <div class="md-list-item-text">
             <h3>{{t 'custom.add'}}</h3>
@@ -82,4 +90,5 @@
   </div>
 </PaperSidenavContainer>
 
-<ModalContainer/>
+<ModalContainer />
+<PaperToaster />

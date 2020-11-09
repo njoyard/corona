@@ -1,0 +1,8 @@
+{{#each @charts as |chart|}}
+  <ChartList::Item
+    @chart={{chart}}
+    @selected={{eq @selected chart.id}}
+    @onClick={{fn @onSelect chart}}
+    @onEdit={{if @onEdit (fn @onEdit chart)}}
+    @onShare={{if @onShare (fn @onShare chart)}} />
+{{/each}}

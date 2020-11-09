@@ -44,6 +44,23 @@ export default class ApplicationController extends Controller {
     return this.data.links
   }
 
+  get selectedChart() {
+    return this.routing.selectedChart
+  }
+
+  /*********************************
+   * Chart selection
+   */
+
+  @action
+  selectChart(chart) {
+    let { selectedChart } = this
+
+    if (!selectedChart || selectedChart !== chart.id) {
+      this.transitionToRoute('chart', chart.id)
+    }
+  }
+
   /*********************************
    * Comparison charts
    */
@@ -51,14 +68,12 @@ export default class ApplicationController extends Controller {
   compareFields = Object.keys(compareFields)
 
   get isCompareChart() {
-    return (
-      this.routing.selectedChart &&
-      this.routing.selectedChart.startsWith('compare:')
-    )
+    let { selectedChart } = this
+    return selectedChart && selectedChart.startsWith('compare:')
   }
 
   get compareField() {
-    return this.routing.selectedChart.replace(/compare:/, '')
+    return this.selectedChart.replace(/compare:/, '')
   }
 
   @action
@@ -67,7 +82,7 @@ export default class ApplicationController extends Controller {
       field = this.compareFields[0]
     }
 
-    this.routing.selectChart(`compare:${field}`)
+    this.transitionToRoute('chart', `compare:${field}`)
   }
 
   /*********************************
@@ -75,13 +90,22 @@ export default class ApplicationController extends Controller {
    */
 
   @action
-  createChart() {
-    this.router.transitionTo('custom', 'new')
+  editChart(chart) {
+    this.transitionToRoute('custom', chart.id || 'new')
   }
 
   @action
-  editChart(chart) {
-    this.router.transitionTo('custom', chart.id)
+  shareChart(chart) {
+    let url = new URL(location.href)
+    url.hash = this.router.urlFor(
+      'custom',
+      `import:${this.custom.export(chart.id)}`
+    )
+
+    this.modals.value({
+      title: this.intl.t('app.share.text'),
+      value: url.href
+    })
   }
 
   /*********************************

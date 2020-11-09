@@ -21,6 +21,10 @@ export default class Dataset {
     return new DatasetZone(chart, this.world).root
   }
 
+  get defaultChart() {
+    return this.charts.firstObject.id
+  }
+
   get allFields() {
     let fields = new Set(['population'])
     let rec = [this.world]

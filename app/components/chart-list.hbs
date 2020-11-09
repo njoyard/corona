@@ -1,3 +1,0 @@
-{{#each @charts as |chart|}}
-  <ChartListItem @chart={{chart}} @selected={{eq this.selected chart.id}} @onClick={{fn this.select chart}} @onEdit={{fn this.edit chart}} />
-{{/each}}

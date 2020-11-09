@@ -4,6 +4,11 @@ app:
 
   chartTypes: Chart type
   chartOptions: Chart options
+  share:
+    text: Use the following address to share this chart.
+    error: Could not import this chart, please check the URL was copied correctly.
+    existing: This chart was already imported.
+    imported: Chart imported successfully.
 
   compare:
     truncate-hint: '{count} hidden {count, plural, one {area} other {areas}} with lower values'

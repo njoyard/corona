@@ -1,6 +1,5 @@
 import Controller from '@ember/controller'
 import { action } from '@ember/object'
-import { inject as service } from '@ember/service'
 import { tracked } from '@glimmer/tracking'
 
 function focusSearch() {
@@ -16,8 +15,6 @@ function focusSearch() {
 }
 
 export default class ChartController extends Controller {
-  @service routing
-
   /*********************************
    * Aliases
    */
@@ -63,8 +60,8 @@ export default class ChartController extends Controller {
   }
 
   @action
-  searchSelect(zone) {
-    this.routing.selectZone(zone)
+  selectZone(zone) {
     this.searchActive = false
+    this.transitionToRoute('chart.zone', zone.id)
   }
 }

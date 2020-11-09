@@ -15,8 +15,7 @@
           @noMatchesMessages={{t 'app.searchNoMatch'}}
           @onBlur={{this.disableSearch}}
           @onClose={{this.disableSearch}}
-          @onSelectionChange={{this.searchSelect}}
-           />
+          @onSelectionChange={{this.selectZone}} />
       </div>
     {{else}}
       {{outlet 'breadcrumbs'}}

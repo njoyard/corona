@@ -1,5 +1,5 @@
 {{#if @zone.parent}}
-  <ZoneParent @zone={{@zone.parent}} @onSelect={{this.select}} />
+  <ZoneBreadcrumbs::Parent @zone={{@zone.parent}} @onSelect={{this.select}} />
   <PaperIcon @icon="chevron_right" />
 {{/if}}
 

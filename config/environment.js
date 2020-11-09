@@ -28,6 +28,13 @@ module.exports = function (environment) {
 
       // Sorting method for compare charts, one of 'max' or 'most-recent'
       sortMethod: 'max'
+    },
+
+    'ember-paper': {
+      'paper-toaster': {
+        position: 'bottom left',
+        duration: 3000
+      }
     }
   }
 

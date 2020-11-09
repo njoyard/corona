@@ -15,8 +15,8 @@ export default class ApplicationRoute extends Route {
   }
 
   redirect(dataset, transition) {
-    if (transition.to.name === 'index' && dataset.charts.length > 0) {
-      this.transitionTo('chart', dataset.charts.firstObject.id)
+    if (transition.to.name === 'index') {
+      this.transitionTo('chart', dataset.defaultChart)
     }
   }
 }
