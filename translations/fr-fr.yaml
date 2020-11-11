@@ -20,6 +20,7 @@ app:
     perCapita:
       title: Par habitant
       hint: Affiche les données pour 100 000 habitants, si applicable
+      legend: pour 100 000 habitants
     range:
       title: Plage temporelle
       reset: Réinitialiser

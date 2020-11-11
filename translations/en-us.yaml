@@ -20,6 +20,7 @@ app:
     perCapita:
       title: Per capita
       hint: Show counts per 100k people, when applicable
+      legend: per 100k people
     range:
       title: Date range
       reset: Reset

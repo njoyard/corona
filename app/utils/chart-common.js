@@ -97,7 +97,7 @@ function timeTitleCallback([context]) {
   )
 }
 
-function labelCallback(seriesOrFormatter, intl) {
+function labelCallback(seriesOrFormatter, { perCapita }, intl) {
   return (context) => {
     let label = context.dataset.label || ''
     let formatter =
@@ -111,6 +111,10 @@ function labelCallback(seriesOrFormatter, intl) {
 
     if (!isNaN(context.dataPoint.y)) {
       label += formatter(intl, context.dataPoint.y)
+    }
+
+    if (perCapita) {
+      label += ` ${intl.t('app.options.perCapita.legend')}`
     }
 
     return label

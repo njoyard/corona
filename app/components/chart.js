@@ -44,7 +44,7 @@ export default class ChartComponent extends Component {
             text: ' '
           }
         },
-        chart.getOptions(intl),
+        chart.getOptions(intl, options),
         isPreview ? { maintainAspectRatio: true, aspectRatio: 16 / 9 } : {}
       ),
       data

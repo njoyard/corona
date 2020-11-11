@@ -47,7 +47,7 @@ export default class CompareChart {
     )
   }
 
-  getOptions(intl) {
+  getOptions(intl, { perCapita }) {
     return {
       ...baseOptions,
       scales: {
@@ -58,7 +58,7 @@ export default class CompareChart {
         ...baseTooltipOptions,
         callbacks: {
           title: timeTitleCallback,
-          label: labelCallback(this.format, intl)
+          label: labelCallback(this.format, { perCapita }, intl)
         }
       }
     }

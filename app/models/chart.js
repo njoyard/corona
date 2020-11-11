@@ -54,7 +54,7 @@ export default class Chart {
     this.scales = scales
   }
 
-  getOptions(intl) {
+  getOptions(intl, { perCapita }) {
     let { series, scales } = this
 
     return {
@@ -67,7 +67,7 @@ export default class Chart {
         ...baseTooltipOptions,
         callbacks: {
           title: timeTitleCallback,
-          label: labelCallback(series, intl)
+          label: labelCallback(series, { perCapita }, intl)
         }
       }
     }
