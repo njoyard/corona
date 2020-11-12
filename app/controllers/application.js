@@ -56,8 +56,12 @@ export default class ApplicationController extends Controller {
   selectChart(chart) {
     let { selectedChart } = this
 
-    if (!selectedChart || selectedChart !== chart.id) {
-      this.transitionToRoute('chart', chart.id)
+    if (typeof chart !== 'string') {
+      chart = chart.id
+    }
+
+    if (!selectedChart || selectedChart !== chart) {
+      this.transitionToRoute('chart', chart)
     }
   }
 
@@ -82,7 +86,7 @@ export default class ApplicationController extends Controller {
       field = this.compareFields[0]
     }
 
-    this.transitionToRoute('chart', `compare:${field}`)
+    this.selectChart(`compare:${field}`)
   }
 
   /*********************************
