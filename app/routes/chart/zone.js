@@ -5,13 +5,12 @@ export default class ChartZoneRoute extends Route {
   @service router
 
   model({ zone_id }) {
-    let { root, chart, start } = this.modelFor('chart')
+    let { root, chart } = this.modelFor('chart')
 
     return {
       chart,
       zone: root.find(zone_id),
-      root,
-      start
+      root
     }
   }
 
