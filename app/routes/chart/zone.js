@@ -7,9 +7,12 @@ export default class ChartZoneRoute extends Route {
   model({ zone_id }) {
     let { root, chart } = this.modelFor('chart')
 
+    let [zone, children] = zone_id.split(':')
+
     return {
       chart,
-      zone: root.find(zone_id),
+      zone: root.find(zone),
+      selected: children ? children.split(',') : null,
       root
     }
   }

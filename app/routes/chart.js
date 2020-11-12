@@ -35,7 +35,8 @@ export default class ChartRoute extends Route {
         let zoneRoute = transition.from.find((ri) => ri.name === 'chart.zone')
 
         if (zoneRoute) {
-          if (root.has(zoneRoute.params.zone_id)) {
+          let [id] = zoneRoute.params.zone_id.split(':')
+          if (root.has(id)) {
             zone = zoneRoute.params.zone_id
           }
         }

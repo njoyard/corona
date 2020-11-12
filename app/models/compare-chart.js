@@ -104,6 +104,12 @@ export default class CompareChart {
   legendFor(zone, intl, options) {
     let validChildren = this.validChildren(zone, options)
 
+    if (options.selected) {
+      validChildren = validChildren.filter((c) =>
+        options.selected.includes(c.id)
+      )
+    }
+
     let entries = validChildren
       .map((c, index) => ({
         label: c.label,
@@ -146,8 +152,14 @@ export default class CompareChart {
   dataForZone(zone, options, intl) {
     let { scale, format, field } = this
 
+    let children = this.validChildren(zone, options)
+
+    if (options.selected) {
+      children = children.filter((c) => options.selected.includes(c.id))
+    }
+
     return {
-      datasets: this.validChildren(zone, options).map((child, index) =>
+      datasets: children.map((child, index) =>
         new ChartSeries(
           null,
           field,

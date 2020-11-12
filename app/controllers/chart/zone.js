@@ -33,6 +33,10 @@ export default class ChartZoneController extends Controller {
     return this.model.zone
   }
 
+  get selected() {
+    return this.model.selected
+  }
+
   get isCompareChart() {
     return this.chart.isCompareChart
   }
@@ -155,7 +159,9 @@ export default class ChartZoneController extends Controller {
       rangeStart,
       rangeEnd,
       rangeMin,
-      rangeMax
+      rangeMax,
+      isCompareChart,
+      selected
     } = this
 
     let options = {
@@ -165,6 +171,10 @@ export default class ChartZoneController extends Controller {
     if (hasRangeOption) {
       if (rangeStart && rangeStart > rangeMin) options.start = rangeStart
       if (rangeEnd && rangeEnd < rangeMax) options.end = rangeEnd
+    }
+
+    if (isCompareChart && selected) {
+      options.selected = selected
     }
 
     return options
@@ -217,8 +227,14 @@ export default class ChartZoneController extends Controller {
   }
 
   get legend() {
-    let { chart, intl, perCapita, zone } = this
-    return chart.legendFor(zone.zone, intl, { perCapita })
+    let { chart, intl, perCapita, zone, isCompareChart, selected } = this
+    let options = { perCapita }
+
+    if (isCompareChart && selected) {
+      options.selected = selected
+    }
+
+    return chart.legendFor(zone.zone, intl, options)
   }
 
   @action
