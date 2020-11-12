@@ -20,6 +20,21 @@ const colors = {
   blueGrey: '#607d8b'
 }
 
+const contrastColors = {
+  pink: colors.pink,
+  lightGreen: colors.lightGreen,
+  purple: colors.purple,
+  amber: colors.amber,
+  deepPurple: colors.deepPurple,
+  deepOrange: colors.deepOrange,
+  indigo: colors.indigo,
+  brown: colors.brown,
+  blue: colors.blue,
+  grey: colors.grey,
+  teal: colors.teal,
+  blueGrey: colors.blueGrey
+}
+
 function alpha(color, opacity, apply = false) {
   let values
 
@@ -45,4 +60,4 @@ function alpha(color, opacity, apply = false) {
   return `rgba(${values.join(',')},${opacity})`
 }
 
-export { alpha, colors }
+export { alpha, colors, contrastColors }

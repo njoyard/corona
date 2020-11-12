@@ -6,8 +6,8 @@ export default class DatasetZone {
     this.chart = chart
     this._parent = parent
 
-    let { id, label, subdivision, iso, children } = zone
-    Object.assign(this, { id, label, subdivision, iso })
+    let { id, label, subdivision, iso, rank, children } = zone
+    Object.assign(this, { id, label, subdivision, iso, rank })
 
     let allChildren = children.map((c) => new DatasetZone(chart, c, this))
     this.children = allChildren.filter((dz) => dz.hasData)

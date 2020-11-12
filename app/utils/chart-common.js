@@ -1,27 +1,21 @@
 import { DateTime } from 'luxon'
 
-import { colors } from 'corona/utils/colors'
+import { contrastColors } from 'corona/utils/colors'
 import { bignum, percent } from 'corona/utils/formats'
 
-// Only use every other color to avoid confusing charts
-const styleColors = Object.values(colors).filter((c, index) => index % 2 == 1)
+const styleColors = Object.values(contrastColors)
+const styleTypes = ['line', 'dotted', 'thin', 'dashed']
+const styles = styleTypes
+  .map((type) => styleColors.map((color) => ({ type, color })))
+  .flat()
 
 function compareStyle(index) {
-  let type = 'line'
-
-  if (index >= styleColors.length) {
-    type = 'dotted'
+  if (index >= styles.length) {
+    console.warn(`not enough different styles: ${index}`)
+    index = styles.length - 1
   }
 
-  if (index >= 2 * styleColors.length) {
-    type = 'thin'
-  }
-
-  if (index >= 3 * styleColors.length) {
-    type = 'dashed'
-  }
-
-  return { color: styleColors[index % styleColors.length], type }
+  return styles[index]
 }
 
 const baseOptions = {

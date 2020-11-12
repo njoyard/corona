@@ -16,7 +16,7 @@ import { number } from 'corona/utils/formats'
 import { decorate as cached } from 'corona/utils/weak-cache'
 
 const {
-  APP: { compareMaxSeries }
+  APP: { compareMaxSeries, styleMode }
 } = config
 
 export default class CompareChart {
@@ -103,10 +103,11 @@ export default class CompareChart {
 
   legendFor(zone, intl, options) {
     let validChildren = this.validChildren(zone, options)
+
     let entries = validChildren
-      .map(({ label }, index) => ({
-        label,
-        ...compareStyle(index)
+      .map((c, index) => ({
+        label: c.label,
+        ...compareStyle(styleMode === 'rank' ? c.rank : index)
       }))
       .sort(compareLabels)
 
@@ -146,15 +147,15 @@ export default class CompareChart {
     let { scale, format, field } = this
 
     return {
-      datasets: this.validChildren(zone, options).map((zone, index) =>
+      datasets: this.validChildren(zone, options).map((child, index) =>
         new ChartSeries(
           null,
           field,
           Object.assign(
-            { label: zone.label, scale, format },
-            compareStyle(index)
+            { label: child.label, scale, format },
+            compareStyle(styleMode === 'rank' ? child.rank : index)
           )
-        ).dataForZone(zone, options, intl)
+        ).dataForZone(child, options, intl)
       )
     }
   }

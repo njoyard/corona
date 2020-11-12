@@ -11,6 +11,7 @@ export default class Zone {
   label = null
 
   fields = new Set()
+  rank = 0
   children = []
   points = []
 
@@ -49,6 +50,10 @@ export default class Zone {
 
     if ('iso' in meta) {
       this.iso = meta.iso
+    }
+
+    if ('rank' in meta) {
+      this.rank = meta.rank
     }
   }
 
