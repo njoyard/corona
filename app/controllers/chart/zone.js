@@ -201,10 +201,16 @@ export default class ChartZoneController extends Controller {
   }
 
   get zones() {
-    let { zone, multi, isCompareChart } = this
+    let { zone, multi, isCompareChart, selected } = this
 
     if (!isCompareChart && multi && zone.children.length > 1) {
-      return zone.children.map((c) => c.zone)
+      let zones = zone.children.map((c) => c.zone)
+
+      if (selected) {
+        zones = zones.filter((z) => selected.includes(z.id))
+      }
+
+      return zones
     } else {
       return [zone.zone]
     }
