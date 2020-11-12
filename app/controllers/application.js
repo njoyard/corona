@@ -103,7 +103,7 @@ export default class ApplicationController extends Controller {
     )
 
     this.modals.value({
-      title: this.intl.t('app.share.text'),
+      title: this.intl.t('share.text'),
       value: url.href
     })
   }

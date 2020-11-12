@@ -10,13 +10,13 @@
         <svg class="toolbar-icon" viewBox="0 0 64 64">
           <use xlink:href="assets/corona.svg#corona"></use>
         </svg>
-        <h1>{{t 'app.title'}}</h1>
+        <h1>{{t 'title'}}</h1>
       </toolbar.tools>
     </PaperToolbar>
 
     <PaperContent>
       <PaperList>
-        <PaperSubheader>{{t 'app.chartTypes'}}</PaperSubheader>
+        <PaperSubheader>{{t 'chartTypes'}}</PaperSubheader>
         <PaperItem @class={{concat "md-2-line md-long-text chart-list-item" (if this.isCompareChart " selected")}} @onClick={{unless this.isCompareChart this.showCompareChart}}>
           <img src='assets/chart-compare.png' alt={{t 'charts.compare.title'}} class="md-avatar">
           <div class="md-list-item-text">
@@ -56,10 +56,10 @@
         {{outlet 'chart-options'}}
 
         <PaperDivider />
-        <PaperSubheader>{{t 'app.about.menuHeader'}}</PaperSubheader>
+        <PaperSubheader>{{t 'about.menuHeader'}}</PaperSubheader>
         <PaperItem @class="menu-link" @onClick={{this.showAbout}}>
           <PaperIcon @icon="help" @size={{18}} />
-          <p>{{t 'app.about.menuEntry'}}</p>
+          <p>{{t 'about.menuEntry'}}</p>
         </PaperItem>
 
         {{#each this.links as |link|}}
@@ -73,7 +73,7 @@
                 {{/if}}
               {{/if}}
 
-              <p>{{t (concat 'app.links.' link.id)}}</p>
+              <p>{{t (concat 'links.' link.id)}}</p>
 
               <div class="md-secondary-container">
                 <PaperIcon @icon="launch" @size={{18}} />

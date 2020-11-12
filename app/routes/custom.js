@@ -43,13 +43,13 @@ export default class CustomRoute extends Route {
     let { toast, intl } = this
 
     if (model.imported) {
-      toast.show(intl.t('app.share.imported'))
+      toast.show(intl.t('share.imported'))
       this.transitionTo('chart', model.imported)
     } else if (model.existing) {
-      toast.show(intl.t('app.share.existing'))
+      toast.show(intl.t('share.existing'))
       this.transitionTo('chart', model.existing)
     } else if (model.error) {
-      toast.show(intl.t('app.share.error'))
+      toast.show(intl.t('share.error'))
 
       if (transition.from) {
         transition.abort()

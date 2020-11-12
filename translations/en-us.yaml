@@ -1,75 +1,74 @@
-app:
-  title: Covid-19 Charts
-  starting: Starting...
+title: Covid-19 Charts
+starting: Starting...
 
-  chartTypes: Chart type
-  chartOptions: Chart options
-  share:
-    text: Use the following address to share this chart.
-    error: Could not import this chart, please check the URL was copied correctly.
-    existing: This chart was already imported.
-    imported: Chart imported successfully.
+chartTypes: Chart type
+chartOptions: Chart options
+share:
+  text: Use the following address to share this chart.
+  error: Could not import this chart, please check the URL was copied correctly.
+  existing: This chart was already imported.
+  imported: Chart imported successfully.
 
-  compare:
-    truncate-hint: '{count} hidden {count, plural, one {area} other {areas}} with lower values'
+compare:
+  truncate-hint: '{count} hidden {count, plural, one {area} other {areas}} with lower values'
 
-  options:
-    multi:
-      title: Multiple charts
-      hint: Display one chart per region in the selected area
-    perCapita:
-      title: Per capita
-      hint: Show counts per 100k people, when applicable
-      legend: per 100k people
-    range:
-      title: Date range
-      reset: Reset
-      all: All data
-      between: From {from, date, medium} until {to, date, medium}
-      from: From {from, date, medium}
-      to: Until {to, date, medium}
+options:
+  multi:
+    title: Multiple charts
+    hint: Display one chart per region in the selected area
+  perCapita:
+    title: Per capita
+    hint: Show counts per 100k people, when applicable
+    legend: per 100k people
+  range:
+    title: Date range
+    reset: Reset
+    all: All data
+    between: From {from, date, medium} until {to, date, medium}
+    from: From {from, date, medium}
+    to: Until {to, date, medium}
 
-  about:
-    menuHeader: About
-    menuEntry: Information
-    title: About
-    close: Close
-    text: |
-      This app uses data from the CSSE at John Hopkins University, from the European Centre for Disease Prevention and Control (ECDC), and from Santé Publique France.
+about:
+  menuHeader: About
+  menuEntry: Information
+  title: About
+  close: Close
+  text: |
+    This app uses data from the CSSE at John Hopkins University, from the European Centre for Disease Prevention and Control (ECDC), and from Santé Publique France.
 
-      Please note that CSSE and ECDC data comes from officially reported figures, and is only indicative of the actual situation. It comes from various organizations and countries, and may use different counting methods. Some figures are probably underestimated (like the number of cases), others are probably overestimated (like mortality rate).
+    Please note that CSSE and ECDC data comes from officially reported figures, and is only indicative of the actual situation. It comes from various organizations and countries, and may use different counting methods. Some figures are probably underestimated (like the number of cases), others are probably overestimated (like mortality rate).
 
-      Data is refreshed every 6 hours, independently of source updates.
-    built: This version was built on {buildDate, date, medium} at {buildDate, time, full}
-    sources: Data sources
-    sourceNames:
-      csse: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University
-      ecdc: European Centre for Disease Prevention and Control (ECDC)
-      spf: Santé Publique France on the data.gouv.fr platform
-      lizurey: French department/region hierarchy by César Lizurey on the data.gouv.fr platform
-    opendata: |
-      Aggregated data for use by this application is <a href="//github.com/njoyard/corona/tree/data" target="_blank" rel="noopener noreferrer">available as Open Data</a>.
-    devInfo:
-      title: Developer info
-      repo: |
-        The source code for this app is available under the terms of the MIT license
-        <a href="//github.com/njoyard/corona" target="_blank" rel="noopener noreferrer">on GitHub</a>.
-        Feel free to <a href="//github.com/njoyard/corona/issues/new" target="_blank" rel="noopener noreferer">report issues</a> and make suggestions.
-      logo: |
-        Coronavirus icon courtesy of <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferrer">Becris</a>,
-        shared under the <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">Creative Commons CC-BY-SA version 3.0 license</a>.
-    stats: |
-      <a href="//www.goatcounter.com/" target="_blank" rel="noopener noreferrer">GoatCounter</a> is used to record access statistics, which you can access <a href="//stats.njoyard.fr" target="_blank" rel="noopener noreferrer">here</a>. No personal information is recorded (and no cookies are used), the only information kept is: URL, time of access, referrer URL (when available), browser user-agent string, screen size and country (deduced from the IP, but the IP itself is not saved).
+    Data is refreshed every 6 hours, independently of source updates.
+  built: This version was built on {buildDate, date, medium} at {buildDate, time, full}
+  sources: Data sources
+  sourceNames:
+    csse: Center for Systems Science and Engineering (CSSE) at Johns Hopkins University
+    ecdc: European Centre for Disease Prevention and Control (ECDC)
+    spf: Santé Publique France on the data.gouv.fr platform
+    lizurey: French department/region hierarchy by César Lizurey on the data.gouv.fr platform
+  opendata: |
+    Aggregated data for use by this application is <a href="//github.com/njoyard/corona/tree/data" target="_blank" rel="noopener noreferrer">available as Open Data</a>.
+  devInfo:
+    title: Developer info
+    repo: |
+      The source code for this app is available under the terms of the MIT license
+      <a href="//github.com/njoyard/corona" target="_blank" rel="noopener noreferrer">on GitHub</a>.
+      Feel free to <a href="//github.com/njoyard/corona/issues/new" target="_blank" rel="noopener noreferer">report issues</a> and make suggestions.
+    logo: |
+      Coronavirus icon courtesy of <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferrer">Becris</a>,
+      shared under the <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferrer">Creative Commons CC-BY-SA version 3.0 license</a>.
+  stats: |
+    <a href="//www.goatcounter.com/" target="_blank" rel="noopener noreferrer">GoatCounter</a> is used to record access statistics, which you can access <a href="//stats.njoyard.fr" target="_blank" rel="noopener noreferrer">here</a>. No personal information is recorded (and no cookies are used), the only information kept is: URL, time of access, referrer URL (when available), browser user-agent string, screen size and country (deduced from the IP, but the IP itself is not saved).
 
-  links:
-    github: Source code
-    new-issue: Report issues
-    data: Open data
-    contact: Contact
+links:
+  github: Source code
+  new-issue: Report issues
+  data: Open data
+  contact: Contact
 
-  errors:
-    chart-error: Could not draw this chart
-    no-data: No data for this chart
+errors:
+  chart-error: Could not draw this chart
+  no-data: No data for this chart
 
 custom:
   add: Add custom chart

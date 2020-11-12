@@ -9,7 +9,7 @@ export default class ApplicationRoute extends Route {
     let languages = [...navigator.languages, 'en-us']
 
     this.intl.setLocale(languages)
-    document.title = this.intl.t('app.title')
+    document.title = this.intl.t('title')
   }
 
   model() {

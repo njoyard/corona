@@ -1,75 +1,74 @@
-app:
-  title: Graphiques Covid-19
-  starting: Chargement...
+title: Graphiques Covid-19
+starting: Chargement...
 
-  chartTypes: Type de graphique
-  chartOptions: Options
-  share:
-    text: Utilisez l'adresse ci-dessous pour partager ce graphique.
-    error: Impossible d'importer ce graphique, vérifiez que l'URL a été copiée correctement.
-    existing: Ce graphique a déjà été importé.
-    imported: Graphique importé.
+chartTypes: Type de graphique
+chartOptions: Options
+share:
+  text: Utilisez l'adresse ci-dessous pour partager ce graphique.
+  error: Impossible d'importer ce graphique, vérifiez que l'URL a été copiée correctement.
+  existing: Ce graphique a déjà été importé.
+  imported: Graphique importé.
 
-  compare:
-    truncate-hint: '{count} {count, plural, one {zone masquée} other {zones masquées}} ayant des valeurs inférieures'
+compare:
+  truncate-hint: '{count} {count, plural, one {zone masquée} other {zones masquées}} ayant des valeurs inférieures'
 
-  options:
-    multi:
-      title: Graphiques multiples
-      hint: Affiche un graphique par région dans la zone géographique sélectionnée
-    perCapita:
-      title: Par habitant
-      hint: Affiche les données pour 100 000 habitants, si applicable
-      legend: pour 100 000 habitants
-    range:
-      title: Plage temporelle
-      reset: Réinitialiser
-      all: Toutes les données
-      between: Du {from, date, medium} au {to, date, medium}
-      from: À partir du {from, date, long}
-      to: Jusqu'au {to, date, long}
+options:
+  multi:
+    title: Graphiques multiples
+    hint: Affiche un graphique par région dans la zone géographique sélectionnée
+  perCapita:
+    title: Par habitant
+    hint: Affiche les données pour 100 000 habitants, si applicable
+    legend: pour 100 000 habitants
+  range:
+    title: Plage temporelle
+    reset: Réinitialiser
+    all: Toutes les données
+    between: Du {from, date, medium} au {to, date, medium}
+    from: À partir du {from, date, long}
+    to: Jusqu'au {to, date, long}
 
-  about:
-    menuHeader: À propos
-    menuEntry: Informations
-    title: À propos
-    close: Fermer
-    text: |
-      Cette application utilise les données en provenance du CSSE à l'université John Hopkins, du Centre Européen pour la Prévention et le Contrôle des Maladies (ECDC), ainsi que celles de Santé Publique France.
+about:
+  menuHeader: À propos
+  menuEntry: Informations
+  title: À propos
+  close: Fermer
+  text: |
+    Cette application utilise les données en provenance du CSSE à l'université John Hopkins, du Centre Européen pour la Prévention et le Contrôle des Maladies (ECDC), ainsi que celles de Santé Publique France.
 
-      Notez que les données CSSE et de l'ECDC sont fournies uniquement à titre indicatif. Elles sont agrégées à partir des informations fournies par plusieurs organismes distincts, qui utilisent des méthodes de relevé et de comptage diverses. Certains chiffres sont probablement sous-estimés (comme le nombre de cas), et d'autres surestimés (comme le taux de mortalité).
+    Notez que les données CSSE et de l'ECDC sont fournies uniquement à titre indicatif. Elles sont agrégées à partir des informations fournies par plusieurs organismes distincts, qui utilisent des méthodes de relevé et de comptage diverses. Certains chiffres sont probablement sous-estimés (comme le nombre de cas), et d'autres surestimés (comme le taux de mortalité).
 
-      Les données sont récupérées par l'application toutes les 6 heures, indépendemment de la mise à jour des données sources.
-    built: Cette version a été générée le {buildDate, date, medium} à {buildDate, time, full}
-    sources: Sources de données
-    sourceNames:
-      csse: Center for Systems Science and Engineering (CSSE) de l'université Johns Hopkins
-      ecdc: Centre Européen pour la Prévention et le Contrôle des Maladies (ECDC)
-      spf: Santé Publique France sur la plateforme data.gouv.fr
-      lizurey: Hiérarchie des départements et régions françaises par César Lizurey sur la plateforme data.gouv.fr
-    opendata: |
-      Les données agrégées utilisées par cette application sont <a href="//github.com/njoyard/corona/tree/data" target="_blank" rel="noopener noreferrer">disponibles en Open Data</a>.
-    devInfo:
-      title: Développement
-      repo: |
-        Le code source de l'application est disponible sous license MIT
-        <a href="//github.com/njoyard/corona" target="_blank" rel="noopener noreferer">sur GitHub</a>.
-        N'hésitez pas à y <a href="//github.com/njoyard/corona/issues/new" target="_blank" rel="noopener noreferer">signaler tout problème</a> ou y faire des suggestions.
-      logo: |
-        Logo fourni par <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferer">Becris</a>,
-        sous license <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0</a>.
-    stats: |
-      L'application utilise <a href="//www.goatcounter.com/" target="_blank" rel="noopener noreferrer">GoatCounter</a> pour enregistrer les statistiques d'accès, que vous pouvez consulter <a href="//stats.njoyard.fr" target="_blank" rel="noopener noreferrer">ici</a>. Aucune information personnelle n'est enregistrée (et aucun cookie n'est utilisé), les seules informations conservées sont : l'URL, la date et heure d'accès, l'URL de provenance (<i>referrer</i>), la version de votre navigateur (<i>user-agent</i>), la taille de votre écran et le pays d'origine (déduit à partir de votre adresse IP, qui n'est pas elle-même conservée).
+    Les données sont récupérées par l'application toutes les 6 heures, indépendemment de la mise à jour des données sources.
+  built: Cette version a été générée le {buildDate, date, medium} à {buildDate, time, full}
+  sources: Sources de données
+  sourceNames:
+    csse: Center for Systems Science and Engineering (CSSE) de l'université Johns Hopkins
+    ecdc: Centre Européen pour la Prévention et le Contrôle des Maladies (ECDC)
+    spf: Santé Publique France sur la plateforme data.gouv.fr
+    lizurey: Hiérarchie des départements et régions françaises par César Lizurey sur la plateforme data.gouv.fr
+  opendata: |
+    Les données agrégées utilisées par cette application sont <a href="//github.com/njoyard/corona/tree/data" target="_blank" rel="noopener noreferrer">disponibles en Open Data</a>.
+  devInfo:
+    title: Développement
+    repo: |
+      Le code source de l'application est disponible sous license MIT
+      <a href="//github.com/njoyard/corona" target="_blank" rel="noopener noreferer">sur GitHub</a>.
+      N'hésitez pas à y <a href="//github.com/njoyard/corona/issues/new" target="_blank" rel="noopener noreferer">signaler tout problème</a> ou y faire des suggestions.
+    logo: |
+      Logo fourni par <a href="//www.iconfinder.com/becris" target="_blank" rel="noopener noreferer">Becris</a>,
+      sous license <a href="//creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener noreferer">Creative Commons CC-BY-SA version 3.0</a>.
+  stats: |
+    L'application utilise <a href="//www.goatcounter.com/" target="_blank" rel="noopener noreferrer">GoatCounter</a> pour enregistrer les statistiques d'accès, que vous pouvez consulter <a href="//stats.njoyard.fr" target="_blank" rel="noopener noreferrer">ici</a>. Aucune information personnelle n'est enregistrée (et aucun cookie n'est utilisé), les seules informations conservées sont : l'URL, la date et heure d'accès, l'URL de provenance (<i>referrer</i>), la version de votre navigateur (<i>user-agent</i>), la taille de votre écran et le pays d'origine (déduit à partir de votre adresse IP, qui n'est pas elle-même conservée).
 
-  links:
-    github: Code source
-    new-issue: Signaler un problème
-    data: Open Data
-    contact: Contact
+links:
+  github: Code source
+  new-issue: Signaler un problème
+  data: Open Data
+  contact: Contact
 
-  errors:
-    chart-error: Could not draw this chart
-    no-data: Aucune donnée pour ce graphique
+errors:
+  chart-error: Could not draw this chart
+  no-data: Aucune donnée pour ce graphique
 
 custom:
   add: Graphique personnalisé

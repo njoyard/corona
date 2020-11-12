@@ -114,7 +114,7 @@ function labelCallback(seriesOrFormatter, { perCapita }, intl) {
     }
 
     if (perCapita) {
-      label += ` ${intl.t('app.options.perCapita.legend')}`
+      label += ` ${intl.t('options.perCapita.legend')}`
     }
 
     return label

@@ -33,7 +33,7 @@ export default class ChartComponent extends Component {
     let data = chart.dataForZone(zone, options, intl)
 
     if (data.datasets.every((ds) => ds.data.length < dataThreshold)) {
-      throw 'app.errors.no-data'
+      throw 'errors.no-data'
     }
 
     return {
@@ -67,7 +67,7 @@ export default class ChartComponent extends Component {
     } catch (e) {
       if (typeof e !== 'string') {
         console.error(`getChartConfig error`, e)
-        this.dataError = 'app.errors.chart-error'
+        this.dataError = 'errors.chart-error'
       } else {
         this.dataError = e
       }

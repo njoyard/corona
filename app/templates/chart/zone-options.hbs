@@ -1,13 +1,13 @@
 {{#if this.hasChartOptions}}
   <PaperDivider />
-  <PaperSubheader>{{t 'app.chartOptions'}}</PaperSubheader>
+  <PaperSubheader>{{t 'chartOptions'}}</PaperSubheader>
 {{/if}}
 
 {{#if this.hasMultiOption}}
   <PaperItem @class="md-2-line md-long-text" as |controls|>
     <div class="md-list-item-text">
-      <h3>{{t 'app.options.multi.title'}}</h3>
-      <p>{{t 'app.options.multi.hint'}}</p>
+      <h3>{{t 'options.multi.title'}}</h3>
+      <p>{{t 'options.multi.hint'}}</p>
     </div>
     <div class="md-secondary-container">
       <controls.checkbox @value={{this.multi}} @secondary={{true}} @onChange={{fn (mut this.multi)}} />
@@ -18,8 +18,8 @@
 {{#if this.hasPerCapitaOption}}
   <PaperItem @class="md-2-line md-long-text" as |controls|>
     <div class="md-list-item-text">
-      <h3>{{t 'app.options.perCapita.title'}}</h3>
-      <p>{{t 'app.options.perCapita.hint'}}</p>
+      <h3>{{t 'options.perCapita.title'}}</h3>
+      <p>{{t 'options.perCapita.hint'}}</p>
     </div>
     <div class="md-secondary-container">
       <controls.checkbox @value={{this.perCapita}} @secondary={{true}} @onChange={{fn (mut this.perCapita)}} />
@@ -30,16 +30,16 @@
 {{#if this.hasRangeOption}}
   <PaperItem @class="md-2-line md-long-text slider-text-container" as |controls|>
     <div class="md-list-item-text">
-      <h3>{{t 'app.options.range.title'}}</h3>
+      <h3>{{t 'options.range.title'}}</h3>
       <p>
         {{#if (and this.displayStart this.displayEnd)}}
-          {{t 'app.options.range.between' from=this.displayStart to=this.displayEnd}}
+          {{t 'options.range.between' from=this.displayStart to=this.displayEnd}}
         {{else if this.displayStart}}
-          {{t 'app.options.range.from' from=this.displayStart}}
+          {{t 'options.range.from' from=this.displayStart}}
         {{else if this.displayEnd}}
-          {{t 'app.options.range.to' to=this.displayEnd}}
+          {{t 'options.range.to' to=this.displayEnd}}
         {{else}}
-          {{t 'app.options.range.all'}}
+          {{t 'options.range.all'}}
         {{/if}}
       </p>
     </div>
@@ -49,7 +49,7 @@
         <controls.button @iconButton={{true}} @onClick={{this.resetRange}}>
           <PaperIcon @icon="clear" @size={{18}}>
             <PaperTooltip @position="top">
-              {{t 'app.options.range.reset'}}
+              {{t 'options.range.reset'}}
             </PaperTooltip>
           </PaperIcon>
         </controls.button>
