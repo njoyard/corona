@@ -165,6 +165,9 @@ fields:
   confirmed-weekly:
     short: Nouveaux cas quotidiens
     long: Nouveaux cas quotidiens (moyenne glissante sur 7 jours)
+  active:
+    short: Cas actifs (estimation)
+    long: Estimation des cas actifs (confirmés, non décédés, non guéris)
   tests:
     short: Tests effectués
   tests-weekly:

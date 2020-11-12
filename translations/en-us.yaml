@@ -164,6 +164,9 @@ fields:
   confirmed-weekly:
     short: Daily new cases
     long: Daily new cases (7-day moving average)
+  active:
+    short: Active cases (estimate)
+    long: Estimated active cases (confirmed, neither deceased nor recovered)
   tests:
     short: Total tests made
   tests-weekly:

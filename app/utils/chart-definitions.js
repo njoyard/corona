@@ -1,4 +1,11 @@
-import { change, ratio, reverse, weekly } from 'corona/utils/fields'
+import {
+  change,
+  offset,
+  ratio,
+  scale,
+  reverse,
+  weekly
+} from 'corona/utils/fields'
 import { colors, alpha } from 'corona/utils/colors'
 import { abs, percent } from 'corona/utils/formats'
 
@@ -12,6 +19,7 @@ const weeklyConfirmedChange = weekly(confirmedChange)
 const deceasedChange = change('deceased')
 const weeklyDeceasedChange = weekly(deceasedChange)
 const weeklyHospitalChange = weekly(change('hospital'))
+const active = offset('confirmed', scale(-1, offset('deceased', 'recovered')))
 
 const chartDefinitions = [
   {
@@ -100,6 +108,7 @@ const chartDefinitions = [
 const compareFields = {
   'confirmed-cumulative': { field: 'confirmed' },
   'confirmed-weekly': { field: weeklyConfirmedChange },
+  active: { field: active },
   'deceased-cumulative': { field: 'deceased' },
   'deceased-weekly': { field: weeklyDeceasedChange },
   hospital: { field: 'hospital' },
