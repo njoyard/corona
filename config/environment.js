@@ -27,7 +27,7 @@ module.exports = function (environment) {
         'https://raw.githubusercontent.com/njoyard/corona/data/corona.json',
 
       // Style mode for compare charts, one of 'rank' (fixed style for a given zone) or 'sort'
-      styleMode: 'sort',
+      styleMode: 'rank',
 
       // Sorting method for compare charts, one of 'max' or 'most-recent'
       sortMethod: 'max'

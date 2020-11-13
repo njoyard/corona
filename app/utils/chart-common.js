@@ -1,12 +1,20 @@
 import { DateTime } from 'luxon'
 
-import { contrastColors } from 'corona/utils/colors'
+import { contrastColors, alpha, scale } from 'corona/utils/colors'
 import { bignum, percent } from 'corona/utils/formats'
 
 const styleColors = Object.values(contrastColors)
-const styleTypes = ['line', 'dotted', 'thin', 'dashed']
+const styleTypes = [
+  { type: 'line', transform: (c) => c },
+  { type: 'line', transform: (c) => alpha(c, 0.75) },
+  { type: 'dotted', transform: (c) => c },
+  { type: 'thin', transform: (c) => scale(c, 0.75) }
+]
+
 const styles = styleTypes
-  .map((type) => styleColors.map((color) => ({ type, color })))
+  .map(({ type, transform }) =>
+    styleColors.map((color) => ({ type, color: transform(color) }))
+  )
   .flat()
 
 function compareStyle(index) {

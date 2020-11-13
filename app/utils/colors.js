@@ -35,6 +35,28 @@ const contrastColors = {
   blueGrey: colors.blueGrey
 }
 
+function scale(color, scale) {
+  let values
+  let opacity = 1
+
+  if (color.match(/^#/)) {
+    values = color
+      .replace(/#(..)(..)(..)/, '0x$1,0x$2,0x$3')
+      .split(',')
+      .map(Number)
+  } else {
+    values = color
+      .replace(/rgba\((.+),(.+),(.+),(.+)\)/, '$1,$2,$3,$4')
+      .split(',')
+      .map(Number)
+
+    opacity = values.pop()
+  }
+
+  values = values.map((v) => Math.min(255, Math.max(0, v * scale)))
+  return `rgba(${values.join(',')},${opacity})`
+}
+
 function alpha(color, opacity, apply = false) {
   let values
 
@@ -49,7 +71,7 @@ function alpha(color, opacity, apply = false) {
       .split(',')
       .map(Number)
 
-    opacity = opacity * values.pop()
+    opacity = Math.min(1, Math.max(0, opacity * values.pop()))
   }
 
   if (apply) {
@@ -60,4 +82,4 @@ function alpha(color, opacity, apply = false) {
   return `rgba(${values.join(',')},${opacity})`
 }
 
-export { alpha, colors, contrastColors }
+export { alpha, colors, scale, contrastColors }
