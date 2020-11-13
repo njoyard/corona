@@ -26,12 +26,12 @@ function rankZone(zone, data) {
 
     if (!('rankValue' in child)) {
       console.log(
-        `  ! no ranking field for ${chart.id}: ${child.meta.fields.join(', ')}`
+        `  ! no ranking field for ${child.id}: ${child.meta.fields.join(', ')}`
       )
     }
 
     if (isNaN(child.rankValue)) {
-      console.log(`  ! NaN rank value for ${chart.id}`)
+      console.log(`  ! NaN rank value for ${child.id}`)
     }
   }
 
