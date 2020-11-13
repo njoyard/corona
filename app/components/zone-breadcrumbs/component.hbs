@@ -6,4 +6,13 @@
   <h2 class="zone-breadcrumb layout-row layout-nowrap">
     <ZoneBreadcrumbs::Inner @onSelect={{@onSelect}} @zone={{@zone}} />
   </h2>
+
+  {{#if @selectableChildren}}
+    <PaperButton @iconButton={{true}} @accent={{@selectedChildren}} @onClick={{this.selectChildren}}>
+      <PaperTooltip @position="bottom">
+        {{t 'selectChildren.tooltip'}}
+      </PaperTooltip>
+      <PaperIcon @icon="filter_list" @size={{18}}/>
+    </PaperButton>
+  {{/if}}
 {{/if}}

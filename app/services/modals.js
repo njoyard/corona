@@ -25,13 +25,22 @@ export default class ModalsService extends Service {
     )
   }
 
+  selectChildren(params) {
+    this.active = 'select-children'
+    this.params = params
+
+    return new Promise(
+      (resolve, reject) => (this.promise = { resolve, reject })
+    )
+  }
+
   close(outcome) {
     this.active = null
 
     if (this.promise) {
       let { resolve, reject } = this.promise
       this.promise = null
-      outcome ? resolve() : reject()
+      outcome ? resolve(outcome) : reject()
     }
   }
 }

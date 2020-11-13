@@ -28,6 +28,14 @@ options:
     from: From {from, date, medium}
     to: Until {to, date, medium}
 
+search: Search
+
+selectChildren:
+  tooltip: Select visible zones
+  reset: Reset
+  confirm: Confirm
+  cancel: Cancel
+
 about:
   menuHeader: About
   menuEntry: Information

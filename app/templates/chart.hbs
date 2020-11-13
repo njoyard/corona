@@ -23,6 +23,10 @@
     {{/if}}
 
     <PaperButton @iconButton={{true}} @onClick={{this.toggleSearch}}>
+      <PaperTooltip @position="left">
+        {{t 'search'}}
+      </PaperTooltip>
+
       <PaperIcon @icon="search" />
     </PaperButton>
   </toolbar.tools>

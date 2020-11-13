@@ -1,0 +1,28 @@
+<PaperDialog @onClose={{fn @onClose false}} @clickOutsideToClose={{true}} @escapeToClose={{true}}>
+  <PaperDialogContent>
+    {{#if this.noneSelected}}
+      <p>{{t 'selectChildren.noneSelected'}}</p>
+    {{/if}}
+
+    <div class="layout-column">
+      {{#each this.options as |option|}}
+        <PaperCheckbox @value={{option.selected}} @onChange={{option.toggle}}>
+          {{option.zone.label}}
+        </PaperCheckbox>
+      {{/each}}
+    </div>
+  </PaperDialogContent>
+
+  <PaperDialogActions @class="layout-row">
+    <PaperButton @onClick={{this.reset}}>
+      {{t 'selectChildren.reset'}}
+    </PaperButton>
+    <span class="flex"></span>
+    <PaperButton @onClick={{fn @onClose false}}>
+      {{t 'selectChildren.cancel'}}
+    </PaperButton>
+    <PaperButton @accent={{true}} @onClick={{this.confirmSelection}}>
+      {{t 'selectChildren.confirm'}}
+    </PaperButton>
+  </PaperDialogActions>
+</PaperDialog>

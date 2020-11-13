@@ -243,8 +243,27 @@ export default class ChartZoneController extends Controller {
     return chart.legendFor(zone.zone, intl, options)
   }
 
+  /*********************************
+   * Zone selection
+   */
+
+  get selectableChildren() {
+    let { chart, perCapita, multi, isCompareChart, zone } = this
+
+    if (!isCompareChart && multi && zone.children.length > 1) {
+      return zone.children
+    } else if (isCompareChart) {
+      return chart.validChildren(zone.zone, { perCapita }, false)
+    }
+
+    return null
+  }
+
   @action
   selectZone(zone) {
-    this.transitionToRoute('chart.zone', zone.id)
+    this.transitionToRoute(
+      'chart.zone',
+      typeof zone === 'string' ? zone : zone.id
+    )
   }
 }

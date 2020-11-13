@@ -28,6 +28,14 @@ options:
     from: À partir du {from, date, long}
     to: Jusqu'au {to, date, long}
 
+search: Rechercher
+
+selectChildren:
+  tooltip: Sélectionner les zones visibles
+  reset: Réinitialiser
+  confirm: Confirmer
+  cancel: Annuler
+
 about:
   menuHeader: À propos
   menuEntry: Informations

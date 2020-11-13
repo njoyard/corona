@@ -12,4 +12,9 @@
     @text={{this.params.text}}
     @confirm={{this.params.confirm}}
     @cancel={{this.params.cancel}} />
+{{else if (eq this.active 'select-children')}}
+  <Modals::SelectChildren
+    @onClose={{this.close}}
+    @children={{this.params.children}}
+    @selected={{this.params.selected}} />
 {{/if}}

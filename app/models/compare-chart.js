@@ -64,12 +64,12 @@ export default class CompareChart {
     }
   }
 
-  _validChildren(field, zone) {
+  _validChildren(field, zone, truncate = false) {
     let validChildren = zone.children
       .filter((c) => field.canApply(c))
       .sort((a, b) => field.sortValue(b) - field.sortValue(a))
 
-    if (validChildren.length > compareMaxSeries) {
+    if (truncate && validChildren.length > compareMaxSeries) {
       let truncated = validChildren.length - compareMaxSeries
 
       validChildren = validChildren.slice(0, compareMaxSeries)
@@ -89,11 +89,29 @@ export default class CompareChart {
     return this._validChildren(this.field, zone)
   }
 
-  validChildren(zone, { perCapita }) {
-    if (perCapita) {
-      return this._validChildrenPerCapita(zone)
+  @cached
+  _allValidChildrenPerCapita(zone) {
+    return this._validChildren(this.pcField, zone, false)
+  }
+
+  @cached
+  _allValidChildrenFullScale(zone) {
+    return this._validChildren(this.field, zone, false)
+  }
+
+  validChildren(zone, { perCapita }, truncate = true) {
+    if (truncate) {
+      if (perCapita) {
+        return this._validChildrenPerCapita(zone)
+      } else {
+        return this._validChildrenFullScale(zone)
+      }
     } else {
-      return this._validChildrenFullScale(zone)
+      if (perCapita) {
+        return this._allValidChildrenPerCapita(zone)
+      } else {
+        return this._allValidChildrenFullScale(zone)
+      }
     }
   }
 
