@@ -64,7 +64,7 @@ export default class CompareChart {
     }
   }
 
-  _validChildren(field, zone, truncate = false) {
+  _validChildren(field, zone, truncate = true) {
     let validChildren = zone.children
       .filter((c) => field.canApply(c))
       .sort((a, b) => field.sortValue(b) - field.sortValue(a))
