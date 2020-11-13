@@ -120,7 +120,7 @@ export default class CompareChart {
   }
 
   legendFor(zone, intl, options) {
-    let validChildren = this.validChildren(zone, options)
+    let validChildren = this.validChildren(zone, options, !options.selected)
 
     if (options.selected) {
       validChildren = validChildren.filter((c) =>
@@ -170,7 +170,7 @@ export default class CompareChart {
   dataForZone(zone, options, intl) {
     let { scale, format, field } = this
 
-    let children = this.validChildren(zone, options)
+    let children = this.validChildren(zone, options, !options.selected)
 
     if (options.selected) {
       children = children.filter((c) => options.selected.includes(c.id))
