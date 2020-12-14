@@ -1,5 +1,7 @@
 import Service, { inject as service } from '@ember/service'
 
+const LS_KEY = 'corona:route'
+
 export default class RoutingService extends Service {
   @service router
 
@@ -15,5 +17,13 @@ export default class RoutingService extends Service {
     }
 
     return null
+  }
+
+  get savedRoute() {
+    return localStorage.getItem(LS_KEY)
+  }
+
+  set savedRoute(route) {
+    localStorage.setItem(LS_KEY, route)
   }
 }

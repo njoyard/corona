@@ -4,6 +4,16 @@ import { inject as service } from '@ember/service'
 export default class ApplicationRoute extends Route {
   @service data
   @service intl
+  @service router
+  @service routing
+
+  constructor() {
+    super(...arguments)
+
+    this.router.on('routeDidChange', () => {
+      this.routing.savedRoute = this.router.currentURL
+    })
+  }
 
   beforeModel() {
     let languages = [...navigator.languages, 'en-us']
@@ -17,6 +27,11 @@ export default class ApplicationRoute extends Route {
   }
 
   redirect(dataset, transition) {
+    if (!transition.from && this.routing.savedRoute) {
+      this.transitionTo(this.routing.savedRoute)
+      return
+    }
+
     if (transition.to.name === 'index') {
       this.transitionTo('chart', dataset.defaultChart)
     }
