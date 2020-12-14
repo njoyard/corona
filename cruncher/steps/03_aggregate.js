@@ -86,9 +86,24 @@ function aggregateZone(zone, data) {
     )
   )
 
-  // Do not aggregate fields that parent already has
   for (let field of meta.fields) {
-    aggregateFields.delete(field)
+    // Figure out if children have more recent data than parent
+    let parentMaxDate = Math.max(
+      ...points.filter((p) => p[field] !== undefined).map((p) => p.date)
+    )
+
+    let childrenMaxDate = Math.max(
+      ...children
+        .map((c) =>
+          c.points.filter((p) => p[field] !== undefined).map((p) => p.date)
+        )
+        .flat()
+    )
+
+    // They don't, do not aggregate this field from children, keep the one parent has
+    if (parentMaxDate >= childrenMaxDate) {
+      aggregateFields.delete(field)
+    }
   }
 
   aggregateFields = [...aggregateFields]
