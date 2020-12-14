@@ -27,7 +27,7 @@ export default class ApplicationRoute extends Route {
   }
 
   redirect(dataset, transition) {
-    if (!transition.from && this.routing.savedRoute) {
+    if (!transition.from && !location.hash && this.routing.savedRoute) {
       this.transitionTo(this.routing.savedRoute)
       return
     }
