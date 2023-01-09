@@ -67,7 +67,7 @@
     "chartjs-adapter-luxon": "^0.2.2",
     "esm": "^3.2.25",
     "fs-extra": "^9.0.1",
-    "luxon": "^1.25.0",
+    "luxon": "^2.5.2",
     "node-fetch": "^2.6.1",
     "pegjs": "^0.10.0",
     "require-directory": "^2.1.1"
