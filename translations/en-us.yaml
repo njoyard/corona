@@ -1,6 +1,9 @@
 title: Covid-19 Charts
 starting: Starting...
 
+archivedTitle: Data is now frozen
+archivedWarning: Source data used by this app are no longer updated since March 2023. The app stays usable, but data will no longer be updated.
+
 chartTypes: Chart type
 chartOptions: Chart options
 share:
@@ -10,7 +13,7 @@ share:
   imported: Chart imported successfully.
 
 compare:
-  truncate-hint: '{count} hidden {count, plural, one {area} other {areas}} with lower values'
+  truncate-hint: "{count} hidden {count, plural, one {area} other {areas}} with lower values"
 
 options:
   multi:
@@ -125,8 +128,8 @@ custom:
       <code>confirmed</code>, or function calls like <code>change(deceased)</code>. Function arguments are also expressions,
       as such calls may be nested, as in <code>coalesce(-confirmed, 1 + (change(tests - deceased) * 20) / 3)</code>. Any whitespace
       is ignored and priority rules work as usual (use parentheses if needed).
-    fields: 'The following field names are available, some of them not in all zones:'
-    funcs: 'The following functions are available:'
+    fields: "The following field names are available, some of them not in all zones:"
+    funcs: "The following functions are available:"
     coalesce: returns the first expression that has a value
     change: returns the change of the expression compared to the previous day, has no value when the current or previous days don't
     weekly: returns the 7-day moving average of the expression, centered around the current day, and excluding missing values

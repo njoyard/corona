@@ -1,8 +1,5 @@
 <PaperSidenavContainer class="layout-fill site-nav-container">
-  <PaperSidenav
-    @class="md-whiteframe-z2"
-    @open={{this.sideNavOpen}}
-    @onToggle={{fn (mut this.sideNavOpen)}}
+  <PaperSidenav @class="md-whiteframe-z2" @open={{this.sideNavOpen}} @onToggle={{fn (mut this.sideNavOpen)}}
     @lockedOpen="gt-sm">
 
     <PaperToolbar as |toolbar|>
@@ -16,9 +13,17 @@
 
     <PaperContent>
       <PaperList>
+        <PaperItem @class="md-2-line md-long-text">
+          <div class="md-list-item-text">
+            <h3 color="red">{{t 'archivedTitle'}}</h3>
+            <p>{{t 'archivedWarning'}}</p>
+          </div>
+        </PaperItem>
+
         <PaperSubheader>{{t 'chartTypes'}}</PaperSubheader>
-        <PaperItem @class={{concat "md-2-line md-long-text chart-list-item" (if this.isCompareChart " selected")}} @onClick={{unless this.isCompareChart this.showCompareChart}}>
-          <img src='assets/chart-compare.png' alt={{t 'charts.compare.title'}} class="md-avatar">
+        <PaperItem @class={{concat "md-2-line md-long-text chart-list-item" (if this.isCompareChart " selected" )}}
+          @onClick={{unless this.isCompareChart this.showCompareChart}}>
+          <img src='assets/chart-compare.png' alt={{t 'charts.compare.title' }} class="md-avatar">
           <div class="md-list-item-text">
             <h3>{{t 'charts.compare.title'}}</h3>
             <p>
@@ -28,24 +33,17 @@
         </PaperItem>
 
         {{#if this.isCompareChart}}
-          {{#each this.compareFields as |field|}}
-            <PaperItem @class="chart-list-item compare-field" as |controls|>
-              <controls.radio @groupValue={{this.compareField}} @value={{field}} @onChange={{this.showCompareChart}} />
-              <p>{{t (concat 'fields.' field '.short')}}</p>
-            </PaperItem>
-          {{/each}}
+        {{#each this.compareFields as |field|}}
+        <PaperItem @class="chart-list-item compare-field" as |controls|>
+          <controls.radio @groupValue={{this.compareField}} @value={{field}} @onChange={{this.showCompareChart}} />
+          <p>{{t (concat 'fields.' field '.short')}}</p>
+        </PaperItem>
+        {{/each}}
         {{/if}}
 
-        <ChartList
-          @charts={{this.charts}}
-          @selected={{this.selectedChart}}
-          @onSelect={{this.selectChart}} />
-        <ChartList
-          @charts={{this.customCharts}}
-          @selected={{this.selectedChart}}
-          @onSelect={{this.selectChart}}
-          @onEdit={{this.editChart}}
-          @onShare={{this.shareChart}} />
+        <ChartList @charts={{this.charts}} @selected={{this.selectedChart}} @onSelect={{this.selectChart}} />
+        <ChartList @charts={{this.customCharts}} @selected={{this.selectedChart}} @onSelect={{this.selectChart}}
+          @onEdit={{this.editChart}} @onShare={{this.shareChart}} />
         <PaperItem @class="md-2-line md-long-text chart-list-item" @onClick={{this.editChart}}>
           <PaperIcon @icon="addchart" />
           <div class="md-list-item-text">
@@ -63,23 +61,23 @@
         </PaperItem>
 
         {{#each this.links as |link|}}
-          <a class="menu-link" href={{link.href}} rel="noopener noreferrer" target="_blank">
-            <PaperItem @onClick={{this.noop}}>
-              {{#if link.icon}}
-                {{#if (eq link.icon 'github')}}
-                  <GithubIcon />
-                {{else}}
-                  <PaperIcon @icon={{link.icon}} @size={{18}} />
-                {{/if}}
-              {{/if}}
+        <a class="menu-link" href={{link.href}} rel="noopener noreferrer" target="_blank">
+          <PaperItem @onClick={{this.noop}}>
+            {{#if link.icon}}
+            {{#if (eq link.icon 'github')}}
+            <GithubIcon />
+            {{else}}
+            <PaperIcon @icon={{link.icon}} @size={{18}} />
+            {{/if}}
+            {{/if}}
 
-              <p>{{t (concat 'links.' link.id)}}</p>
+            <p>{{t (concat 'links.' link.id)}}</p>
 
-              <div class="md-secondary-container">
-                <PaperIcon @icon="launch" @size={{18}} />
-              </div>
-            </PaperItem>
-          </a>
+            <div class="md-secondary-container">
+              <PaperIcon @icon="launch" @size={{18}} />
+            </div>
+          </PaperItem>
+        </a>
         {{/each}}
       </PaperList>
     </PaperContent>

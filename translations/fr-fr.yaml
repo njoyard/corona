@@ -1,6 +1,9 @@
 title: Graphiques Covid-19
 starting: Chargement...
 
+archivedTitle: Données figées
+archivedWarning: Les données source utilisées par cette application ne sont plus mises à jour depuis mars 2023. L'application reste utilisable pour référence, mais aucune nouvelle donnée ne sera prise en compte.
+
 chartTypes: Type de graphique
 chartOptions: Options
 share:
@@ -10,7 +13,7 @@ share:
   imported: Graphique importé.
 
 compare:
-  truncate-hint: '{count} {count, plural, one {zone masquée} other {zones masquées}} ayant des valeurs inférieures'
+  truncate-hint: "{count} {count, plural, one {zone masquée} other {zones masquées}} ayant des valeurs inférieures"
 
 options:
   multi:
@@ -126,8 +129,8 @@ custom:
       Les arguments des fonctions sont aussi des expressions, de sorte que les appels peuvent être imbriqués, comme dans
       <code>coalesce(-confirmed, 1 + (change(tests - deceased) * 20) / 3)</code>. Les espaces sont ignorés, et les règles de priorité
       usuelles s'appliquent (utiliser des parenthèses si nécessaire).
-    fields: 'Les noms de champs suivants sont disponibles, certains uniquement dans certaines zones:'
-    funcs: 'Les fonctions suivantes sont disponibles:'
+    fields: "Les noms de champs suivants sont disponibles, certains uniquement dans certaines zones:"
+    funcs: "Les fonctions suivantes sont disponibles:"
     coalesce: renvoie la première expression ayant une valeur
     change: renvoie l'évolution de l'expression par rapport au jour précédent, ou aucune valeur quand l'expression n'en a pas
     weekly: renvoie la moyenne glissante sur 7 jours de l'expression, centrée sur le jour actuel, en excluant les valeurs vides
